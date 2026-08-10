@@ -6,10 +6,10 @@ Full PRDs for every item below are in `docs/prd/`. Each PRD's `HANDOFF.md` is wr
 
 - [x] **PRD 1 — Event Brief Generator** — this repo's initial build. Guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log.
 - [x] **PRD 2 — Promo Campaign Kit** — built. Generates 18 assets (landing page, 5-email sequence with compressed send dates, 9 channel-aware social posts, 3 sales snippets) from the brief by template interpolation; edit tracking with live edit-distance; staleness detection and a regenerate flow that skips edited assets; registration pacing tracker with backloaded/linear target curves, CSV import with row-level errors, and rule-based interventions. Routes: `/promo`, `/promo/kit`, `/promo/pacing`. Logic covered by `pnpm promo-check`.
-- [ ] **PRD 3 — Run-of-Show / Logistics Pack** — single-source-of-truth run-of-show, staffing, shipping manifest, venue checklist, contact sheet; print/PDF export.
+- [x] **PRD 3 — Run-of-Show / Logistics Pack** — built. One `LogisticsPack` per brief in the new `packages/logistics`, seeded from during-event milestones and stakeholders. Sessions hold time/label/location once; staffing, checklist, contacts and issues reference them and derive through `resolveSessionTime`, so one edit propagates everywhere. Room-clash and double-booking warnings, shipping CSV import, category checklist progress, issue log with a flag-from-anywhere affordance, browser-native print routes per artifact and for the full pack, and risk/milestone write-back into the brief. Logic covered by `pnpm logistics-check`.
 - [ ] **PRD 4 — Budget Builder & Tracker** — line-item budget by event type, committed/actual tracking, variance flags, reforecast prompts, CSV/XLSX import.
 
-PRDs 2–4 only depend on PRD 1 and can be built in parallel, each as a new route under `apps/web/app/(tools)/`. PRDs 3 and 4 remain to be built.
+PRDs 2–4 only depend on PRD 1 and can be built in parallel, each as a new route under `apps/web/app/(tools)/`. PRD 4 remains to be built.
 
 ## Fast-follow tier
 

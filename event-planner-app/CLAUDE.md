@@ -6,7 +6,7 @@ Instructions for Claude Code (or any agent) working in this repo. Read this befo
 
 The **Event Planner Productivity Suite** — a standalone, local-first web app for corporate/field marketing event planners (conferences, webinars, trade shows). One Next.js monorepo, one shared `EventBrief` data schema, seven tools as routes in a single app. Full product context: `docs/SUITE-OVERVIEW.md`. Per-tool specs: `docs/prd/<tool>/PRD.md` + `HANDOFF.md`.
 
-**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRDs 3–7 are fully spec'd in `docs/prd/` but not yet built.
+**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRDs 4–7 are fully spec'd in `docs/prd/` but not yet built.
 
 ## Non-negotiable architecture rules
 
@@ -28,10 +28,11 @@ pnpm lint         # eslint
 pnpm verify       # typecheck + lint + fixture validation + sanity + local-store + promo checks + build — run before every commit
 pnpm store-check  # PRD 1 persistence behaviour, headless via fake-indexeddb
 pnpm promo-check  # PRD 2 generation, edit-tracking, regenerate and pacing logic
+pnpm logistics-check # PRD 3 seeding, propagation, conflicts, CSV and pack persistence
 ```
 
-Browser-level end-to-end coverage for PRD 2 lives in `scripts/promo-e2e.py` (Playwright, Chromium
-and Firefox). It is not part of `pnpm verify` because it needs Python plus browser binaries — run
+Browser-level end-to-end coverage lives in `scripts/promo-e2e.py` and `scripts/logistics-e2e.py`
+(Playwright, Chromium and Firefox). It is not part of `pnpm verify` because it needs Python plus browser binaries — run
 it manually against `pnpm dev` when changing the promo UI. See the header comment in that file.
 
 `pnpm verify` is what CI (`.github/workflows/ci.yml`) runs on every push/PR — if it fails locally it will fail in CI.
@@ -42,6 +43,7 @@ it manually against `pnpm dev` when changing the promo UI. See the header commen
 apps/web/             the one deployable Next.js app; each tool = a route under app/(tools)/
 packages/schema/       canonical EventBrief types + JSON Schema + presets + migrations (zero React)
 packages/local-store/  IndexedDB repository — the only file(s) that import `idb`
+packages/logistics/    PRD 3 domain types + selectors (zero React), the propagation model
 packages/ui/           shared primitives (Button, Card, Table, Badge, Form, ProgressBar)
 fixtures/              example EventBrief JSON docs, validated by `pnpm verify`
 scripts/               make-fixtures, validate-fixtures, sanity-check, store-check

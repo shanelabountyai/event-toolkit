@@ -16,6 +16,7 @@ import {
   getDb,
   STORE_BRIEFS,
   STORE_INTAKE_PROGRESS,
+  STORE_LOGISTICS_PACKS,
   STORE_PACING_CONFIGS,
   STORE_PACING_ENTRIES,
   STORE_PROMO_ASSET_SETS,
@@ -72,6 +73,7 @@ export async function saveBriefRaw(brief: EventBrief): Promise<EventBrief> {
 export async function deleteBrief(id: string): Promise<void> {
   const db = await getDb();
   const pacingRows = await db.getAllFromIndex(STORE_PACING_ENTRIES, "eventBriefId", id);
+  const packRows = await db.getAllFromIndex(STORE_LOGISTICS_PACKS, "eventBriefId", id);
   const tx = db.transaction(
     [
       STORE_BRIEFS,
@@ -79,6 +81,7 @@ export async function deleteBrief(id: string): Promise<void> {
       STORE_PROMO_ASSET_SETS,
       STORE_PACING_ENTRIES,
       STORE_PACING_CONFIGS,
+      STORE_LOGISTICS_PACKS,
     ],
     "readwrite",
   );
@@ -88,6 +91,8 @@ export async function deleteBrief(id: string): Promise<void> {
   const pacing = tx.objectStore(STORE_PACING_ENTRIES);
   for (const row of pacingRows) await pacing.delete(row.id);
   await tx.objectStore(STORE_PACING_CONFIGS).delete(id);
+  const packs = tx.objectStore(STORE_LOGISTICS_PACKS);
+  for (const row of packRows) await packs.delete(row.id);
   await tx.done;
 }
 

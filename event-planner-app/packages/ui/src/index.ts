@@ -14,6 +14,7 @@ export {
   NumberInput,
   Select,
   DateInput,
+  DateTimeInput,
   type FieldProps,
 } from "./Form";
 export { Table, Th, Td, EmptyRow } from "./Table";

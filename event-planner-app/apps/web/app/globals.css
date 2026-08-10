@@ -29,4 +29,72 @@ body {
     max-width: none !important;
     padding: 0 !important;
   }
+
+  /*
+   * PRD 3 print rules (FR-11). The logistics pack is printed and carried around a venue, so
+   * these are legibility requirements, not polish: nothing smaller than 11pt, and no table row
+   * or checklist item allowed to split across a page.
+   */
+  .print-only {
+    display: inline !important;
+  }
+
+  .print-sheet {
+    font-size: 11pt;
+    line-height: 1.35;
+  }
+
+  .print-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Repeat column headers when a long table runs onto the next page. */
+    page-break-inside: auto;
+  }
+
+  .print-sheet thead {
+    display: table-header-group;
+  }
+
+  .print-sheet tr,
+  .print-sheet li,
+  .print-sheet .break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-sheet th,
+  .print-sheet td {
+    font-size: 10.5pt;
+    padding: 4pt 6pt;
+    border-bottom: 0.5pt solid #cbd5e1;
+  }
+
+  /* Form controls print as their values, not as boxes with dropdown arrows. */
+  .print-sheet input,
+  .print-sheet select,
+  .print-sheet textarea {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: 10.5pt;
+    color: #0f172a;
+  }
+
+  .print-section {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-section:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  @page {
+    margin: 14mm;
+  }
 }

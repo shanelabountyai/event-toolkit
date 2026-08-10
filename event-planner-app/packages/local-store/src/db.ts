@@ -13,10 +13,15 @@ import type {
   PacingEntry,
   PromoAssetSet,
 } from "@event-toolkit/schema";
+import type { LogisticsPack } from "@event-toolkit/logistics";
 
 export const DB_NAME = "event-toolkit";
-/** v2 adds the PRD 2 (Promo Campaign Kit) stores. Upgrades are additive — no data migration. */
-export const DB_VERSION = 2;
+/**
+ * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store.
+ * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
+ * is guarded so a database at any earlier version upgrades in place.
+ */
+export const DB_VERSION = 3;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -24,6 +29,7 @@ export const STORE_INTAKE_PROGRESS = "intakeProgress";
 export const STORE_PROMO_ASSET_SETS = "promoAssetSets";
 export const STORE_PACING_ENTRIES = "pacingEntries";
 export const STORE_PACING_CONFIGS = "pacingConfigs";
+export const STORE_LOGISTICS_PACKS = "logisticsPacks";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -93,6 +99,12 @@ interface EventToolkitDB extends DBSchema {
     key: string;
     value: PacingConfig;
   };
+  /** One logistics pack per brief in practice, but keyed by its own id and indexed on the brief. */
+  [STORE_LOGISTICS_PACKS]: {
+    key: string;
+    value: LogisticsPack;
+    indexes: { eventBriefId: string };
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
@@ -138,6 +150,11 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         }
         if (!db.objectStoreNames.contains(STORE_PACING_CONFIGS)) {
           db.createObjectStore(STORE_PACING_CONFIGS, { keyPath: "eventBriefId" });
+        }
+        // v3 — PRD 3.
+        if (!db.objectStoreNames.contains(STORE_LOGISTICS_PACKS)) {
+          const packs = db.createObjectStore(STORE_LOGISTICS_PACKS, { keyPath: "id" });
+          packs.createIndex("eventBriefId", "eventBriefId");
         }
       },
     });

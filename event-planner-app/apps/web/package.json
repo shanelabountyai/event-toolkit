@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@event-toolkit/local-store": "workspace:*",
+    "@event-toolkit/logistics": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "@event-toolkit/ui": "workspace:*",
     "next": "15.5.23",

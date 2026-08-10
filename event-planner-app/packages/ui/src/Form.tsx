@@ -71,6 +71,21 @@ export const DateInput = React.forwardRef<
   );
 });
 
+/** Native datetime picker — its value format (YYYY-MM-DDTHH:mm) is what sessions store. */
+export const DateTimeInput = React.forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean }
+>(function DateTimeInput({ className, invalid, ...rest }, ref) {
+  return (
+    <input
+      ref={ref}
+      type="datetime-local"
+      className={cx(CONTROL, invalid && CONTROL_ERROR, className)}
+      {...rest}
+    />
+  );
+});
+
 export const NumberInput = React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean }

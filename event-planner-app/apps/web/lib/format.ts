@@ -23,6 +23,37 @@ export function formatIsoDateTime(iso: string | undefined | null): string {
   });
 }
 
+/**
+ * "12 Nov, 09:00" from a local datetime string (YYYY-MM-DDTHH:mm).
+ *
+ * Parsed by hand rather than via `new Date(iso)`: session times are wall-clock times in the
+ * event's own timezone, and letting the browser apply its local offset would shift every
+ * printed run-of-show for anyone travelling to the event.
+ */
+export function formatSessionTime(iso: string | undefined | null): string {
+  if (!iso) return "—";
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const day = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  return `${day}, ${m[4]}:${m[5]}`;
+}
+
+/** "09:00–10:00" or "12 Nov, 09:00 – 13 Nov, 08:00" when a session spans days. */
+export function formatSessionRange(
+  start: string | undefined | null,
+  end: string | undefined | null,
+): string {
+  if (!start && !end) return "—";
+  if (!end) return formatSessionTime(start);
+  const sameDay = start?.slice(0, 10) === end.slice(0, 10);
+  if (sameDay) {
+    const endTime = /T(\d{2}:\d{2})/.exec(end)?.[1] ?? "";
+    return `${formatSessionTime(start)}–${endTime}`;
+  }
+  return `${formatSessionTime(start)} – ${formatSessionTime(end)}`;
+}
+
 /** Relative "3 minutes ago" style label used in the brief list. */
 export function formatRelative(iso: string | undefined | null): string {
   if (!iso) return "—";

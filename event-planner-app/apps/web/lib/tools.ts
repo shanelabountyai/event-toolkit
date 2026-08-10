@@ -1,7 +1,7 @@
 /**
  * The suite's tool registry.
  *
- * PRD 1 (Event Brief Generator) and PRD 2 (Promo Campaign Kit) are built. The remaining five
+ * PRDs 1-3 are built. The remaining four
  * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
  * view's "Launch a tool" links exist without any of their functionality being built.
  * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
@@ -38,9 +38,9 @@ export const SUITE_TOOLS: SuiteTool[] = [
     key: "run-of-show",
     prd: 3,
     name: "Run-of-Show & Logistics Pack",
-    href: "/run-of-show",
+    href: "/logistics",
     description: "Run of show, staffing, shipping manifest and on-site contact sheet.",
-    available: false,
+    available: true,
   },
   {
     key: "budget",

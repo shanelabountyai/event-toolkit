@@ -10,6 +10,7 @@ export {
   DB_VERSION,
   STORE_BRIEFS,
   STORE_INTAKE_PROGRESS,
+  STORE_LOGISTICS_PACKS,
   STORE_PACING_CONFIGS,
   STORE_PACING_ENTRIES,
   STORE_PROMO_ASSET_SETS,
@@ -34,6 +35,16 @@ export {
   type RegenerateOutcome,
   type RegeneratePlanRow,
 } from "./promoKitRepository";
+
+export {
+  deletePack,
+  deletePacksForBrief,
+  findOrCreatePackForBrief,
+  getPack,
+  getPackByBriefId,
+  listPacks,
+  savePack,
+} from "./logisticsRepository";
 
 export {
   DEFAULT_PACING_CONFIG,

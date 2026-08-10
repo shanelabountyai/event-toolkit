@@ -1,8 +1,8 @@
 {
-  "name": "@event-toolkit/local-store",
+  "name": "@event-toolkit/logistics",
   "version": "0.1.0",
   "private": true,
-  "description": "The only place IndexedDB is touched. Typed repository over the Event Brief store \u2014 the seam a future backend slots into.",
+  "description": "Run-of-Show / Logistics Pack domain types and pure selectors. Zero React dependency, mirrors packages/schema's shape.",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -16,9 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@event-toolkit/logistics": "workspace:*",
-    "@event-toolkit/schema": "workspace:*",
-    "idb": "^8.0.3"
+    "@event-toolkit/schema": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

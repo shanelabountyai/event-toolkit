@@ -32,6 +32,9 @@ importers:
       '@event-toolkit/local-store':
         specifier: workspace:*
         version: link:../../packages/local-store
+      '@event-toolkit/logistics':
+        specifier: workspace:*
+        version: link:../../packages/logistics
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../../packages/schema
@@ -78,12 +81,25 @@ importers:
 
   packages/local-store:
     dependencies:
+      '@event-toolkit/logistics':
+        specifier: workspace:*
+        version: link:../logistics
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../schema
       idb:
         specifier: ^8.0.3
         version: 8.0.3
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/logistics:
+    dependencies:
+      '@event-toolkit/schema':
+        specifier: workspace:*
+        version: link:../schema
     devDependencies:
       typescript:
         specifier: ^5.9.3
