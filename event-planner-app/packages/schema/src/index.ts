@@ -12,6 +12,7 @@ export * from "./presets";
 export * from "./defaults";
 export * from "./validation";
 export * from "./completeness";
+export * from "./budget-tracker";
 export * from "./promo-kit";
 export * from "./promo-kit-templates";
 export { migrateBrief, MIGRATIONS, type MigrationStep } from "./migrations";

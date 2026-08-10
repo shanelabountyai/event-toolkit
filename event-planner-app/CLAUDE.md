@@ -6,7 +6,7 @@ Instructions for Claude Code (or any agent) working in this repo. Read this befo
 
 The **Event Planner Productivity Suite** — a standalone, local-first web app for corporate/field marketing event planners (conferences, webinars, trade shows). One Next.js monorepo, one shared `EventBrief` data schema, seven tools as routes in a single app. Full product context: `docs/SUITE-OVERVIEW.md`. Per-tool specs: `docs/prd/<tool>/PRD.md` + `HANDOFF.md`.
 
-**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRDs 4–7 are fully spec'd in `docs/prd/` but not yet built.
+**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRD 4 (Budget Builder) is built — line-item budgets with variance flagging, reforecast prompts, spreadsheet import/export and the actuals roll-up, under `/budget`, backed by `packages/budget-calc`. PRDs 5–7 are fully spec'd in `docs/prd/` but not yet built.
 
 ## Non-negotiable architecture rules
 
@@ -29,6 +29,7 @@ pnpm verify       # typecheck + lint + fixture validation + sanity + local-store
 pnpm store-check  # PRD 1 persistence behaviour, headless via fake-indexeddb
 pnpm promo-check  # PRD 2 generation, edit-tracking, regenerate and pacing logic
 pnpm logistics-check # PRD 3 seeding, propagation, conflicts, CSV and pack persistence
+pnpm budget-check # PRD 4 variance formula, reconciliation, reforecast, import/export, roll-up
 ```
 
 Browser-level end-to-end coverage lives in `scripts/promo-e2e.py` and `scripts/logistics-e2e.py`
@@ -44,6 +45,7 @@ apps/web/             the one deployable Next.js app; each tool = a route under 
 packages/schema/       canonical EventBrief types + JSON Schema + presets + migrations (zero React)
 packages/local-store/  IndexedDB repository — the only file(s) that import `idb`
 packages/logistics/    PRD 3 domain types + selectors (zero React), the propagation model
+packages/budget-calc/  PRD 4 variance, presets, reforecast + computeBudgetActualsSummary (PRD 6's seam)
 packages/ui/           shared primitives (Button, Card, Table, Badge, Form, ProgressBar)
 fixtures/              example EventBrief JSON docs, validated by `pnpm verify`
 scripts/               make-fixtures, validate-fixtures, sanity-check, store-check
@@ -64,6 +66,14 @@ PRD 1 (done) → PRD 2 (Promo Campaign Kit), PRD 3 (Logistics Pack), PRD 4 (Budg
 4. Wire the "coming soon" link for that tool in `apps/web/lib/tools.ts` and `ToolLaunchLinks.tsx` to the new route.
 5. Run `pnpm typecheck && pnpm lint && pnpm build && pnpm verify` before considering it done.
 6. Update `docs/ROADMAP.md`'s checklist.
+
+## The spreadsheet dependency
+
+`xlsx` is installed from SheetJS's own CDN tarball, **not** from npm — the npm-published
+0.18.5 is abandoned and carries two unpatched high-severity advisories (prototype pollution,
+ReDoS), and this code path parses files a planner was handed by a vendor. Keep the CDN pin
+when upgrading. It is imported dynamically in `apps/web/lib/budget-file.ts` so its ~160kB
+stays off the budget page's first load.
 
 ## Things every PRD's "Open Questions" section documents as an assumption, not a validated decision
 

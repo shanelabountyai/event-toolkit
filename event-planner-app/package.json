@@ -14,8 +14,9 @@
     "sanity": "tsx scripts/sanity-check.ts",
     "store-check": "tsx scripts/store-check.ts",
     "promo-check": "tsx scripts/promo-check.ts",
-    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm build",
-    "logistics-check": "tsx scripts/logistics-check.ts"
+    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm budget-check && pnpm build",
+    "logistics-check": "tsx scripts/logistics-check.ts",
+    "budget-check": "tsx scripts/budget-check.ts"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

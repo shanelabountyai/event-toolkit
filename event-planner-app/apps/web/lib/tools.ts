@@ -1,7 +1,7 @@
 /**
  * The suite's tool registry.
  *
- * PRDs 1-3 are built. The remaining four
+ * PRDs 1-4 are built. The remaining three
  * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
  * view's "Launch a tool" links exist without any of their functionality being built.
  * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
@@ -48,7 +48,7 @@ export const SUITE_TOOLS: SuiteTool[] = [
     name: "Budget Builder & Tracker",
     href: "/budget",
     description: "Line-item budget detail, committed/actual tracking and variance flags.",
-    available: false,
+    available: true,
   },
   {
     key: "leads",

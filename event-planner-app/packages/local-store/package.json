@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@event-toolkit/budget-calc": "workspace:*",
     "@event-toolkit/logistics": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "idb": "^8.0.3"

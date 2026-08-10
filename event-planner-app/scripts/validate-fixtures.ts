@@ -30,9 +30,17 @@ const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv);
 const validateJsonSchema = ajv.compile(jsonSchema);
 
-const files = readdirSync(fixturesDir).filter((f) => f.endsWith(".json")).sort();
+/**
+ * Brief fixtures only. `fixtures/` also holds worked examples for other tools (e.g.
+ * `conference-budget-example.json`, which is a budget, not a brief) — those are validated by
+ * their own tool's check script, and running the EventBrief schema over them would fail on
+ * documents that were never meant to satisfy it.
+ */
+const files = readdirSync(fixturesDir)
+  .filter((f) => f.endsWith("-brief-example.json"))
+  .sort();
 if (files.length === 0) {
-  console.error("No fixtures found in fixtures/");
+  console.error("No brief fixtures found in fixtures/");
   process.exit(1);
 }
 

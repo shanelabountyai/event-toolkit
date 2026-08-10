@@ -11,13 +11,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@event-toolkit/budget-calc": "workspace:*",
     "@event-toolkit/local-store": "workspace:*",
     "@event-toolkit/logistics": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "@event-toolkit/ui": "workspace:*",
     "next": "15.5.23",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

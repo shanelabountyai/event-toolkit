@@ -9,6 +9,8 @@ export {
   DB_NAME,
   DB_VERSION,
   STORE_BRIEFS,
+  STORE_BUDGET_LINE_ITEMS,
+  STORE_BUDGET_SETTINGS,
   STORE_INTAKE_PROGRESS,
   STORE_LOGISTICS_PACKS,
   STORE_PACING_CONFIGS,
@@ -35,6 +37,19 @@ export {
   type RegenerateOutcome,
   type RegeneratePlanRow,
 } from "./promoKitRepository";
+
+export {
+  deleteBudgetForBrief,
+  deleteLineItem,
+  findOrCreateBudget,
+  getBudgetSettings,
+  getLineItems,
+  saveBudgetSettings,
+  saveLineItem,
+  saveLineItems,
+  syncActualsToBrief,
+  type BudgetBootstrap,
+} from "./budgetRepository";
 
 export {
   deletePack,
