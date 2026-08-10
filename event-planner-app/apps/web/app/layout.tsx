@@ -6,12 +6,10 @@ import { SUITE_TOOLS } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "Event Planner Productivity Suite",
   description:
-    "Standalone, local-first toolkit for corporate and field marketing event planners. PRD 1: Event Brief Generator.",
+    "Standalone, local-first toolkit for corporate and field marketing event planners. Event Brief Generator and Promo Campaign Kit.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [briefTool, ...comingSoon] = SUITE_TOOLS;
-
   return (
     <html lang="en">
       <body>
@@ -21,26 +19,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/brief" className="text-sm font-semibold tracking-tight text-slate-900">
                 Event Planner Suite
               </Link>
+              {/* Driven by `tool.available`, so shipping a PRD lights up its nav entry. */}
               <nav className="flex flex-wrap items-center gap-1 text-sm">
-                <Link
-                  href={briefTool.href}
-                  className="rounded-md px-2.5 py-1.5 font-medium text-slate-900 hover:bg-slate-100"
-                >
-                  {briefTool.name}
-                </Link>
-                {comingSoon.map((tool) => (
-                  <span
-                    key={tool.key}
-                    aria-disabled="true"
-                    title={`${tool.name} — coming soon (PRD ${tool.prd})`}
-                    className="cursor-not-allowed rounded-md px-2.5 py-1.5 text-slate-400"
-                  >
-                    {tool.name}
-                    <span className="ml-1.5 text-[10px] uppercase tracking-wide text-slate-300">
-                      soon
+                {SUITE_TOOLS.map((tool) =>
+                  tool.available ? (
+                    <Link
+                      key={tool.key}
+                      href={tool.href}
+                      className="rounded-md px-2.5 py-1.5 font-medium text-slate-900 hover:bg-slate-100"
+                    >
+                      {tool.name}
+                    </Link>
+                  ) : (
+                    <span
+                      key={tool.key}
+                      aria-disabled="true"
+                      title={`${tool.name} — coming soon (PRD ${tool.prd})`}
+                      className="cursor-not-allowed rounded-md px-2.5 py-1.5 text-slate-400"
+                    >
+                      {tool.name}
+                      <span className="ml-1.5 text-[10px] uppercase tracking-wide text-slate-300">
+                        soon
+                      </span>
                     </span>
-                  </span>
-                ))}
+                  ),
+                )}
               </nav>
               <span className="ml-auto text-xs text-slate-400">
                 Local-first · data stays in this browser

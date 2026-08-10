@@ -16,6 +16,9 @@ import {
   getDb,
   STORE_BRIEFS,
   STORE_INTAKE_PROGRESS,
+  STORE_PACING_CONFIGS,
+  STORE_PACING_ENTRIES,
+  STORE_PROMO_ASSET_SETS,
   type IntakeProgress,
 } from "./db";
 
@@ -61,12 +64,30 @@ export async function saveBriefRaw(brief: EventBrief): Promise<EventBrief> {
   return brief;
 }
 
-/** Delete a brief and any intake progress attached to it. */
+/**
+ * Delete a brief and everything keyed to it — intake progress, and the downstream tools'
+ * records. Every tool that stores per-brief data cleans up here rather than leaving orphans
+ * behind in its own store.
+ */
 export async function deleteBrief(id: string): Promise<void> {
   const db = await getDb();
-  const tx = db.transaction([STORE_BRIEFS, STORE_INTAKE_PROGRESS], "readwrite");
+  const pacingRows = await db.getAllFromIndex(STORE_PACING_ENTRIES, "eventBriefId", id);
+  const tx = db.transaction(
+    [
+      STORE_BRIEFS,
+      STORE_INTAKE_PROGRESS,
+      STORE_PROMO_ASSET_SETS,
+      STORE_PACING_ENTRIES,
+      STORE_PACING_CONFIGS,
+    ],
+    "readwrite",
+  );
   await tx.objectStore(STORE_BRIEFS).delete(id);
   await tx.objectStore(STORE_INTAKE_PROGRESS).delete(id);
+  await tx.objectStore(STORE_PROMO_ASSET_SETS).delete(id);
+  const pacing = tx.objectStore(STORE_PACING_ENTRIES);
+  for (const row of pacingRows) await pacing.delete(row.id);
+  await tx.objectStore(STORE_PACING_CONFIGS).delete(id);
   await tx.done;
 }
 

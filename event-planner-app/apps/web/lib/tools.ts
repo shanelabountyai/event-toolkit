@@ -1,18 +1,17 @@
 /**
  * The suite's tool registry.
  *
- * PRD 1 (Event Brief Generator) is the only tool implemented in this session. The other six
- * are listed here as explicitly disabled "coming soon" entries so the nav shell and the
- * brief view's "Launch a tool" links exist without any of their functionality being built
- * (handoff §8 non-goals). Names/roles follow the normative PRD table in
- * `packages/schema/event-brief-schema.md`.
+ * PRD 1 (Event Brief Generator) and PRD 2 (Promo Campaign Kit) are built. The remaining five
+ * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
+ * view's "Launch a tool" links exist without any of their functionality being built.
+ * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
  */
 
 export interface SuiteTool {
   key: string;
   prd: number;
   name: string;
-  /** Route namespace. Only `/brief` exists today. */
+  /** Route the "launch from brief" link points at; `?briefId=` is appended. */
   href: string;
   description: string;
   available: boolean;
@@ -31,9 +30,9 @@ export const SUITE_TOOLS: SuiteTool[] = [
     key: "promo",
     prd: 2,
     name: "Promo Campaign Kit",
-    href: "/promo",
+    href: "/promo/kit",
     description: "Landing page, email sequence, social and sales snippets generated from the brief.",
-    available: false,
+    available: true,
   },
   {
     key: "run-of-show",

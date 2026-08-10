@@ -7,14 +7,23 @@
  */
 
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
-import type { EventBrief } from "@event-toolkit/schema";
+import type {
+  EventBrief,
+  PacingConfig,
+  PacingEntry,
+  PromoAssetSet,
+} from "@event-toolkit/schema";
 
 export const DB_NAME = "event-toolkit";
-export const DB_VERSION = 1;
+/** v2 adds the PRD 2 (Promo Campaign Kit) stores. Upgrades are additive — no data migration. */
+export const DB_VERSION = 2;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
 export const STORE_INTAKE_PROGRESS = "intakeProgress";
+export const STORE_PROMO_ASSET_SETS = "promoAssetSets";
+export const STORE_PACING_ENTRIES = "pacingEntries";
+export const STORE_PACING_CONFIGS = "pacingConfigs";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -63,6 +72,27 @@ interface EventToolkitDB extends DBSchema {
     key: string;
     value: IntakeProgress;
   };
+  /** One promo asset set per brief; overwritten wholesale on regenerate (PRD 2). */
+  [STORE_PROMO_ASSET_SETS]: {
+    key: string;
+    value: PromoAssetSet;
+  };
+  [STORE_PACING_ENTRIES]: {
+    key: string;
+    value: PacingEntry;
+    indexes: { eventBriefId: string };
+  };
+  /**
+   * Pacing config, one record per brief.
+   *
+   * PRD 2's handoff names two new stores; this is a third, because `PacingConfig` has to
+   * survive a reload and neither of the other two is a sane home for it (asset sets are
+   * replaced wholesale on regenerate, which would drop the planner's curve choice).
+   */
+  [STORE_PACING_CONFIGS]: {
+    key: string;
+    value: PacingConfig;
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
@@ -97,6 +127,17 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         }
         if (!db.objectStoreNames.contains(STORE_INTAKE_PROGRESS)) {
           db.createObjectStore(STORE_INTAKE_PROGRESS, { keyPath: "briefId" });
+        }
+        // v2 — PRD 2. Guarded like the rest, so a v1 database upgrades in place.
+        if (!db.objectStoreNames.contains(STORE_PROMO_ASSET_SETS)) {
+          db.createObjectStore(STORE_PROMO_ASSET_SETS, { keyPath: "eventBriefId" });
+        }
+        if (!db.objectStoreNames.contains(STORE_PACING_ENTRIES)) {
+          const pacing = db.createObjectStore(STORE_PACING_ENTRIES, { keyPath: "id" });
+          pacing.createIndex("eventBriefId", "eventBriefId");
+        }
+        if (!db.objectStoreNames.contains(STORE_PACING_CONFIGS)) {
+          db.createObjectStore(STORE_PACING_CONFIGS, { keyPath: "eventBriefId" });
         }
       },
     });
