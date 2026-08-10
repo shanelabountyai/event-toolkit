@@ -14,16 +14,24 @@ import type {
   PromoAssetSet,
 } from "@event-toolkit/schema";
 import type { LogisticsPack } from "@event-toolkit/logistics";
+import type {
+  DuplicateCandidate,
+  FollowUpTemplate,
+  ImportBatch,
+  LeadRecord,
+  ScoringRubric,
+  TriageSession,
+} from "@event-toolkit/lead-triage-core";
 import type { BudgetLineItem, BudgetSettings } from "@event-toolkit/schema";
 
 export const DB_NAME = "event-toolkit";
 /**
  * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store, and
- * v4 the PRD 4 (Budget Builder) stores.
+ * v4 the PRD 4 (Budget Builder) stores, and v5 the PRD 5 (Lead Triage) stores.
  * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
  * is guarded so a database at any earlier version upgrades in place.
  */
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -34,6 +42,12 @@ export const STORE_PACING_CONFIGS = "pacingConfigs";
 export const STORE_LOGISTICS_PACKS = "logisticsPacks";
 export const STORE_BUDGET_LINE_ITEMS = "budgetLineItems";
 export const STORE_BUDGET_SETTINGS = "budgetSettings";
+export const STORE_TRIAGE_SESSIONS = "triageSessions";
+export const STORE_IMPORT_BATCHES = "importBatches";
+export const STORE_LEAD_RECORDS = "leadRecords";
+export const STORE_SCORING_RUBRICS = "scoringRubrics";
+export const STORE_FOLLOWUP_TEMPLATES = "followUpTemplates";
+export const STORE_DUPLICATE_CANDIDATES = "duplicateCandidates";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -73,7 +87,15 @@ export type UsageEventType =
   | "reforecast_completed"
   | "reforecast_dismissed"
   | "budget_reconciled"
-  | "variance_flag_first_triggered";
+  | "variance_flag_first_triggered"
+  // PRD 5 (FR-12)
+  | "triage_session_created"
+  | "lead_import_completed"
+  | "dedupe_resolved"
+  | "rubric_edited"
+  | "assignment_run"
+  | "drafts_generated"
+  | "session_routed";
 
 interface EventToolkitDB extends DBSchema {
   [STORE_BRIEFS]: {
@@ -126,6 +148,40 @@ interface EventToolkitDB extends DBSchema {
   [STORE_BUDGET_SETTINGS]: {
     key: string;
     value: BudgetSettings;
+  };
+  /**
+   * PRD 5 stores. These hold attendees' personal data, so they live in the same local-only
+   * database as everything else — nothing here is ever synced anywhere.
+   */
+  [STORE_TRIAGE_SESSIONS]: {
+    key: string;
+    value: TriageSession;
+    indexes: { eventBriefId: string };
+  };
+  [STORE_IMPORT_BATCHES]: {
+    key: string;
+    value: ImportBatch;
+    indexes: { triageSessionId: string };
+  };
+  [STORE_LEAD_RECORDS]: {
+    key: string;
+    value: LeadRecord;
+    indexes: { triageSessionId: string; dedupeKey: string; ownerId: string };
+  };
+  [STORE_SCORING_RUBRICS]: {
+    key: string;
+    value: ScoringRubric;
+    indexes: { triageSessionId: string };
+  };
+  [STORE_FOLLOWUP_TEMPLATES]: {
+    key: string;
+    value: FollowUpTemplate;
+    indexes: { triageSessionId: string };
+  };
+  [STORE_DUPLICATE_CANDIDATES]: {
+    key: string;
+    value: DuplicateCandidate;
+    indexes: { triageSessionId: string };
   };
 }
 
@@ -185,6 +241,33 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         }
         if (!db.objectStoreNames.contains(STORE_BUDGET_SETTINGS)) {
           db.createObjectStore(STORE_BUDGET_SETTINGS, { keyPath: "eventBriefId" });
+        }
+        // v5 — PRD 5.
+        if (!db.objectStoreNames.contains(STORE_TRIAGE_SESSIONS)) {
+          const sessions = db.createObjectStore(STORE_TRIAGE_SESSIONS, { keyPath: "id" });
+          sessions.createIndex("eventBriefId", "eventBriefId");
+        }
+        if (!db.objectStoreNames.contains(STORE_IMPORT_BATCHES)) {
+          const batches = db.createObjectStore(STORE_IMPORT_BATCHES, { keyPath: "id" });
+          batches.createIndex("triageSessionId", "triageSessionId");
+        }
+        if (!db.objectStoreNames.contains(STORE_LEAD_RECORDS)) {
+          const leads = db.createObjectStore(STORE_LEAD_RECORDS, { keyPath: "id" });
+          leads.createIndex("triageSessionId", "triageSessionId");
+          leads.createIndex("dedupeKey", "dedupeKey");
+          leads.createIndex("ownerId", "ownerId");
+        }
+        if (!db.objectStoreNames.contains(STORE_SCORING_RUBRICS)) {
+          const rubrics = db.createObjectStore(STORE_SCORING_RUBRICS, { keyPath: "id" });
+          rubrics.createIndex("triageSessionId", "triageSessionId");
+        }
+        if (!db.objectStoreNames.contains(STORE_FOLLOWUP_TEMPLATES)) {
+          const templates = db.createObjectStore(STORE_FOLLOWUP_TEMPLATES, { keyPath: "id" });
+          templates.createIndex("triageSessionId", "triageSessionId");
+        }
+        if (!db.objectStoreNames.contains(STORE_DUPLICATE_CANDIDATES)) {
+          const dupes = db.createObjectStore(STORE_DUPLICATE_CANDIDATES, { keyPath: "id" });
+          dupes.createIndex("triageSessionId", "triageSessionId");
         }
       },
     });

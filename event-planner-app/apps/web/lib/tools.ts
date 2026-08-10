@@ -1,7 +1,7 @@
 /**
  * The suite's tool registry.
  *
- * PRDs 1-4 are built. The remaining three
+ * PRDs 1-5 are built. The remaining two
  * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
  * view's "Launch a tool" links exist without any of their functionality being built.
  * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
@@ -56,7 +56,7 @@ export const SUITE_TOOLS: SuiteTool[] = [
     name: "Lead Triage & Follow-Up",
     href: "/leads",
     description: "Import badge scans and registrant lists, dedupe, score and route to sales.",
-    available: false,
+    available: true,
   },
   {
     key: "roi",
