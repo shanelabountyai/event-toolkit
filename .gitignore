@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+.DS_Store
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+pnpm-debug.log*
+coverage/
+
+# source archives — contents are extracted and tracked in this repo
+*.zip
+*.tar.gz

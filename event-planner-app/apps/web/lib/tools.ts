@@ -1,0 +1,80 @@
+/**
+ * The suite's tool registry.
+ *
+ * PRD 1 (Event Brief Generator) is the only tool implemented in this session. The other six
+ * are listed here as explicitly disabled "coming soon" entries so the nav shell and the
+ * brief view's "Launch a tool" links exist without any of their functionality being built
+ * (handoff §8 non-goals). Names/roles follow the normative PRD table in
+ * `packages/schema/event-brief-schema.md`.
+ */
+
+export interface SuiteTool {
+  key: string;
+  prd: number;
+  name: string;
+  /** Route namespace. Only `/brief` exists today. */
+  href: string;
+  description: string;
+  available: boolean;
+}
+
+export const SUITE_TOOLS: SuiteTool[] = [
+  {
+    key: "brief",
+    prd: 1,
+    name: "Event Brief Generator",
+    href: "/brief",
+    description: "Guided intake that turns a blank page into a structured, shareable event brief.",
+    available: true,
+  },
+  {
+    key: "promo",
+    prd: 2,
+    name: "Promo Campaign Kit",
+    href: "/promo",
+    description: "Landing page, email sequence, social and sales snippets generated from the brief.",
+    available: false,
+  },
+  {
+    key: "run-of-show",
+    prd: 3,
+    name: "Run-of-Show & Logistics Pack",
+    href: "/run-of-show",
+    description: "Run of show, staffing, shipping manifest and on-site contact sheet.",
+    available: false,
+  },
+  {
+    key: "budget",
+    prd: 4,
+    name: "Budget Builder & Tracker",
+    href: "/budget",
+    description: "Line-item budget detail, committed/actual tracking and variance flags.",
+    available: false,
+  },
+  {
+    key: "leads",
+    prd: 5,
+    name: "Lead Triage & Follow-Up",
+    href: "/leads",
+    description: "Import badge scans and registrant lists, dedupe, score and route to sales.",
+    available: false,
+  },
+  {
+    key: "roi",
+    prd: 6,
+    name: "Event ROI & Attribution",
+    href: "/roi",
+    description: "Budget actuals, lead outcomes and survey data combined into an ROI report.",
+    available: false,
+  },
+  {
+    key: "retro",
+    prd: 7,
+    name: "Post-Mortem Generator",
+    href: "/retro",
+    description: "Structured retro that writes lessons learned back onto the next brief.",
+    available: false,
+  },
+];
+
+export const DOWNSTREAM_TOOLS = SUITE_TOOLS.filter((t) => t.key !== "brief");

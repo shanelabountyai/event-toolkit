@@ -1,0 +1,370 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "7ad6b764-fd06-4d30-ab76-2575a9d1c9a9",
+  "name": "Q4 Customer Summit 2026",
+  "type": "conference",
+  "status": "complete",
+  "version": 7,
+  "createdAt": "2026-05-04T16:12:03.000Z",
+  "updatedAt": "2026-05-29T21:40:11.000Z",
+  "createdBy": "Dana Rivera",
+  "goals": {
+    "primaryObjective": "Generate 150 qualified pipeline opportunities from 500 customer and prospect attendees, and give the platform team a public roadmap moment.",
+    "objectives": [
+      "Recruit 10 customers willing to be named references or case studies",
+      "Drive 40% of attendees into a hands-on product workshop",
+      "Give regional sales 25 pre-booked executive meetings on site"
+    ],
+    "businessJustification": "Renewals in the enterprise segment slipped 6 points last year, and win/loss interviews point to weak awareness of the platform roadmap among existing accounts. A single flagship in-person moment is the cheapest way to reach the top 200 accounts with both product depth and executive access before the FY27 planning cycle."
+  },
+  "audience": {
+    "description": "Existing enterprise customers and late-stage prospects across North America — platform practitioners plus the executive sponsors who own their budget. Roughly 70% customer, 30% prospect.",
+    "targetPersonas": [
+      {
+        "name": "Practitioner attendee",
+        "title": "Platform Engineering Manager",
+        "description": "Runs the day-to-day implementation. Comes for hands-on sessions, migration guidance and peer conversations; strongly influences renewal but does not sign.",
+        "painPoints": [
+          "Needs concrete migration guidance, not a product pitch",
+          "Has to justify two days away from an on-call rotation"
+        ]
+      },
+      {
+        "name": "Executive sponsor",
+        "title": "VP Engineering / CTO",
+        "description": "Attends the keynote and the executive track. Cares about roadmap credibility, benchmarks and peer conversation.",
+        "painPoints": [
+          "Limited time on site — will skip anything that feels like a demo",
+          "Wants evidence of business outcomes from comparable companies"
+        ]
+      }
+    ],
+    "estimatedSize": 500,
+    "segments": [
+      "existing customers",
+      "late-stage prospects",
+      "partners"
+    ]
+  },
+  "budget": {
+    "totalBudget": 285000,
+    "currency": "USD",
+    "allocations": [
+      {
+        "id": "799a5461-cd95-450a-93fc-a637fccc9c3a",
+        "category": "Venue",
+        "plannedAmount": 78000,
+        "actualAmount": null,
+        "notes": "Moscone West, two days including move-in"
+      },
+      {
+        "id": "4d3c58ad-72a9-4e5d-b896-b401d7efb3d4",
+        "category": "Catering",
+        "plannedAmount": 52000,
+        "actualAmount": null,
+        "notes": "Breakfast, lunch and one evening reception"
+      },
+      {
+        "id": "b057f900-0c18-47a6-a47c-3b48b1f0a821",
+        "category": "AV & production",
+        "plannedAmount": 61000,
+        "actualAmount": null,
+        "notes": "Main stage plus three breakout rooms"
+      },
+      {
+        "id": "7393a7a5-fbe1-4f73-ba30-c561aae8de61",
+        "category": "Speaker fees & travel",
+        "plannedAmount": 24000,
+        "actualAmount": null,
+        "notes": "Two external keynotes"
+      },
+      {
+        "id": "8a2b56d3-8d21-4a87-841c-edb8a47da399",
+        "category": "Promotion",
+        "plannedAmount": 32000,
+        "actualAmount": null,
+        "notes": "Paid social, email and field outreach"
+      },
+      {
+        "id": "50b83540-4288-49de-bf9a-1928e3435982",
+        "category": "Swag & printed collateral",
+        "plannedAmount": 14000,
+        "actualAmount": null
+      },
+      {
+        "id": "46fb6c0c-0d3d-4e17-b6af-636161dfd38b",
+        "category": "Staff travel & lodging",
+        "plannedAmount": 21000,
+        "actualAmount": null,
+        "notes": "14 staff, three nights"
+      }
+    ],
+    "notes": "High-level only — vendor-level detail and commitments are tracked in the Budget Builder. 8% contingency is held centrally and is not shown here."
+  },
+  "dates": {
+    "timezone": "America/Los_Angeles",
+    "eventStartDate": "2026-11-12",
+    "eventEndDate": "2026-11-13"
+  },
+  "format": {
+    "deliveryMode": "in_person",
+    "venueOrPlatform": {
+      "name": "Moscone West",
+      "locationOrUrl": "800 Howard St, San Francisco, CA 94103",
+      "capacity": 600,
+      "notes": "Level 2 for the main stage, Level 3 for breakouts and the sponsor lounge."
+    }
+  },
+  "stakeholders": [
+    {
+      "id": "15c306c7-f1c0-45fb-95cc-07be719c9253",
+      "name": "Dana Rivera",
+      "role": "Event Lead",
+      "raci": "A",
+      "email": "dana.rivera@example.com",
+      "department": "Events"
+    },
+    {
+      "id": "74d42769-7eb3-4bab-9034-ddb455fadd97",
+      "name": "Marcus Hale",
+      "role": "Marketing Ops",
+      "raci": "R",
+      "email": "marcus.hale@example.com",
+      "department": "Marketing Ops"
+    },
+    {
+      "id": "45d6cfac-ffcd-4c3d-8f1d-246e26bcb015",
+      "name": "Priya Nair",
+      "role": "Content & Speaker Manager",
+      "raci": "R",
+      "department": "Product Marketing"
+    },
+    {
+      "id": "a4bbc3fd-27b0-4875-9f64-e69497d6c5ed",
+      "name": "Tom Alvarez",
+      "role": "Regional Sales Director",
+      "raci": "C",
+      "department": "Sales"
+    },
+    {
+      "id": "a8db2310-c46f-468c-920a-843739155dff",
+      "name": "Erin Chao",
+      "role": "Executive Sponsor",
+      "raci": "I",
+      "department": "Executive"
+    }
+  ],
+  "successMetrics": [
+    {
+      "id": "93e246a2-a884-4e4e-8d79-88cf0dbf79e0",
+      "metric": "Registrations",
+      "target": 500,
+      "unit": "count",
+      "actual": null,
+      "notes": "Total confirmed registrations by event day"
+    },
+    {
+      "id": "e5cad91c-3142-4717-b442-285a98157138",
+      "metric": "Attendance rate",
+      "target": 70,
+      "unit": "%",
+      "actual": null,
+      "notes": "Checked-in attendees ÷ registrations"
+    },
+    {
+      "id": "ce615654-da6d-44d7-9c69-f11509a909fe",
+      "metric": "Average session attendance",
+      "target": 120,
+      "unit": "count",
+      "actual": null,
+      "notes": "Mean attendees per breakout session"
+    },
+    {
+      "id": "def7dd77-9df6-4c0a-9917-106bb4ac9e4b",
+      "metric": "Attendee NPS",
+      "target": 40,
+      "unit": "score",
+      "actual": null,
+      "notes": "From the post-event survey"
+    },
+    {
+      "id": "8f50ebe5-3497-4583-b73e-23811c411bd5",
+      "metric": "Pipeline influenced",
+      "target": 750000,
+      "unit": "$",
+      "actual": null,
+      "notes": "Opportunity value touched within 90 days"
+    },
+    {
+      "id": "72a996cd-ef50-4b5b-9a39-1d95762416b3",
+      "metric": "Executive meetings booked",
+      "target": 25,
+      "unit": "count",
+      "actual": null,
+      "notes": "Pre-booked 1:1s with target accounts"
+    }
+  ],
+  "riskRegister": [
+    {
+      "id": "1055731d-92c4-401e-8f8e-b1f3a3da2ba5",
+      "risk": "Registrations exceed venue capacity, or fall so far short the room looks empty",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Hard cap registration at 540 (90% of fire-code capacity) and review pacing weekly from 8 weeks out; hold a waitlist.",
+      "owner": "Dana Rivera",
+      "status": "open"
+    },
+    {
+      "id": "7b664930-5709-4b11-b4d0-28cc4794c5b5",
+      "risk": "Keynote speaker cancels close to the event",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Confirm speakers in writing by 14 Aug, keep two vetted backups warm, and pre-record a fallback session by 20 Oct.",
+      "owner": "Priya Nair",
+      "status": "open"
+    },
+    {
+      "id": "9751cf78-7966-4649-8669-2e9e8bebd6fb",
+      "risk": "Registration falls short of target because promotion starts too late",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Lock the promo calendar before registration opens; mid-campaign checkpoint at 50% of target with $8k paid budget in reserve.",
+      "owner": "Marcus Hale",
+      "status": "open"
+    },
+    {
+      "id": "aee7c308-e6e1-44c4-aefc-438d49e55795",
+      "risk": "AV or production failure during a main-stage session",
+      "likelihood": "low",
+      "impact": "high",
+      "mitigation": "Full technical rehearsal on 11 Nov, redundant mics and laptops on site, named AV vendor contact on the run of show.",
+      "owner": "Dana Rivera",
+      "status": "open"
+    },
+    {
+      "id": "62a987de-d030-4a47-9845-90256e6d2502",
+      "risk": "Catering headcount mismatch",
+      "likelihood": "medium",
+      "impact": "medium",
+      "mitigation": "Base the guarantee on a 72% historical check-in rate and confirm the final count on 29 Oct.",
+      "status": "open"
+    }
+  ],
+  "timeline": {
+    "milestones": [
+      {
+        "id": "035ab14b-ff1e-4ed7-8be8-824b031c66cc",
+        "label": "Venue contract signed",
+        "phase": "pre_event",
+        "targetDate": "2026-07-15",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "3b942275-c51c-4eef-86a1-9955e245d59f",
+        "label": "Speaker lineup confirmed",
+        "phase": "pre_event",
+        "targetDate": "2026-08-14",
+        "owner": "Priya Nair",
+        "status": "not_started"
+      },
+      {
+        "id": "e36b6967-9095-48d2-ad6f-6d57d2ae38f5",
+        "label": "Registration opens",
+        "phase": "pre_event",
+        "targetDate": "2026-09-13",
+        "owner": "Marcus Hale",
+        "status": "not_started"
+      },
+      {
+        "id": "6da1de5e-8ae4-4dee-984f-9555c97734f9",
+        "label": "Agenda published and promotion campaign live",
+        "phase": "pre_event",
+        "targetDate": "2026-09-28",
+        "owner": "Marcus Hale",
+        "status": "not_started"
+      },
+      {
+        "id": "0b8cdc3a-8aa5-4a2c-87b1-97c8855138ef",
+        "label": "Final headcount and catering guarantee to venue",
+        "phase": "pre_event",
+        "targetDate": "2026-10-29",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "6b136aff-3142-45d9-a353-cb75bc5a9759",
+        "label": "Run of show finalised and AV rehearsal complete",
+        "phase": "pre_event",
+        "targetDate": "2026-11-10",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "bfea3713-29cd-47a2-9594-8807b68caa15",
+        "label": "Event day — registration desk opens",
+        "phase": "during_event",
+        "targetDate": "2026-11-12",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "07ccf0fb-7a73-4b07-a0a4-aa6078a3e411",
+        "label": "Post-event survey sent to attendees",
+        "phase": "post_event",
+        "targetDate": "2026-11-15",
+        "owner": "Marcus Hale",
+        "status": "not_started"
+      },
+      {
+        "id": "815ffc45-79cc-43d2-8495-e510a6f3e6a5",
+        "label": "Leads handed off to sales with follow-up owners",
+        "phase": "post_event",
+        "targetDate": "2026-11-18",
+        "owner": "Tom Alvarez",
+        "status": "not_started"
+      },
+      {
+        "id": "26d83fab-b428-49a8-b180-d2f873854226",
+        "label": "Retro complete and ROI report published",
+        "phase": "post_event",
+        "targetDate": "2026-12-04",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      }
+    ]
+  },
+  "constraints": {
+    "items": [
+      "Executive sponsor is only on site for the morning of day one",
+      "No budget for a second evening event — reception is the only social moment",
+      "Registration data must stay in the US region for enterprise customer contracts",
+      "Book the AV vendor 90 days out — 60 was too late last year"
+    ],
+    "notes": "Two competitor conferences fall in the same month; the date is fixed by the executive calendar and cannot move."
+  },
+  "carryForwardLessons": [
+    {
+      "id": "fc1c996a-41c1-4cdd-9cd6-19e8bcfef411",
+      "sourceEventId": "f975b5bd-a2f0-417d-85a0-4882745af29c",
+      "category": "Vendor",
+      "lesson": "Book the AV vendor 90 days out — 60 was too late and cost us the preferred rate.",
+      "addedAt": "2026-01-19T15:02:44.000Z"
+    },
+    {
+      "id": "9b2808af-fa97-49e2-bc99-0a3841548b5e",
+      "sourceEventId": "db109ae5-2061-4349-8c41-d40007af26be",
+      "category": "Content",
+      "lesson": "Breakout rooms sized on registration interest, not room availability — two sessions turned people away last year.",
+      "addedAt": "2026-01-19T15:06:12.000Z"
+    }
+  ],
+  "exportHistory": [
+    {
+      "id": "cf47aac9-0f56-4c53-9705-a991dfb4b2c1",
+      "format": "markdown",
+      "generatedAt": "2026-05-29T21:41:02.000Z",
+      "filename": "q4-customer-summit-2026-brief.md"
+    }
+  ]
+}

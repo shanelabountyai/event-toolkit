@@ -1,0 +1,285 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "c4e295a5-d9ab-4c62-8588-30641d50a203",
+  "name": "Marketing Ops Automation Webinar — June",
+  "type": "webinar",
+  "status": "draft",
+  "version": 3,
+  "createdAt": "2026-04-21T09:31:55.000Z",
+  "updatedAt": "2026-04-24T11:18:07.000Z",
+  "createdBy": "Dana Rivera",
+  "goals": {
+    "primaryObjective": "Generate 300 registrants and 50 sales-qualified leads from the mid-market marketing operations segment.",
+    "objectives": [
+      "Produce three on-demand clips for the nurture sequence",
+      "Test the new partner co-promotion motion on a low-risk event"
+    ],
+    "businessJustification": "Mid-market pipeline is 22% below plan for the half and the segment responds better to practical tooling content than to product demos. A webinar is the cheapest repeatable format to test the co-promotion motion before committing to a field event."
+  },
+  "audience": {
+    "description": "Mid-market marketing operations leads and demand-gen managers evaluating automation tooling in the next two quarters, primarily in North America and the UK.",
+    "targetPersonas": [
+      {
+        "name": "Hands-on evaluator",
+        "title": "Marketing Operations Manager",
+        "description": "Registers to learn whether the approach solves a live problem; will trade an email address for a practical walkthrough they can act on the same week.",
+        "painPoints": [
+          "Has sat through too many webinars that were 45 minutes of product pitch",
+          "Owns the tooling decision but has no budget authority"
+        ]
+      }
+    ],
+    "estimatedSize": 300,
+    "segments": [
+      "prospects",
+      "existing customers",
+      "partner audience"
+    ]
+  },
+  "budget": {
+    "totalBudget": 12000,
+    "currency": "USD",
+    "allocations": [
+      {
+        "id": "13817b65-093e-487b-b121-726c9d0a26dc",
+        "category": "Platform & tooling",
+        "plannedAmount": 2400,
+        "actualAmount": null,
+        "notes": "Webinar platform seat and streaming overage"
+      },
+      {
+        "id": "ecce07bb-b583-4fb8-a9ec-13a8a12e26c7",
+        "category": "Promotion",
+        "plannedAmount": 6500,
+        "actualAmount": null,
+        "notes": "Paid social plus partner list co-promotion"
+      },
+      {
+        "id": "adce9788-b52d-49ab-af1b-18374e333bd7",
+        "category": "Speaker fees",
+        "plannedAmount": 1500,
+        "actualAmount": null,
+        "notes": "External guest practitioner"
+      },
+      {
+        "id": "bbb50b39-b65b-49f1-a052-71a63063d75c",
+        "category": "Production",
+        "plannedAmount": 1600,
+        "actualAmount": null,
+        "notes": "Editing the on-demand cut and three clips"
+      }
+    ],
+    "notes": "Partner covers half of the promotion spend against their own list."
+  },
+  "dates": {
+    "timezone": "America/New_York",
+    "eventStartDate": "2026-06-18",
+    "eventEndDate": "2026-06-18"
+  },
+  "format": {
+    "deliveryMode": "virtual",
+    "venueOrPlatform": {
+      "name": "Zoom Webinar",
+      "locationOrUrl": "https://example.zoom.us/webinar/register/j/000000000",
+      "capacity": 1000,
+      "notes": "11:00–11:45 ET including 10 minutes of live Q&A."
+    }
+  },
+  "stakeholders": [
+    {
+      "id": "cbbb4294-ff85-4c48-9e33-341695c5a9ab",
+      "name": "Dana Rivera",
+      "role": "Event Lead",
+      "raci": "A",
+      "email": "dana.rivera@example.com",
+      "department": "Events"
+    },
+    {
+      "id": "e23a44f9-520f-47c1-9eec-39befde5d75a",
+      "name": "Jules Okafor",
+      "role": "Demand Generation Manager",
+      "raci": "R",
+      "email": "jules.okafor@example.com",
+      "department": "Marketing"
+    },
+    {
+      "id": "42540dd0-48d5-4b37-b315-d61a903835ea",
+      "name": "Sam Whitfield",
+      "role": "Presenter",
+      "raci": "R",
+      "department": "Product Marketing"
+    },
+    {
+      "id": "02df3303-feba-4933-b2a1-78337c52598f",
+      "name": "Nina Petrova",
+      "role": "Sales Development Lead",
+      "raci": "C",
+      "department": "Sales"
+    }
+  ],
+  "successMetrics": [
+    {
+      "id": "eaa0adf3-b9a8-4e94-9567-3f7ebe08f73a",
+      "metric": "Registrations",
+      "target": 300,
+      "unit": "count",
+      "actual": null,
+      "notes": "Total form completions before air date"
+    },
+    {
+      "id": "73612e8b-8232-4b69-b684-b9c53587d8c6",
+      "metric": "Live attendance rate",
+      "target": 40,
+      "unit": "%",
+      "actual": null,
+      "notes": "Live attendees ÷ registrations"
+    },
+    {
+      "id": "b75fc702-8423-4c30-aec7-3aa7f3a66273",
+      "metric": "Sales-qualified leads",
+      "target": 50,
+      "unit": "count",
+      "actual": null,
+      "notes": "Accepted by sales within 14 days"
+    },
+    {
+      "id": "ffdf11e6-e606-4db8-b8f8-f4cc9e78f247",
+      "metric": "On-demand views (first 30 days)",
+      "target": 150,
+      "unit": "count",
+      "actual": null
+    }
+  ],
+  "riskRegister": [
+    {
+      "id": "1714a31f-271f-4825-81e3-82e882d4e392",
+      "risk": "Registration volume falls short because the topic or promo list is too narrow",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Confirm the combined list supports 300 at a 2.5% conversion rate before committing; add paid budget if pacing is behind at T-14.",
+      "owner": "Jules Okafor",
+      "status": "open"
+    },
+    {
+      "id": "4b1b0b81-831f-4db7-bb01-65509c9f53f1",
+      "risk": "Webinar platform outage or streaming failure during the live session",
+      "likelihood": "low",
+      "impact": "high",
+      "mitigation": "Dry run on the production account on 15 Jun, backup host assigned, pre-recorded cut ready, and a 'recording to follow' email drafted.",
+      "owner": "Dana Rivera",
+      "status": "open"
+    },
+    {
+      "id": "6c10a66d-de5f-4bf6-bd09-7435f319fde9",
+      "risk": "Speaker cancels close to air date",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Confirm in writing by 21 May, slides due 11 Jun, and Sam Whitfield rehearses as the internal backup.",
+      "owner": "Sam Whitfield",
+      "status": "open"
+    },
+    {
+      "id": "36e39bfa-15e4-42b6-9562-12435efcfdb4",
+      "risk": "High registration but low live attendance",
+      "likelihood": "high",
+      "impact": "medium",
+      "mitigation": "Reminders at 1 week, 1 day and 15 minutes; calendar invite on registration; on-demand path promoted to no-shows within 48 hours.",
+      "owner": "Jules Okafor",
+      "status": "open"
+    }
+  ],
+  "timeline": {
+    "milestones": [
+      {
+        "id": "a0f7f97a-bcca-43f8-bda2-e2589b31c83e",
+        "label": "Topic, abstract and speaker confirmed",
+        "phase": "pre_event",
+        "targetDate": "2026-05-14",
+        "owner": "Sam Whitfield",
+        "status": "not_started"
+      },
+      {
+        "id": "f54ede0e-e6f8-4545-8181-47b4ba3c3183",
+        "label": "Landing page live and registration opens",
+        "phase": "pre_event",
+        "targetDate": "2026-05-21",
+        "owner": "Jules Okafor",
+        "status": "not_started"
+      },
+      {
+        "id": "23b29260-880b-4388-be78-bcf337e08945",
+        "label": "Promotion email 1 sent",
+        "phase": "pre_event",
+        "targetDate": "2026-05-28",
+        "owner": "Jules Okafor",
+        "status": "not_started"
+      },
+      {
+        "id": "aef00c78-96c3-4ac8-a477-04a868eb7489",
+        "label": "Slides final and platform configured",
+        "phase": "pre_event",
+        "targetDate": "2026-06-11",
+        "owner": "Sam Whitfield",
+        "status": "not_started"
+      },
+      {
+        "id": "5ea209f0-4b8b-42ff-8d29-8460a550e418",
+        "label": "Dry run / technical check complete",
+        "phase": "pre_event",
+        "targetDate": "2026-06-15",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "c3a1c2e9-c35b-4cbe-9bc0-ab112c45851e",
+        "label": "24-hour reminder email sent",
+        "phase": "pre_event",
+        "targetDate": "2026-06-17",
+        "owner": "Jules Okafor",
+        "status": "not_started"
+      },
+      {
+        "id": "3bcf73c5-6705-4c21-8111-47439881e6ad",
+        "label": "Live webinar broadcast",
+        "phase": "during_event",
+        "targetDate": "2026-06-18",
+        "owner": "Dana Rivera",
+        "status": "not_started"
+      },
+      {
+        "id": "912b99a1-bf68-4308-b245-d87a6cfd41cd",
+        "label": "Recording published and follow-up email sent",
+        "phase": "post_event",
+        "targetDate": "2026-06-20",
+        "owner": "Jules Okafor",
+        "status": "not_started"
+      },
+      {
+        "id": "0caa7ac7-15b1-4779-a7cd-ec39dd68ebda",
+        "label": "Leads scored, routed to sales, and ROI report published",
+        "phase": "post_event",
+        "targetDate": "2026-07-02",
+        "owner": "Nina Petrova",
+        "status": "not_started"
+      }
+    ]
+  },
+  "constraints": {
+    "items": [
+      "Must air before the end of Q2 to count toward the half",
+      "Partner co-promotion requires their brand review 10 days before launch",
+      "No gated content beyond the registration form — legal signed off on one form only"
+    ],
+    "notes": "Reuse the Q1 landing page template; no new design resource is available this quarter."
+  },
+  "carryForwardLessons": [
+    {
+      "id": "bdca0965-3077-40fd-80e7-c9f0018486f4",
+      "sourceEventId": "585d831a-2486-415b-96de-e0e230a135ed",
+      "category": "Promotion",
+      "lesson": "Send the 15-minute reminder — live attendance jumped 9 points the one time we did it.",
+      "addedAt": "2026-03-02T13:44:20.000Z"
+    }
+  ],
+  "exportHistory": []
+}

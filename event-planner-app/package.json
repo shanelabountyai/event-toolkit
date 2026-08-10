@@ -1,0 +1,30 @@
+{
+  "name": "event-toolkit",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Event Planner Productivity Suite — monorepo root (PRD 1: Event Brief Generator)",
+  "scripts": {
+    "dev": "pnpm --filter @event-toolkit/web dev",
+    "build": "pnpm -r --filter @event-toolkit/web... build",
+    "start": "pnpm --filter @event-toolkit/web start",
+    "lint": "pnpm --filter @event-toolkit/web lint",
+    "typecheck": "pnpm -r typecheck",
+    "fixtures:generate": "node scripts/make-fixtures.mjs",
+    "validate:fixtures": "tsx scripts/validate-fixtures.ts",
+    "sanity": "tsx scripts/sanity-check.ts",
+    "store-check": "tsx scripts/store-check.ts",
+    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm build"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "fake-indexeddb": "^6.2.5",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "zod": "^3.25.76"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

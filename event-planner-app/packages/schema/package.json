@@ -1,0 +1,25 @@
+{
+  "name": "@event-toolkit/schema",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Canonical Event Brief types, JSON Schema, presets, factories and migrations. Zero React/Next dependency.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./event-brief.schema.json": "./src/event-brief.schema.json"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
