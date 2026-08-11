@@ -11,21 +11,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.11.3",
+    "@event-toolkit/access": "workspace:*",
     "@event-toolkit/budget-calc": "workspace:*",
     "@event-toolkit/lead-triage-core": "workspace:*",
     "@event-toolkit/local-store": "workspace:*",
     "@event-toolkit/logistics": "workspace:*",
+    "@event-toolkit/pii-registry": "workspace:*",
     "@event-toolkit/postmortem-core": "workspace:*",
     "@event-toolkit/roi-report-core": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
+    "@event-toolkit/sync-engine": "workspace:*",
     "@event-toolkit/ui": "workspace:*",
     "next": "15.5.23",
+    "next-auth": "5.0.0-beta.32",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-    "@event-toolkit/pii-registry": "workspace:*",
-    "@event-toolkit/access": "workspace:*",
-    "@event-toolkit/sync-engine": "workspace:*"
+    "@event-toolkit/server-db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

@@ -57,6 +57,21 @@ export async function listMemberships(db: Db, userId: string) {
   return db.select().from(memberships).where(eq(memberships.userId, userId));
 }
 
+/** Memberships with the workspace's name attached — what the switcher actually needs to render. */
+export async function listWorkspacesFor(db: Db, userId: string) {
+  return db
+    .select({
+      workspaceId: workspaces.id,
+      name: workspaces.name,
+      role: memberships.role,
+      joinedAt: memberships.joinedAt,
+      migratedAt: workspaces.migratedAt,
+    })
+    .from(memberships)
+    .innerJoin(workspaces, eq(memberships.workspaceId, workspaces.id))
+    .where(eq(memberships.userId, userId));
+}
+
 /** The role a user holds, for building an `AccessContext`. Null when they are not a member. */
 export async function roleOf(db: Db, workspaceId: string, userId: string): Promise<Role | null> {
   const [row] = await db
