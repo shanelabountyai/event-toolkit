@@ -14,7 +14,7 @@
     "sanity": "tsx scripts/sanity-check.ts",
     "store-check": "tsx scripts/store-check.ts",
     "promo-check": "tsx scripts/promo-check.ts",
-    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm budget-check && pnpm leads-check && pnpm roi-check && pnpm retro-check && pnpm calibration-check && pnpm access-check  && pnpm db-schema-check && pnpm workspace-store-check && pnpm sync-check && pnpm pii-check && pnpm server-db-check && pnpm build",
+    "verify": "pnpm clean:stale && pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm budget-check && pnpm leads-check && pnpm roi-check && pnpm retro-check && pnpm calibration-check && pnpm access-check  && pnpm db-schema-check && pnpm workspace-store-check && pnpm sync-check && pnpm pii-check && pnpm server-db-check && pnpm build",
     "logistics-check": "tsx scripts/logistics-check.ts",
     "budget-check": "tsx scripts/budget-check.ts",
     "leads-check": "tsx scripts/leads-check.ts",
@@ -27,7 +27,9 @@
     "sync-check": "tsx scripts/sync-check.ts",
     "pii-check": "tsx scripts/pii-check.ts",
     "server-db-check": "tsx scripts/server-db-check.ts",
-    "db-smoke": "tsx scripts/db-smoke.ts"
+    "db-smoke": "tsx scripts/db-smoke.ts",
+    "seed-staging": "tsx scripts/seed-staging.ts",
+    "clean:stale": "node scripts/clean-stale.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
