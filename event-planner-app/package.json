@@ -29,7 +29,8 @@
     "server-db-check": "tsx scripts/server-db-check.ts",
     "db-smoke": "tsx scripts/db-smoke.ts",
     "seed-staging": "tsx scripts/seed-staging.ts",
-    "clean:stale": "node scripts/clean-stale.mjs"
+    "clean:stale": "node scripts/clean-stale.mjs",
+    "restore-check": "tsx scripts/restore-check.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
