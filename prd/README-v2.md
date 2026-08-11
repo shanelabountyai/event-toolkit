@@ -43,8 +43,24 @@ Two design choices follow from the same instinct:
 
 ## Status
 
-Specs only. No `HANDOFF.md` yet — those are written once the PRDs are agreed, which is the order
-the original seven were produced in.
+Each PRD now has a `HANDOFF.md` — a self-contained kickoff brief that can be pasted into a fresh
+Claude Code session without reading the PRD first, exactly like the original seven.
 
 Open questions in each PRD follow the house convention: a decided default you can build on,
 flagged `Assumption — pending validation`.
+
+## Two findings from writing the handoffs
+
+**`LogisticsPack` breaks naive sync.** It is one record containing six arrays — sessions,
+staffing, shipping, checklist, contacts, issue log — and it is also the only genuinely
+multi-user document in the suite: on event day a planner edits the run of show, a coordinator
+ticks the checklist, and on-site staff log issues, all at once, all into the same record.
+Record-level concurrency would make the highest-value multi-user scenario the most broken one.
+PRD 9's handoff requires sub-document sync for that kind specifically, exploding the arrays into
+per-item records at the sync boundary and reassembling on read. Everything else stays whole.
+
+**Privacy operations must be registry-driven, not per-tool.** PRD 10's handoff specifies a
+`PII_REGISTRY` describing where personal data lives, with subject search, export and deletion
+implemented once against it — plus a build check that fails when a new sync kind is added
+without an entry. Hand-writing the traversal seven times guarantees one gets missed, and a
+missed category is invisible to every privacy operation built on top.
