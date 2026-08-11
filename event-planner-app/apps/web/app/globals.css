@@ -1,3 +1,5 @@
+@import "./tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,8 +15,38 @@ body {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  background-color: var(--color-canvas);
+  color: var(--color-text);
   font-family: var(--font-sans);
+  @apply antialiased;
+}
+
+/*
+ * One focus style everywhere, and it is never removed.
+ *
+ * Half this product is forms, and a planner filling in a run of show by keyboard needs to know
+ * where they are. `:focus-visible` means a mouse click does not draw a ring, so there is no
+ * temptation to turn it off.
+ */
+*:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * Respect a stated preference for less motion. Nothing here is decorative enough to be worth
+ * overriding somebody's accessibility setting.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Printable brief view (FR-8: the on-screen brief should print cleanly too). */

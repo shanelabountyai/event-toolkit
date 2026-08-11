@@ -3,6 +3,8 @@ import Link from "next/link";
 import "./globals.css";
 import { SUITE_TOOLS } from "@/lib/tools";
 import { WorkspaceSync } from "@/components/WorkspaceSync";
+import { ThemeScript } from "@/components/ThemeScript";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Event Planner Productivity Suite",
@@ -12,7 +14,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: ThemeScript adds a class to <html> before React hydrates, which
+    // is the point of it. Without this, React logs a mismatch for the one element it should.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
         <div className="flex min-h-full flex-col">
           <header className="no-print border-b border-slate-200 bg-white">
@@ -53,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               */}
               <div className="ml-auto flex items-center gap-3">
                 <WorkspaceSync />
+                <ThemeToggle />
               </div>
               <Link
                 href="/workspace"
