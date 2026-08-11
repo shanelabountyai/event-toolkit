@@ -163,3 +163,20 @@ export {
   refreshIngestion,
   saveRetro,
 } from "./retroRepository";
+
+/**
+ * PRD 8 §7 — workspace context. Local-only mode is the default and needs none of this.
+ */
+export {
+  assertStoreAccess,
+  capabilityForStore,
+  databaseName,
+  getStoreContext,
+  LocalStorePermissionError,
+  onStoreContextChange,
+  resetStoreContext,
+  setStoreContext,
+  STORE_TOOLS,
+  type StoreContext,
+  type StoreVerb,
+} from "./context";

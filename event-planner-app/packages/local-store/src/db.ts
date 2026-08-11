@@ -7,6 +7,7 @@
  */
 
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import { assertStoreAccess, databaseName, getStoreContext, onStoreContextChange } from "./context";
 import type {
   EventBrief,
   PacingConfig,
@@ -263,6 +264,55 @@ interface EventToolkitDB extends DBSchema {
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
 
+// Switching workspace switches database. Drop the handle rather than writing to the old one.
+onStoreContextChange(() => {
+  dbPromise = null;
+});
+
+/**
+ * Every read and write, permission-checked in one place.
+ *
+ * The alternative — an `assertCan` at the top of all sixty-odd repository functions — is sixty
+ * chances to forget one, and the one forgotten is the leak. Every method below takes the store
+ * name as its first argument, so the guard needs to know nothing about what each repository is
+ * doing. `transaction` is included because it is the escape hatch the repositories use for
+ * multi-store writes.
+ *
+ * In local mode `assertStoreAccess` returns immediately, so this costs a function call and
+ * changes no behaviour for a planner who never signs in.
+ */
+const READ_METHODS = new Set(["get", "getAll", "getAllFromIndex", "getAllKeys", "getKey", "count", "getFromIndex"]);
+const WRITE_METHODS = new Set(["put", "add", "delete", "clear"]);
+
+function guarded(db: IDBPDatabase<EventToolkitDB>): IDBPDatabase<EventToolkitDB> {
+  if (getStoreContext().mode !== "workspace") return db;
+
+  return new Proxy(db, {
+    get(target, prop, receiver) {
+      const value = Reflect.get(target, prop, receiver);
+      if (typeof value !== "function" || typeof prop !== "string") return value;
+
+      if (prop === "transaction") {
+        return (stores: string | string[], mode?: IDBTransactionMode, ...rest: unknown[]) => {
+          const verb = mode === "readwrite" ? "write" : "read";
+          for (const store of Array.isArray(stores) ? stores : [stores]) {
+            assertStoreAccess(store, verb);
+          }
+          return (value as Function).call(target, stores, mode, ...rest);
+        };
+      }
+
+      const verb = READ_METHODS.has(prop) ? "read" : WRITE_METHODS.has(prop) ? "write" : null;
+      if (verb === null) return typeof value === "function" ? value.bind(target) : value;
+
+      return (store: string, ...rest: unknown[]) => {
+        assertStoreAccess(store, verb);
+        return (value as Function).call(target, store, ...rest);
+      };
+    },
+  });
+}
+
 /** True when running in a browser context with IndexedDB available. */
 export function isStorageAvailable(): boolean {
   return typeof globalThis !== "undefined" && typeof globalThis.indexedDB !== "undefined";
@@ -278,7 +328,8 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
     );
   }
   if (!dbPromise) {
-    dbPromise = openDB<EventToolkitDB>(DB_NAME, DB_VERSION, {
+    // One database per workspace — see `databaseName`. In local mode this is plain DB_NAME.
+    dbPromise = openDB<EventToolkitDB>(databaseName(DB_NAME), DB_VERSION, {
       upgrade(db) {
         if (!db.objectStoreNames.contains(STORE_BRIEFS)) {
           const briefs = db.createObjectStore(STORE_BRIEFS, { keyPath: "id" });
@@ -378,7 +429,7 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
       },
     });
   }
-  return dbPromise;
+  return dbPromise.then(guarded);
 }
 
 /** Test/tooling helper: forget the cached connection (does not delete data). */

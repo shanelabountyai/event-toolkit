@@ -22,7 +22,8 @@
     "@event-toolkit/postmortem-core": "workspace:*",
     "@event-toolkit/roi-report-core": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
-    "idb": "^8.0.3"
+    "idb": "^8.0.3",
+    "@event-toolkit/access": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
