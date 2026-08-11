@@ -28,10 +28,14 @@ All app commands run from `event-planner-app/`:
 ```bash
 pnpm install
 pnpm dev            # localhost:3000, redirects to /brief
-pnpm verify         # typecheck + lint + fixtures + sanity + store-check + promo-check + build
-pnpm promo-check    # PRD 2 logic only — fastest loop when changing generation/pacing
-pnpm store-check    # PRD 1 persistence only
+pnpm verify         # the whole gate: typecheck, lint, fixtures, all 8 check scripts, build
+pnpm store-check    # PRD 1 persistence          pnpm leads-check   # PRD 5 dedupe/scoring
+pnpm promo-check    # PRD 2 generation/pacing    pnpm roi-check     # PRD 6 attribution/scorecard
+pnpm logistics-check # PRD 3 propagation         pnpm retro-check   # PRD 7 carry-forward
+pnpm budget-check   # PRD 4 variance math        pnpm calibration-check # /calibration findings
 ```
+
+Run the single tool's check while iterating; run `pnpm verify` before committing.
 
 CI runs `pnpm verify` from `.github/workflows/ci.yml` at the **repo root** — it must stay
 there. GitHub ignores workflows nested inside subdirectories, and the app carries its own
@@ -43,9 +47,17 @@ helper that exits non-zero on failure. **A new tool adds its own `scripts/<tool>
 appends it to the `verify` chain in `package.json`** — that script, not the UI, is where the
 tool's correctness is expected to live.
 
-Browser-level coverage is `scripts/promo-e2e.py` (Playwright, Chromium + Firefox). It is
-deliberately outside `pnpm verify` because CI installs neither Python nor browser binaries; run
-it by hand when changing promo UI.
+Browser coverage sits outside `pnpm verify`, because CI installs neither Python nor browser
+binaries. Run against `pnpm dev`:
+
+```bash
+python scripts/suite-e2e.py chromium       # all 7 tools + /calibration, routes and empty states
+python scripts/promo-e2e.py chromium       # PRD 2 in depth
+python scripts/logistics-e2e.py chromium   # PRD 3, incl. the propagation check
+```
+
+`suite-e2e.py` is the one to run after any cross-cutting change — it catches mount-time throws
+and broken empty states that the headless scripts structurally cannot.
 
 ### pnpm is not installed globally on this machine
 
@@ -73,15 +85,20 @@ drift. The whole `prd/` and `schema/` tree is likewise mirrored under `event-pla
 When a PRD's text and the schema doc disagree about which tool owns which field, the schema doc's
 "Confirmed PRD numbering" table wins.
 
-## Build order (each tool reads real output shapes from the ones before it)
+## All seven tools are built
 
-PRD 1 (done) → PRDs 2 (done), 3, 4 in parallel → PRD 5 → PRD 6 (needs 4+5) → PRD 7 (needs 3+4+6).
-PRD 7 writes `carryForwardLessons`, which PRD 1 reads at intake — that is what closes the
-lifecycle loop. Status lives in `event-planner-app/docs/ROADMAP.md`.
+The dependency chain they were built along still explains how they fit: PRD 1 → 2/3/4 → 5 →
+6 (needs 4+5) → 7 (needs 3+4+6). PRD 7 writes `carryForwardLessons`, which PRD 1 reads at
+intake — that is the loop closing. Per-tool status lives in `event-planner-app/docs/ROADMAP.md`.
 
-To build a tool, work from `prd/<NN-tool>/HANDOFF.md`: it is written to be self-contained, so it
-does not require reading the PRD first, though the PRD carries the numbered FRs and acceptance
-criteria worth checking against at the end.
+Each tool owns a domain package (`packages/<tool>-core` or similar) holding its pure logic, an
+`apps/web/app/(tools)/<tool>/` route tree, and one `scripts/<tool>-check.ts`. Follow that shape
+for anything new; `prd/<NN-tool>/HANDOFF.md` remains the spec of record for what each one owes.
+
+**What is not done is validation.** Every tool shipped defaults flagged
+`Assumption — pending validation`, and no real event has run through the suite yet.
+`/calibration` reads whatever data exists and reports what it says about each default —
+see `docs/PILOT.md` for how to generate that data.
 
 ## Standing product constraints
 

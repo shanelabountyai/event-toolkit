@@ -130,7 +130,8 @@ export function CalibrationView() {
         <p className="mt-2 max-w-3xl text-sm text-slate-600">
           On a new install almost everything here will say &ldquo;not enough data yet&rdquo;.
           That is the honest answer — it exists so the first real event produces evidence
-          instead of a hunch.
+          instead of a hunch. <strong>docs/PILOT.md</strong> is the runbook for generating that
+          data: one event, seven tools, and what to notice at each step.
         </p>
       </header>
 
