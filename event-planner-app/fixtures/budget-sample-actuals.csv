@@ -1,0 +1,10 @@
+Line Item,Category,Vendor,Actual Spend,Status
+Venue rental,Venue,Moscone West,"$95,000",paid
+General session AV package,AV,Bright Stage Productions,"$48,200",invoiced
+Breakfast/lunch/breaks,F&B,Moscone Catering,"$51,300",paid
+Reception catering,F&B,Moscone Catering,"$24,850",invoiced
+Speaker travel,Travel,Corporate Travel Desk,"$23,600",invoiced
+Digital promotion,Promo,Northgate Media,"$19,400",paid
+Registration desk staff,Staffing,OnPoint Event Staffing,"$12,000",paid
+Photobooth,Other,Snapline Rentals,"$3,200",paid
+Broken row,Venue,,not a number,paid
