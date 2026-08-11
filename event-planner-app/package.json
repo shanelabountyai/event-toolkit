@@ -30,7 +30,11 @@
     "db-smoke": "tsx scripts/db-smoke.ts",
     "seed-staging": "tsx scripts/seed-staging.ts",
     "clean:stale": "node scripts/clean-stale.mjs",
-    "restore-check": "tsx scripts/restore-check.ts"
+    "restore-check": "tsx scripts/restore-check.ts",
+    "e2e:setup": "python3 -m venv .venv && .venv/bin/python -m pip install --quiet --upgrade pip playwright && .venv/bin/python -m playwright install chromium firefox",
+    "e2e": ".venv/bin/python scripts/suite-e2e.py chromium",
+    "e2e:promo": ".venv/bin/python scripts/promo-e2e.py chromium",
+    "e2e:logistics": ".venv/bin/python scripts/logistics-e2e.py chromium"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",

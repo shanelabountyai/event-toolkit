@@ -52,13 +52,26 @@ postgres.js against a real server; `packages/server-db/src/testing.ts` is import
 scripts.
 
 Browser-level coverage (Playwright, Chromium and Firefox), none of it part of `pnpm verify`
-because CI installs neither Python nor browser binaries. Run against `pnpm dev`:
+because CI installs neither Python nor browser binaries.
+
+**One-time setup**, because the system Python has no Playwright and Homebrew's is
+externally managed:
 
 ```bash
-python scripts/suite-e2e.py chromium       # all 7 tools: routes, empty states, console errors
-python scripts/promo-e2e.py chromium       # PRD 2 in depth
-python scripts/logistics-e2e.py chromium   # PRD 3 in depth, incl. the §5 propagation check
+pnpm e2e:setup     # creates .venv (gitignored, ~150MB) and downloads chromium + firefox
 ```
+
+Then, with `pnpm dev` running:
+
+```bash
+pnpm e2e             # all 7 tools: routes, empty states, console errors
+pnpm e2e:promo       # PRD 2 in depth
+pnpm e2e:logistics   # PRD 3 in depth, incl. the §5 propagation check
+```
+
+These scripts existed for a long time in a state where nobody could run them — the invocation in
+this file was `python scripts/...`, which fails on a machine whose `python3` has no Playwright.
+That is why they went unrun. Playwright 1.62 does have wheels for Python 3.14.
 
 `suite-e2e.py` is the one to run after any cross-cutting change — it is breadth-first and
 catches what the headless checks cannot: a route that throws on mount, a missing Suspense
