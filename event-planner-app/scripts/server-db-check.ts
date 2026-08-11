@@ -24,7 +24,13 @@ import {
   listAccessEvents,
   listInvitations,
   listMembers,
+  deleteSubject,
+  exportSubject,
+  getRetentionPolicy,
   migrateRecords,
+  purgeExpiredRecords,
+  searchSubject,
+  setRetentionPolicy,
   pullRecords,
   pushMutations,
   removeMember,
@@ -356,6 +362,126 @@ async function main(): Promise<void> {
     capabilityForKind("somethingTheClientInvented", "edit") === "workspace:delete",
     "the server must never take the client's word for what a kind is",
   );
+
+  console.log("\nPrivacy operations (PRD 10)");
+  {
+    const ws2 = await createWorkspace(db, "Privacy test", alice.id);
+    const admin2 = ctx(ws2.id, alice.id, "owner");
+    const DANA = "dana.okoro@example.com";
+
+    await migrateRecords(db, admin2, [
+      { kind: "leadRecords", documentId: "lr-d", document: { id: "lr-d", contact: { email: DANA, firstName: "Dana", lastName: "Okoro", phone: "+1 555 0100" }, signals: { boothInteractions: 2 } } },
+      { kind: "surveyResponses", documentId: "sr-d", document: { id: "sr-d", respondentEmail: DANA, comment: "Sam was unhelpful", npsScore: 3 } },
+      { kind: "pipelineOpportunities", documentId: "op-d", document: { id: "op-d", contactEmail: DANA, contactName: "Dana Okoro", opportunityName: "Renewal", amount: 48000 } },
+      { kind: "leadRecords", documentId: "lr-other", document: { id: "lr-other", contact: { email: "someone@else.com", firstName: "Someone" } } },
+      { kind: "briefs", documentId: "b-d", document: { id: "b-d", name: "Summit", stakeholders: [{ id: "s1", name: "Dana Okoro", email: DANA, role: "Sponsor" }, { id: "s2", name: "Sam Reyes", email: "sam@example.com", role: "Marketing" }] } },
+    ]);
+
+    const hits = await searchSubject(db, admin2, "DANA.OKORO@example.com  ");
+    check("⭐ subject search finds every record across tools", hits.length === 4, `found ${hits.length}`);
+    check("…and does not match anybody else", !hits.some((h) => h.documentId === "lr-other"));
+    check("…naming the tool each came from", hits.some((h) => h.label === "Attendee lead record"));
+    check("…and its sensitivity", hits.some((h) => h.sensitivity === "third_party_personal"));
+    check(
+      "⭐ the search itself is logged as a read of personal data (FR-6)",
+      (await listAccessEvents(db, admin2)).some((e) => e.action === "privacy.subject_searched"),
+    );
+
+    const exported = await exportSubject(db, admin2, DANA);
+    check("export carries every matching record", exported.records.length === 4);
+    check("…including the survey free text", JSON.stringify(exported).includes("Sam was unhelpful"));
+    check("…and the behavioural signals", JSON.stringify(exported).includes("boothInteractions"));
+
+    check(
+      "⭐ a finance user cannot reach subject search",
+      await throws(() => searchSubject(db, ctx(ws2.id, cara.id, "finance"), DANA), PermissionError),
+      "otherwise the privacy screen is a way around the one permission with a legal consequence",
+    );
+    check(
+      "…nor a coordinator",
+      await throws(() => searchSubject(db, ctx(ws2.id, cara.id, "coordinator"), DANA), PermissionError),
+    );
+
+    const result = await deleteSubject(db, admin2, DANA);
+    check("the lead record and the survey response are deleted outright", result.deletedRecords === 2);
+    check("the opportunity and the brief keep their rows", result.erasedFields === 2);
+    check("…and the result says plainly that aggregates are not recomputed", result.note.includes("not"));
+
+    const after = await db.select().from(records).where(eq(records.workspaceId, ws2.id));
+    const lead = after.find((r) => r.documentId === "lr-d")!;
+    check("⭐ the deleted lead is a tombstone, not a flagged row", lead.deletedAt !== null);
+    check(
+      "⭐ …carrying no trace of the person",
+      !JSON.stringify(lead.document).includes("Okoro") && !JSON.stringify(lead.document).includes("555 0100"),
+      "a tombstone still holding the data is the same data, one query away",
+    );
+
+    const opp = after.find((r) => r.documentId === "op-d")!;
+    check("the opportunity survives", opp.deletedAt === null);
+    check("⭐ …with its amount intact", (opp.document as { amount: number }).amount === 48000);
+    check("…and the contact gone", !JSON.stringify(opp.document).includes("Okoro"));
+
+    const briefRow = after.find((r) => r.documentId === "b-d")!;
+    const stakeholders = (briefRow.document as { stakeholders: Record<string, unknown>[] }).stakeholders;
+    check("⭐ the other stakeholder in the same brief is untouched", stakeholders[1].name === "Sam Reyes");
+    check("…while the subject's details are gone", !("email" in stakeholders[0]));
+
+    check("somebody else's lead record is untouched", after.find((r) => r.documentId === "lr-other")!.deletedAt === null);
+    check("searching again finds nothing", (await searchSubject(db, admin2, DANA)).length === 0);
+    check(
+      "the deletion is logged",
+      (await listAccessEvents(db, admin2)).some((e) => e.action === "privacy.subject_deleted"),
+    );
+    check(
+      "⭐ the deletion advanced the version, so it propagates to every device",
+      lead.version > 1,
+      "a device that already synced must be told, not left holding a copy",
+    );
+  }
+
+  console.log("\nRetention (PRD 10 FR-4)");
+  {
+    const ws3 = await createWorkspace(db, "Retention test", alice.id);
+    const admin3 = ctx(ws3.id, alice.id, "owner");
+    await migrateRecords(db, admin3, [
+      { kind: "leadRecords", documentId: "old-lead", document: { id: "old-lead", contact: { email: "old@x.com" } } },
+      { kind: "surveyResponses", documentId: "old-survey", document: { id: "old-survey", respondentEmail: "old@x.com" } },
+      { kind: "briefs", documentId: "old-brief", document: { id: "old-brief", name: "Ancient summit" } },
+      { kind: "budgetLineItems", documentId: "old-budget", document: { id: "old-budget", plannedAmount: 100 } },
+    ]);
+
+    check("the default policy is 12 months", (await getRetentionPolicy(db, ws3.id)).months === 12);
+
+    // Age everything past the cutoff.
+    const longAgo = new Date();
+    longAgo.setFullYear(longAgo.getFullYear() - 2);
+    await db.update(records).set({ updatedAt: longAgo }).where(eq(records.workspaceId, ws3.id));
+
+    const purge = await purgeExpiredRecords(db, ws3.id);
+    check("the purge removes expired attendee data", purge.purged === 2, `purged ${purge.purged}`);
+
+    const remaining = await db.select().from(records).where(eq(records.workspaceId, ws3.id));
+    check("⭐ the brief survives — an event's own history is not a person's data", remaining.find((r) => r.documentId === "old-brief")!.deletedAt === null);
+    check("…as does the budget", remaining.find((r) => r.documentId === "old-budget")!.deletedAt === null);
+    check("the attendee record is tombstoned", remaining.find((r) => r.documentId === "old-lead")!.deletedAt !== null);
+    check("…carrying nothing", JSON.stringify(remaining.find((r) => r.documentId === "old-lead")!.document) === "{}");
+    check(
+      "⭐ the purge writes an audit entry — an automated deletion nobody can account for is data loss",
+      (await listAccessEvents(db, admin3)).some((e) => e.action === "privacy.retention_purge"),
+    );
+    check("…and records when it last ran", (await getRetentionPolicy(db, ws3.id)).lastRunAt !== null);
+
+    const second = await purgeExpiredRecords(db, ws3.id);
+    check("running it again purges nothing — already-tombstoned rows are skipped", second.purged === 0);
+
+    await setRetentionPolicy(db, admin3, 24, false);
+    const disabled = await purgeExpiredRecords(db, ws3.id);
+    check("a disabled policy purges nothing", disabled.skipped === "disabled");
+    check(
+      "a coordinator cannot change the retention policy",
+      await throws(() => setRetentionPolicy(db, ctx(ws3.id, cara.id, "coordinator"), 1, true), PermissionError),
+    );
+  }
 
   if (failures > 0) {
     console.error(`\n${failures} server database check(s) failed.\n`);

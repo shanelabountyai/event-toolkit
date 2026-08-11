@@ -23,7 +23,8 @@
     "drizzle-orm": "^0.44.6",
     "postgres": "^3.4.7",
     "@event-toolkit/access": "workspace:*",
-    "@event-toolkit/sync-engine": "workspace:*"
+    "@event-toolkit/sync-engine": "workspace:*",
+    "@event-toolkit/pii-registry": "workspace:*"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.5",

@@ -248,6 +248,9 @@ importers:
       '@event-toolkit/access':
         specifier: workspace:*
         version: link:../access
+      '@event-toolkit/pii-registry':
+        specifier: workspace:*
+        version: link:../pii-registry
       '@event-toolkit/sync-engine':
         specifier: workspace:*
         version: link:../sync-engine
