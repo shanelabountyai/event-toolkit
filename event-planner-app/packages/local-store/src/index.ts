@@ -19,6 +19,8 @@ export {
   STORE_PIPELINE_IMPORT_BATCHES,
   STORE_PIPELINE_OPPORTUNITIES,
   STORE_OUTBOX,
+  STORE_CONFLICTS,
+  STORE_SYNC_STATE,
   STORE_RETROS,
   STORE_ROI_REPORTS,
   STORE_SCORING_RUBRICS,
@@ -205,3 +207,32 @@ export {
   type CollectedData,
   type MigrationPreview,
 } from "./migration";
+
+/** PRD 9 — suppressing capture while applying records that came from the server. */
+export { isApplyingRemote, withRemoteApply, captureWrite, captureDelete, NOT_SYNCED, type CapturedMutation } from "./capture";
+
+/** PRD 9 FR-3 — applying pulled records, and the cursor. */
+export {
+  applyRemoteRecords,
+  clearSyncState,
+  getSyncState,
+  saveSyncState,
+  type ApplyResult,
+  type RemoteRecord,
+} from "./sync-apply";
+export type { SyncState } from "./db";
+
+/** Re-exported so UI code can type a role without depending on @event-toolkit/access directly. */
+export type { Role } from "@event-toolkit/access";
+
+/** PRD 9 FR-9 — conflicts, surfaced and kept until somebody decides. */
+export {
+  conflictCount,
+  dismissConflict,
+  keepMine,
+  keepTheirs,
+  listConflicts,
+  recordConflicts,
+  type IncomingConflict,
+} from "./conflicts";
+export type { StoredConflict } from "./db";

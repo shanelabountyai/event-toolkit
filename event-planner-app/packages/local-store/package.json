@@ -2,7 +2,7 @@
   "name": "@event-toolkit/local-store",
   "version": "0.1.0",
   "private": true,
-  "description": "The only place IndexedDB is touched. Typed repository over the Event Brief store \u2014 the seam a future backend slots into.",
+  "description": "The only place IndexedDB is touched. Typed repository over the Event Brief store — the seam a future backend slots into.",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

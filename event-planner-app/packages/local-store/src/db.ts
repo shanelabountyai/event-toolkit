@@ -40,11 +40,11 @@ export const DB_NAME = "event-toolkit";
  * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store, and
  * v4 the PRD 4 (Budget Builder) stores, v5 the PRD 5 (Lead Triage) stores and v6 the
  * PRD 6 (ROI Report) stores, and v7 the PRD 7 (Post-Mortem) store, and v8 the PRD 9 sync
- * outbox.
+ * outbox, v9 the sync cursor, and v10 unresolved conflicts.
  * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
  * is guarded so a database at any earlier version upgrades in place.
  */
-export const DB_VERSION = 8;
+export const DB_VERSION = 10;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -70,6 +70,35 @@ export const STORE_ATTRIBUTION_SETTINGS = "attributionSettings";
 export const STORE_RETROS = "retros";
 /** PRD 9 FR-2: durable queue of unsynced mutations. Empty and unused in local-only mode. */
 export const STORE_OUTBOX = "outbox";
+/** PRD 9: where the last pull got to, per workspace. Device state, not workspace data. */
+export const STORE_SYNC_STATE = "syncState";
+
+/** PRD 9 FR-9: conflicts the user has not yet decided about. */
+export const STORE_CONFLICTS = "conflicts";
+
+export interface StoredConflict {
+  /** `${kind}:${documentId}` — one open conflict per document, not one per failed attempt. */
+  id: string;
+  workspaceId: string;
+  kind: string;
+  documentId: string;
+  resolution: "conflict" | "server_wins";
+  /** What this device tried to save. */
+  mine: unknown;
+  /** What the server holds instead. */
+  theirs: unknown;
+  theirVersion: number;
+  theirUpdatedAt: string;
+  detectedAt: string;
+}
+
+export interface SyncState {
+  workspaceId: string;
+  /** Server-assigned sequence. Never a timestamp — clock skew must not reorder anything. */
+  cursor: string;
+  lastPulledAt: string | null;
+  lastPushedAt: string | null;
+}
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -269,9 +298,33 @@ interface EventToolkitDB extends DBSchema {
     value: OutboxEntry;
     indexes: { documentId: string; queuedAt: string };
   };
+  [STORE_SYNC_STATE]: {
+    key: string;
+    value: SyncState;
+    indexes: Record<string, never>;
+  };
+  [STORE_CONFLICTS]: {
+    key: string;
+    value: StoredConflict;
+    indexes: { workspaceId: string };
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
+
+/**
+ * A hook the sync layer registers to observe writes (PRD 9 FR-2).
+ *
+ * Inversion rather than a direct call, because the outbox lives in a module that itself needs
+ * `getDb` — importing it here would be a cycle. This file stays ignorant of sync, which is the
+ * same reason it is the only file that touches IndexedDB.
+ */
+type WriteInterceptor = (store: string, method: string, arg: unknown, result: unknown) => unknown;
+let writeInterceptor: WriteInterceptor | null = null;
+
+export function setWriteInterceptor(fn: WriteInterceptor | null): void {
+  writeInterceptor = fn;
+}
 
 // Switching workspace switches database. Drop the handle rather than writing to the old one.
 onStoreContextChange(() => {
@@ -316,7 +369,15 @@ function guarded(db: IDBPDatabase<EventToolkitDB>): IDBPDatabase<EventToolkitDB>
 
       return (store: string, ...rest: unknown[]) => {
         assertStoreAccess(store, verb);
-        return (value as Function).call(target, store, ...rest);
+        const result = (value as Function).call(target, store, ...rest);
+
+        // PRD 9 FR-2: the same single point that checks permission also feeds the outbox, so a
+        // write cannot be added to this package without being queued.
+        if (writeInterceptor && (prop === "put" || prop === "add" || prop === "delete")) {
+          return writeInterceptor(store, prop, rest[0], result);
+        }
+
+        return result;
       };
     },
   });
@@ -441,6 +502,16 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
           const outbox = db.createObjectStore(STORE_OUTBOX, { keyPath: "id" });
           outbox.createIndex("documentId", "documentId");
           outbox.createIndex("queuedAt", "queuedAt");
+        }
+        // v9 — the sync cursor. Additive and guarded like every upgrade before it.
+        if (!db.objectStoreNames.contains(STORE_SYNC_STATE)) {
+          db.createObjectStore(STORE_SYNC_STATE, { keyPath: "workspaceId" });
+        }
+        // v10 — unresolved conflicts. They outlive a reload deliberately: a planner who closes the
+        // tab must not lose the knowledge that one of their edits never saved.
+        if (!db.objectStoreNames.contains(STORE_CONFLICTS)) {
+          const conflicts = db.createObjectStore(STORE_CONFLICTS, { keyPath: "id" });
+          conflicts.createIndex("workspaceId", "workspaceId");
         }
       },
     });

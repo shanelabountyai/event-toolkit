@@ -127,6 +127,12 @@ export const UNGATED_STORES = new Set([
   // flush their own logistics edits because the same queue also holds a brief edit they may not
   // make. The queue is plumbing, not data.
   "outbox",
+  // The pull cursor. Device bookkeeping, and a role that cannot read a store still needs its own
+  // cursor to advance past the records it was not sent.
+  "syncState",
+  // An unresolved conflict is a note to this device about a write it failed to make. Gating it
+  // would hide from a coordinator that their own logistics edit did not save.
+  "conflicts",
 ]);
 
 export type StoreVerb = "read" | "write";

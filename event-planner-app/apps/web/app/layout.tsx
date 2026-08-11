@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { SUITE_TOOLS } from "@/lib/tools";
+import { WorkspaceSync } from "@/components/WorkspaceSync";
 
 export const metadata: Metadata = {
   title: "Event Planner Productivity Suite",
@@ -50,9 +51,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 the root layout dynamic and opt every static page in the suite out of prerendering,
                 to save one click. /workspace sends you to sign-in if you are not signed in.
               */}
+              <div className="ml-auto flex items-center gap-3">
+                <WorkspaceSync />
+              </div>
               <Link
                 href="/workspace"
-                className="ml-auto rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               >
                 Account
               </Link>

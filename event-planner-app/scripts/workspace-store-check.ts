@@ -33,6 +33,7 @@ import {
   markFailed,
   markSynced,
   pendingCount,
+  withRemoteApply,
   collectLocalRecords,
   unknownKinds,
   databaseName,
@@ -266,6 +267,61 @@ async function main(): Promise<void> {
       (await enqueue({ kind: "logisticsPack.session", documentId: "s1", document: {}, baseVersion: 1 })) !== null,
       "the queue is plumbing — permission was checked when the edit was made",
     );
+  }
+
+  console.log("\n⭐ Writes fill the outbox by themselves (PRD 9 FR-2)");
+  setStoreContext({ mode: "workspace", workspaceId: "ws-cap", userId: "u1", role: "owner" });
+  await clearOutbox();
+  {
+    const db = await getDb();
+    const brief = named("conference", "Captured");
+    await db.put(STORE_BRIEFS, brief);
+
+    const queued = await listPending();
+    check(
+      "a repository write queues a mutation with no repository change",
+      queued.some((e) => e.kind === "briefs" && e.documentId === brief.id),
+      "the guard that checks permission is the same one that fills the outbox",
+    );
+    check("…carrying the document", queued[0]?.document !== null);
+
+    await db.delete(STORE_BRIEFS, brief.id);
+    const afterDelete = await listPending();
+    check(
+      "a delete queues a tombstone, not an absence",
+      afterDelete.some((e) => e.documentId === brief.id && e.document === null),
+      "an absence is something sync cannot see; a tombstone propagates",
+    );
+
+    await clearOutbox();
+    const pack = createLogisticsPackFromBrief(brief);
+    await db.put("logisticsPacks", {
+      ...pack,
+      sessions: [{ ...(pack.sessions[0] ?? {}), id: "cs1", label: "Keynote" }],
+      issueLog: [{ id: "ci1", timestamp: "2026-08-11T12:00:00.000Z", description: "x", severity: "low", status: "open" }],
+    } as never);
+    const packQueue = await listPending();
+    check(
+      "⭐ a logistics pack queues per item, not as one document",
+      packQueue.some((e) => e.kind === "logisticsPack.session" && e.documentId === "cs1") &&
+        packQueue.some((e) => e.kind === "logisticsPack.issue" && e.documentId === "ci1") &&
+        packQueue.some((e) => e.kind === "logisticsPack"),
+      "otherwise two people on event day conflict over parts they never touched",
+    );
+
+    await clearOutbox();
+    await withRemoteApply(async () => {
+      await db.put(STORE_BRIEFS, named("webinar", "From the server"));
+    });
+    check(
+      "⭐ applying a record from the server queues nothing back",
+      (await pendingCount()) === 0,
+      "without this, every pull would push itself straight back and sync would never settle",
+    );
+
+    await clearOutbox();
+    await db.put("usageEvents", { id: "ue1", type: "x", timestamp: "2026-08-11T00:00:00.000Z" } as never);
+    check("device-local stores are not queued", (await pendingCount()) === 0);
   }
 
   console.log("\nMigration preview (PRD 8 FR-9)");
