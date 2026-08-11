@@ -17,6 +17,7 @@
 import { ROLES } from "@event-toolkit/access";
 import { relations, sql } from "drizzle-orm";
 import {
+  bigserial,
   boolean,
   index,
   integer,
@@ -240,6 +241,14 @@ export const records = pgTable(
     document: jsonb("document").notNull(),
     /** Bumped on every write. PRD 9's optimistic concurrency check compares against it. */
     version: integer("version").notNull().default(1),
+    /**
+     * The sync cursor (PRD 9 §5), assigned by the database and bumped on every write.
+     *
+     * Never a timestamp. Two servers with a few milliseconds of clock skew would reorder records
+     * between them, and a client that pulled "everything since 10:04:02" would silently skip a
+     * record written at 10:04:01 by the machine whose clock ran fast. A sequence cannot skew.
+     */
+    seq: bigserial("seq", { mode: "number" }).notNull(),
     updatedAt: ts("updated_at").notNull().defaultNow(),
     updatedBy: text("updated_by").references(() => users.id, { onDelete: "set null" }),
     /** Tombstone. A deletion has to be a row PRD 9 can propagate, not an absence it cannot see. */
@@ -251,6 +260,8 @@ export const records = pgTable(
     uniqueIndex("records_workspace_kind_document_uq").on(t.workspaceId, t.kind, t.documentId),
     // PRD 9 pulls "everything in this workspace changed since X".
     index("records_workspace_updated_idx").on(t.workspaceId, t.updatedAt),
+    // PRD 9 pulls "everything in this workspace after cursor N", in sequence order.
+    index("records_workspace_seq_idx").on(t.workspaceId, t.seq),
   ],
 );
 

@@ -54,6 +54,7 @@ CREATE TABLE "records" (
 	"document_id" text NOT NULL,
 	"document" jsonb NOT NULL,
 	"version" integer DEFAULT 1 NOT NULL,
+	"seq" bigserial NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_by" text,
 	"deleted_at" timestamp with time zone
@@ -133,4 +134,5 @@ CREATE UNIQUE INDEX "memberships_workspace_user_uq" ON "memberships" USING btree
 CREATE INDEX "memberships_user_idx" ON "memberships" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "records_workspace_kind_document_uq" ON "records" USING btree ("workspace_id","kind","document_id");--> statement-breakpoint
 CREATE INDEX "records_workspace_updated_idx" ON "records" USING btree ("workspace_id","updated_at");--> statement-breakpoint
+CREATE INDEX "records_workspace_seq_idx" ON "records" USING btree ("workspace_id","seq");--> statement-breakpoint
 CREATE INDEX "share_links_workspace_idx" ON "share_links" USING btree ("workspace_id");
