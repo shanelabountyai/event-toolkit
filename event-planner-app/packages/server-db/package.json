@@ -1,0 +1,30 @@
+{
+  "name": "@event-toolkit/server-db",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Drizzle schema and client for the hosted tier. The only package that talks to Postgres.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.6",
+    "postgres": "^3.4.7",
+    "@event-toolkit/access": "workspace:*"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.5",
+    "typescript": "^5.9.3"
+  }
+}
