@@ -1,0 +1,22 @@
+{
+  "name": "@event-toolkit/roi-report-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ROI report domain logic: attribution, cost math, NPS, scorecard, YoY and executive summary. Zero React dependency.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@event-toolkit/budget-calc": "workspace:*",
+    "@event-toolkit/lead-triage-core": "workspace:*",
+    "@event-toolkit/schema": "workspace:*",
+    "papaparse": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.3.14",
+    "typescript": "^5.9.3"
+  }
+}

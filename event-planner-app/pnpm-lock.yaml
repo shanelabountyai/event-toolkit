@@ -41,6 +41,9 @@ importers:
       '@event-toolkit/logistics':
         specifier: workspace:*
         version: link:../../packages/logistics
+      '@event-toolkit/roi-report-core':
+        specifier: workspace:*
+        version: link:../../packages/roi-report-core
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../../packages/schema
@@ -125,6 +128,9 @@ importers:
       '@event-toolkit/logistics':
         specifier: workspace:*
         version: link:../logistics
+      '@event-toolkit/roi-report-core':
+        specifier: workspace:*
+        version: link:../roi-report-core
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../schema
@@ -142,6 +148,28 @@ importers:
         specifier: workspace:*
         version: link:../schema
     devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/roi-report-core:
+    dependencies:
+      '@event-toolkit/budget-calc':
+        specifier: workspace:*
+        version: link:../budget-calc
+      '@event-toolkit/lead-triage-core':
+        specifier: workspace:*
+        version: link:../lead-triage-core
+      '@event-toolkit/schema':
+        specifier: workspace:*
+        version: link:../schema
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.5.4
+    devDependencies:
+      '@types/papaparse':
+        specifier: ^5.3.14
+        version: 5.5.2
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

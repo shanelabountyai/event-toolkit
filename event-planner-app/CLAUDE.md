@@ -6,7 +6,7 @@ Instructions for Claude Code (or any agent) working in this repo. Read this befo
 
 The **Event Planner Productivity Suite** — a standalone, local-first web app for corporate/field marketing event planners (conferences, webinars, trade shows). One Next.js monorepo, one shared `EventBrief` data schema, seven tools as routes in a single app. Full product context: `docs/SUITE-OVERVIEW.md`. Per-tool specs: `docs/prd/<tool>/PRD.md` + `HANDOFF.md`.
 
-**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRD 4 (Budget Builder) is built — line-item budgets with variance flagging, reforecast prompts, spreadsheet import/export and the actuals roll-up, under `/budget`, backed by `packages/budget-calc`. PRD 5 (Lead Triage) is built — import, dedupe, scoring, routing, follow-up drafts and per-owner export under `/leads`, backed by `packages/lead-triage-core`. PRDs 6–7 are fully spec'd in `docs/prd/` but not yet built.
+**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRD 4 (Budget Builder) is built — line-item budgets with variance flagging, reforecast prompts, spreadsheet import/export and the actuals roll-up, under `/budget`, backed by `packages/budget-calc`. PRD 5 (Lead Triage) is built — import, dedupe, scoring, routing, follow-up drafts and per-owner export under `/leads`, backed by `packages/lead-triage-core`. PRD 6 (ROI Report) is built — attribution, cost per outcome, scorecard, YoY and report export under `/roi`, backed by `packages/roi-report-core`. PRD 7 is fully spec'd in `docs/prd/` but not yet built.
 
 ## Non-negotiable architecture rules
 
@@ -31,6 +31,7 @@ pnpm promo-check  # PRD 2 generation, edit-tracking, regenerate and pacing logic
 pnpm logistics-check # PRD 3 seeding, propagation, conflicts, CSV and pack persistence
 pnpm budget-check # PRD 4 variance formula, reconciliation, reforecast, import/export, roll-up
 pnpm leads-check  # PRD 5 dedupe, scoring, templates, assignment, export, brief-read-only
+pnpm roi-check    # PRD 6 attribution windows, NPS, cost math, scorecard bands, YoY, rendering
 ```
 
 Browser-level end-to-end coverage lives in `scripts/promo-e2e.py` and `scripts/logistics-e2e.py`
@@ -48,6 +49,7 @@ packages/local-store/  IndexedDB repository — the only file(s) that import `id
 packages/logistics/    PRD 3 domain types + selectors (zero React), the propagation model
 packages/budget-calc/  PRD 4 variance, presets, reforecast + computeBudgetActualsSummary (PRD 6's seam)
 packages/lead-triage-core/ PRD 5 CSV parse, dedupe, scoring, templates, assignment, export
+packages/roi-report-core/  PRD 6 attribution, costs, NPS, scorecard, YoY, report rendering
 packages/ui/           shared primitives (Button, Card, Table, Badge, Form, ProgressBar)
 fixtures/              example EventBrief JSON docs, validated by `pnpm verify`
 scripts/               make-fixtures, validate-fixtures, sanity-check, store-check

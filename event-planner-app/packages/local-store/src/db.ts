@@ -22,16 +22,25 @@ import type {
   ScoringRubric,
   TriageSession,
 } from "@event-toolkit/lead-triage-core";
+import type {
+  AttributionSettings,
+  PipelineImportBatch,
+  PipelineOpportunity,
+  RoiReport,
+  SurveyImportBatch,
+  SurveyResponse,
+} from "@event-toolkit/roi-report-core";
 import type { BudgetLineItem, BudgetSettings } from "@event-toolkit/schema";
 
 export const DB_NAME = "event-toolkit";
 /**
  * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store, and
- * v4 the PRD 4 (Budget Builder) stores, and v5 the PRD 5 (Lead Triage) stores.
+ * v4 the PRD 4 (Budget Builder) stores, v5 the PRD 5 (Lead Triage) stores and v6 the
+ * PRD 6 (ROI Report) stores.
  * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
  * is guarded so a database at any earlier version upgrades in place.
  */
-export const DB_VERSION = 5;
+export const DB_VERSION = 6;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -48,6 +57,12 @@ export const STORE_LEAD_RECORDS = "leadRecords";
 export const STORE_SCORING_RUBRICS = "scoringRubrics";
 export const STORE_FOLLOWUP_TEMPLATES = "followUpTemplates";
 export const STORE_DUPLICATE_CANDIDATES = "duplicateCandidates";
+export const STORE_ROI_REPORTS = "roiReports";
+export const STORE_PIPELINE_OPPORTUNITIES = "pipelineOpportunities";
+export const STORE_PIPELINE_IMPORT_BATCHES = "pipelineImportBatches";
+export const STORE_SURVEY_RESPONSES = "surveyResponses";
+export const STORE_SURVEY_IMPORT_BATCHES = "surveyImportBatches";
+export const STORE_ATTRIBUTION_SETTINGS = "attributionSettings";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -95,7 +110,17 @@ export type UsageEventType =
   | "rubric_edited"
   | "assignment_run"
   | "drafts_generated"
-  | "session_routed";
+  | "session_routed"
+  // PRD 6 (FR-15)
+  | "roi_report_created"
+  | "pipeline_imported"
+  | "survey_imported"
+  | "attribution_settings_changed"
+  | "yoy_comparator_selected"
+  | "scorecard_computed"
+  | "report_finalized"
+  | "report_reverted_to_draft"
+  | "success_metrics_written";
 
 interface EventToolkitDB extends DBSchema {
   [STORE_BRIEFS]: {
@@ -183,6 +208,37 @@ interface EventToolkitDB extends DBSchema {
     value: DuplicateCandidate;
     indexes: { triageSessionId: string };
   };
+  /** PRD 6 stores. One report per brief is enforced at the repository layer. */
+  [STORE_ROI_REPORTS]: {
+    key: string;
+    value: RoiReport;
+    indexes: { eventBriefId: string };
+  };
+  [STORE_PIPELINE_OPPORTUNITIES]: {
+    key: string;
+    value: PipelineOpportunity;
+    indexes: { roiReportId: string; recordId: string };
+  };
+  [STORE_PIPELINE_IMPORT_BATCHES]: {
+    key: string;
+    value: PipelineImportBatch;
+    indexes: { roiReportId: string };
+  };
+  [STORE_SURVEY_RESPONSES]: {
+    key: string;
+    value: SurveyResponse;
+    indexes: { roiReportId: string };
+  };
+  [STORE_SURVEY_IMPORT_BATCHES]: {
+    key: string;
+    value: SurveyImportBatch;
+    indexes: { roiReportId: string };
+  };
+  /** Exactly one row in v1, id "default". */
+  [STORE_ATTRIBUTION_SETTINGS]: {
+    key: string;
+    value: AttributionSettings;
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
@@ -268,6 +324,31 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         if (!db.objectStoreNames.contains(STORE_DUPLICATE_CANDIDATES)) {
           const dupes = db.createObjectStore(STORE_DUPLICATE_CANDIDATES, { keyPath: "id" });
           dupes.createIndex("triageSessionId", "triageSessionId");
+        }
+        // v6 — PRD 6.
+        if (!db.objectStoreNames.contains(STORE_ROI_REPORTS)) {
+          const reports = db.createObjectStore(STORE_ROI_REPORTS, { keyPath: "id" });
+          reports.createIndex("eventBriefId", "eventBriefId");
+        }
+        if (!db.objectStoreNames.contains(STORE_PIPELINE_OPPORTUNITIES)) {
+          const opps = db.createObjectStore(STORE_PIPELINE_OPPORTUNITIES, { keyPath: "id" });
+          opps.createIndex("roiReportId", "roiReportId");
+          opps.createIndex("recordId", "recordId");
+        }
+        if (!db.objectStoreNames.contains(STORE_PIPELINE_IMPORT_BATCHES)) {
+          const batches = db.createObjectStore(STORE_PIPELINE_IMPORT_BATCHES, { keyPath: "id" });
+          batches.createIndex("roiReportId", "roiReportId");
+        }
+        if (!db.objectStoreNames.contains(STORE_SURVEY_RESPONSES)) {
+          const responses = db.createObjectStore(STORE_SURVEY_RESPONSES, { keyPath: "id" });
+          responses.createIndex("roiReportId", "roiReportId");
+        }
+        if (!db.objectStoreNames.contains(STORE_SURVEY_IMPORT_BATCHES)) {
+          const batches = db.createObjectStore(STORE_SURVEY_IMPORT_BATCHES, { keyPath: "id" });
+          batches.createIndex("roiReportId", "roiReportId");
+        }
+        if (!db.objectStoreNames.contains(STORE_ATTRIBUTION_SETTINGS)) {
+          db.createObjectStore(STORE_ATTRIBUTION_SETTINGS, { keyPath: "id" });
         }
       },
     });

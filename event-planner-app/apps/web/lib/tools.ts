@@ -1,7 +1,7 @@
 /**
  * The suite's tool registry.
  *
- * PRDs 1-5 are built. The remaining two
+ * PRDs 1-6 are built. The remaining one
  * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
  * view's "Launch a tool" links exist without any of their functionality being built.
  * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
@@ -64,7 +64,7 @@ export const SUITE_TOOLS: SuiteTool[] = [
     name: "Event ROI & Attribution",
     href: "/roi",
     description: "Budget actuals, lead outcomes and survey data combined into an ROI report.",
-    available: false,
+    available: true,
   },
   {
     key: "retro",

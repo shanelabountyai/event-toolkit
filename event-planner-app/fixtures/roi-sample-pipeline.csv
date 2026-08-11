@@ -1,0 +1,8 @@
+Opp ID,Opportunity Name,Account Name,Contact Name,Contact Email,Created Date,Amount,Stage,Closed Won,Close Date,Attribution,Record Type
+OPP-1001,Northwind - Platform expansion,Northwind Logistics,Dana Whitfield,dana.whitfield@northwind.example,2026-11-20,120000,Discovery,No,,Sourced,Opportunity
+OPP-1002,BrightPath - Pilot,BrightPath Health,Marcus Oyelaran,m.oyelaran@brightpath.example,2026-11-28,45000,Proposal,No,,,Opportunity
+OPP-1003,Lumen Works - Renewal uplift,Lumen Works,Priya Raghunathan,priya@lumenworks.example,2026-10-02,80000,Negotiation,Yes,2026-12-15,Influenced,Opportunity
+OPP-1004,Stellar Bank - New logo,Stellar Bank,Nadia Fournier,nadia.fournier@stellarbank.example,2026-12-27,250000,Discovery,No,,,Opportunity
+OPP-1005,Harborlight - Content pilot,Harborlight Media,Owen Petrides,owen.p@harborlight.example,2027-04-15,60000,Qualification,No,,Sourced,Opportunity
+MTG-2001,Intro meeting - Quillstone,Quillstone Software,Erin Chao,erin.chao@quillstone.example,2026-11-14,0,Held,No,,,Meeting
+MTG-2002,Follow-up - Ridgeline,Ridgeline Manufacturing,Sam Beckley,sam.beckley@ridgeline.example,2026-11-25,0,Held,No,,,Meeting
