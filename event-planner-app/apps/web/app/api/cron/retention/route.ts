@@ -8,6 +8,9 @@ import { NextResponse } from "next/server";
 import { getDb, listAllWorkspaceIds, purgeExpiredRecords } from "@event-toolkit/server-db";
 import { log } from "@/lib/redact";
 
+// Scheduled daily at 03:00 UTC by apps/web/vercel.json. The schedule lives there rather than
+// beside this code because Vercel owns it — and note that vercel.json rejects unknown keys, so it
+// cannot carry a comment of its own explaining that.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 // Purging every workspace can outlast the default 10 seconds, and a truncated purge is one that
