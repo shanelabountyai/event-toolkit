@@ -21,8 +21,8 @@ export function BudgetSettingsPanel({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Budget settings</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Budget settings</h2>
+          <p className="text-xs text-content-muted">
             The default threshold applies to every line item without its own override.
           </p>
         </div>
@@ -52,32 +52,32 @@ export function BudgetSettingsPanel({
               }}
             />
           </Field>
-          <p className="mb-2 text-xs text-slate-500">
+          <p className="mb-2 text-xs text-content-muted">
             Currency is {settings.currency}, taken from the brief. A budget is single-currency.
           </p>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Reforecast history</h3>
+          <h3 className="text-sm font-semibold text-content">Reforecast history</h3>
           {reforecastHistory.length === 0 ? (
-            <p className="mt-1 text-sm text-slate-500">No reforecasts yet.</p>
+            <p className="mt-1 text-sm text-content-muted">No reforecasts yet.</p>
           ) : (
             <ul className="mt-2 space-y-2">
               {[...reforecastHistory].reverse().map((event) => (
-                <li key={event.id} className="rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                <li key={event.id} className="rounded-lg border border-line px-3 py-2 text-sm">
                   <span className="flex flex-wrap items-center gap-2">
                     <Badge tone={event.action === "reforecasted" ? "success" : "neutral"}>
                       {event.action === "reforecasted" ? "Reforecast" : "Dismissed"}
                     </Badge>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-content-muted">
                       {formatIsoDateTime(event.triggeredAt)} · brief v{event.briefVersionAtTrigger}
                     </span>
                   </span>
-                  <span className="mt-1 block text-xs text-slate-600">{event.triggerReason}</span>
+                  <span className="mt-1 block text-xs text-content-muted">{event.triggerReason}</span>
                   {event.action === "reforecasted" &&
                   event.totalBudgetedBefore !== undefined &&
                   event.totalBudgetedAfter !== undefined ? (
-                    <span className="mt-0.5 block text-xs text-slate-600">
+                    <span className="mt-0.5 block text-xs text-content-muted">
                       Total budgeted {formatMoney(event.totalBudgetedBefore, settings.currency)} →{" "}
                       {formatMoney(event.totalBudgetedAfter, settings.currency)}
                     </span>

@@ -32,7 +32,7 @@ export function StringListEditor({
   return (
     <div className="space-y-2">
       {values.length === 0 ? (
-        <p className="text-xs text-slate-500">{emptyLabel}</p>
+        <p className="text-xs text-content-muted">{emptyLabel}</p>
       ) : (
         <ul className="space-y-1.5">
           {values.map((value, index) => (

@@ -93,7 +93,7 @@ export function RetroList() {
   };
 
   if (briefIdParam || rows === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   const overdue = rows.filter((r) => r.prompt !== "none");
@@ -101,8 +101,8 @@ export function RetroList() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Post-Mortem</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Post-Mortem</h1>
+        <p className="mt-1 text-sm text-content-muted">
           Pulls what actually happened out of the issue log, the budget and the ROI report, and
           writes the lessons forward so the next event&rsquo;s intake starts with them.
         </p>
@@ -114,8 +114,8 @@ export function RetroList() {
           role="status"
           className={
             row.prompt === "escalated"
-              ? "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900"
-              : "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+              ? "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-danger-border bg-danger-subtle px-4 py-3 text-sm text-danger-text"
+              : "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-warning-border bg-warning-subtle px-4 py-3 text-sm text-warning-text"
           }
         >
           <span>{retroPromptMessage(row.brief.name || "That event", row.prompt)}</span>
@@ -127,7 +127,7 @@ export function RetroList() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Events</h2>
+          <h2 className="text-base font-semibold text-content">Events</h2>
         </CardHeader>
         <CardBody>
           <Table>
@@ -149,8 +149,8 @@ export function RetroList() {
                   return (
                     <tr key={brief.id}>
                       <Td>
-                        <span className="font-medium text-slate-900">{brief.name || "Untitled brief"}</span>
-                        <span className="block text-xs text-slate-500">{formatDateRange(brief)}</span>
+                        <span className="font-medium text-content">{brief.name || "Untitled brief"}</span>
+                        <span className="block text-xs text-content-muted">{formatDateRange(brief)}</span>
                       </Td>
                       <Td>
                         {retro ? (
@@ -158,15 +158,15 @@ export function RetroList() {
                             {retro.status === "completed" ? "Completed" : "Draft"}
                           </Badge>
                         ) : (
-                          <span className="text-xs text-slate-400">Not started</span>
+                          <span className="text-xs text-content-subtle">Not started</span>
                         )}
                       </Td>
-                      <Td className="text-xs text-slate-600">
+                      <Td className="text-xs text-content-muted">
                         {preview
                           ? `${preview.total} carried · ${preview.repeat}R / ${preview.fix}F / ${preview.drop}D`
                           : "—"}
                       </Td>
-                      <Td className="text-xs text-slate-600">
+                      <Td className="text-xs text-content-muted">
                         {retro?.completedAt ? formatIsoDateTime(retro.completedAt) : "—"}
                       </Td>
                       <Td className="text-right">

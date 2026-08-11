@@ -49,11 +49,11 @@ export function LeadsShell({
       <header className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-content-muted">
               Lead Triage &amp; Follow-Up
             </p>
-            <h1 className="text-xl font-semibold text-slate-900">{session.eventName}</h1>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+            <h1 className="text-xl font-semibold text-content">{session.eventName}</h1>
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-content-muted">
               <Badge tone={session.status === "routed" ? "success" : "neutral"}>
                 {TRIAGE_STATUS_LABELS[session.status]}
               </Badge>
@@ -69,14 +69,14 @@ export function LeadsShell({
             {brief ? (
               <Link
                 href={`/brief/${brief.id}`}
-                className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline"
+                className="rounded-md px-2.5 py-1.5 text-sm font-medium text-content-muted underline-offset-4 hover:text-content hover:underline"
               >
                 View linked brief
               </Link>
             ) : null}
             <Link
               href="/leads"
-              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline"
+              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-content-muted underline-offset-4 hover:text-content hover:underline"
             >
               ← All sessions
             </Link>
@@ -84,7 +84,7 @@ export function LeadsShell({
         </div>
 
         {/* FR-11 — visible on every screen of the tool, not a separate dashboard page. */}
-        <div className="rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <div className="rounded-lg border border-line bg-surface px-4 py-3 shadow-sm">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             <Stat label="Leads" value={String(progress.leadCount)} />
             <Stat label="Deduped" value={`${progress.dedupedPct}%`} />
@@ -105,7 +105,7 @@ export function LeadsShell({
           </div>
         </div>
 
-        <nav className="flex flex-wrap gap-1 border-b border-slate-200" aria-label="Triage sections">
+        <nav className="flex flex-wrap gap-1 border-b border-line" aria-label="Triage sections">
           {TABS.map((tab) => {
             const href = tab.slug ? `${base}/${tab.slug}` : base;
             const isActive = active === tab.slug;
@@ -116,8 +116,8 @@ export function LeadsShell({
                 aria-current={isActive ? "page" : undefined}
                 className={
                   isActive
-                    ? "-mb-px flex items-center gap-1.5 border-b-2 border-slate-900 px-3 py-2 text-sm font-semibold text-slate-900"
-                    : "-mb-px flex items-center gap-1.5 border-b-2 border-transparent px-3 py-2 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-800"
+                    ? "-mb-px flex items-center gap-1.5 border-b-2 border-accent px-3 py-2 text-sm font-semibold text-content"
+                    : "-mb-px flex items-center gap-1.5 border-b-2 border-transparent px-3 py-2 text-sm font-medium text-content-muted hover:border-line-strong hover:text-content"
                 }
               >
                 {tab.label}
@@ -138,23 +138,23 @@ export function LeadsShell({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <span>
-      <span className="block text-xs text-slate-500">{label}</span>
-      <span className="font-semibold text-slate-900">{value}</span>
+      <span className="block text-xs text-content-muted">{label}</span>
+      <span className="font-semibold text-content">{value}</span>
     </span>
   );
 }
 
 export function LeadsLoading() {
-  return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
 }
 
 export function LeadsNotFound() {
   return (
-    <div className="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-      <h1 className="text-lg font-semibold text-slate-900">That triage session no longer exists</h1>
+    <div className="mx-auto max-w-lg rounded-xl border border-line bg-surface p-8 text-center shadow-sm">
+      <h1 className="text-lg font-semibold text-content">That triage session no longer exists</h1>
       <Link
         href="/leads"
-        className="mt-5 inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+        className="mt-5 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
       >
         Back to sessions
       </Link>

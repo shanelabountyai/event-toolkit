@@ -57,35 +57,35 @@ export function LogisticsEntry() {
   }, [briefId, router]);
 
   if (briefId && !error) {
-    return <p className="py-16 text-center text-sm text-slate-500">Opening the logistics pack…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Opening the logistics pack…</p>;
   }
   if (briefs === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Run-of-Show &amp; Logistics Pack</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Run-of-Show &amp; Logistics Pack</h1>
+        <p className="mt-1 text-sm text-content-muted">
           Run of show, staffing, shipping, venue checklist and contacts — one set of facts, so a
           time changed once changes everywhere.
         </p>
       </header>
 
       {error ? (
-        <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-800">
+        <p role="alert" className="rounded-lg border border-danger-border bg-danger-subtle px-4 py-2 text-sm text-danger-text">
           {error}
         </p>
       ) : null}
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Choose an event</h2>
+          <h2 className="text-base font-semibold text-content">Choose an event</h2>
         </CardHeader>
         <CardBody>
           {briefs.length === 0 ? (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-content-muted">
               No briefs in this browser yet.{" "}
               <Link href="/brief/new" className="font-medium underline underline-offset-4">
                 Create one first
@@ -93,18 +93,18 @@ export function LogisticsEntry() {
               .
             </p>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-line">
               {briefs.map((brief) => (
                 <li key={brief.id}>
                   <Link
                     href={`/logistics?briefId=${brief.id}`}
-                    className="flex flex-wrap items-center justify-between gap-2 py-3 hover:bg-slate-50"
+                    className="flex flex-wrap items-center justify-between gap-2 py-3 hover:bg-surface-sunken"
                   >
                     <span>
-                      <span className="block text-sm font-medium text-slate-900">
+                      <span className="block text-sm font-medium text-content">
                         {brief.name || "Untitled brief"}
                       </span>
-                      <span className="block text-xs text-slate-500">
+                      <span className="block text-xs text-content-muted">
                         {formatDateRange(brief)} · updated {formatRelative(brief.updatedAt)}
                       </span>
                     </span>

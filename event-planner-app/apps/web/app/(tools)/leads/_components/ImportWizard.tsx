@@ -81,10 +81,10 @@ export function ImportWizard({
       {batches.length > 0 ? (
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold text-slate-900">Files imported so far</h2>
+            <h2 className="text-base font-semibold text-content">Files imported so far</h2>
           </CardHeader>
           <CardBody>
-            <ul className="space-y-1 text-sm text-slate-700">
+            <ul className="space-y-1 text-sm text-content-muted">
               {batches.map((batch) => (
                 <li key={batch.id} className="flex items-center justify-between gap-3">
                   <span>{batch.filename}</span>
@@ -99,10 +99,10 @@ export function ImportWizard({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-content">
               {step === "done" ? "Import complete" : "Import a lead file"}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-content-muted">
               CSV or XLSX. Import as many files as you like — they all merge into one pool, and
               dedupe runs automatically after each one.
             </p>
@@ -110,7 +110,7 @@ export function ImportWizard({
         </CardHeader>
         <CardBody className="space-y-4">
           {error ? (
-            <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            <p role="alert" className="rounded-lg border border-danger-border bg-danger-subtle px-3 py-2 text-sm text-danger-text">
               {error}
             </p>
           ) : null}
@@ -123,17 +123,17 @@ export function ImportWizard({
                 const file = e.target.files?.[0];
                 if (file) void onFile(file);
               }}
-              className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700"
+              className="block w-full text-sm text-content-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover"
             />
           ) : null}
 
           {step === "mapping" && parsed ? (
             <>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 {filename} · {parsed.rows.length} rows. Check each column before importing.
               </p>
               {parsed.warnings.length > 0 ? (
-                <ul className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                <ul className="rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                   {parsed.warnings.map((w) => (
                     <li key={w}>{w}</li>
                   ))}
@@ -192,10 +192,10 @@ export function ImportWizard({
                             }
                           />
                         ) : (
-                          <span className="text-xs text-slate-400">—</span>
+                          <span className="text-xs text-content-subtle">—</span>
                         )}
                       </Td>
-                      <Td className="text-xs text-slate-500">
+                      <Td className="text-xs text-content-muted">
                         {String(parsed.rows[0]?.[column.sourceColumn] ?? "")}
                       </Td>
                     </tr>
@@ -207,7 +207,7 @@ export function ImportWizard({
 
           {step === "preview" && parsed ? (
             <>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 First {preview.length} of {parsed.rows.length} rows, as they will be imported.
               </p>
               <Table>
@@ -235,7 +235,7 @@ export function ImportWizard({
                 </tbody>
               </Table>
               {preview.length === 0 ? (
-                <p className="text-sm text-amber-800">
+                <p className="text-sm text-warning-text">
                   Nothing usable — make sure a column is mapped to a name or an email.
                 </p>
               ) : null}
@@ -243,13 +243,13 @@ export function ImportWizard({
           ) : null}
 
           {step === "done" && summary ? (
-            <div className="space-y-1 text-sm text-slate-700">
+            <div className="space-y-1 text-sm text-content-muted">
               <p>
                 Imported {summary.imported} rows from {filename}.
               </p>
               {summary.merged > 0 ? <p>{summary.merged} merged automatically on matching email.</p> : null}
               {summary.queued > 0 ? (
-                <p className="text-amber-800">
+                <p className="text-warning-text">
                   {summary.queued} possible duplicate{summary.queued === 1 ? "" : "s"} need your review.
                 </p>
               ) : null}

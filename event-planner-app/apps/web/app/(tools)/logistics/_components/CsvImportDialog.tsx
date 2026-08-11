@@ -38,15 +38,15 @@ export function CsvImportDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="csv-import-title"
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 sm:p-8"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-accent/40 p-4 sm:p-8"
     >
-      <div className="w-full max-w-3xl rounded-xl bg-white shadow-xl">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 id="csv-import-title" className="text-base font-semibold text-slate-900">
+      <div className="w-full max-w-3xl rounded-xl bg-surface shadow-xl">
+        <div className="border-b border-line px-5 py-4">
+          <h2 id="csv-import-title" className="text-base font-semibold text-content">
             Import shipping manifest from CSV
           </h2>
-          <p className="mt-1 text-xs text-slate-600">
-            Columns: <code className="rounded bg-slate-100 px-1">{SHIPPING_CSV_COLUMNS.join(", ")}</code>.
+          <p className="mt-1 text-xs text-content-muted">
+            Columns: <code className="rounded bg-surface-hover px-1">{SHIPPING_CSV_COLUMNS.join(", ")}</code>.
             Only <strong>item</strong> and <strong>shipTo</strong> are required. A header row is
             detected automatically, in any column order.
           </p>
@@ -62,7 +62,7 @@ export function CsvImportDialog({
                 const file = e.target.files?.[0];
                 if (file) void onFile(file);
               }}
-              className="block text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700"
+              className="block text-sm text-content-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover"
             />
             <Button
               size="sm"
@@ -77,7 +77,7 @@ export function CsvImportDialog({
 
           {parsed ? (
             <>
-              <p className="flex flex-wrap items-center gap-2 text-sm text-slate-700">
+              <p className="flex flex-wrap items-center gap-2 text-sm text-content-muted">
                 <span className="font-medium">{filename}</span>
                 <Badge tone={parsed.items.length > 0 ? "success" : "neutral"}>
                   {parsed.items.length} row{parsed.items.length === 1 ? "" : "s"} ready
@@ -88,7 +88,7 @@ export function CsvImportDialog({
               </p>
 
               {parsed.errors.length > 0 ? (
-                <ul className="max-h-32 overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                <ul className="max-h-32 overflow-y-auto rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                   {parsed.errors.map((err) => (
                     <li key={`${err.row}-${err.reason}`}>
                       Line {err.row}: {err.reason}
@@ -127,11 +127,11 @@ export function CsvImportDialog({
               </div>
             </>
           ) : (
-            <p className="text-sm text-slate-500">Choose a file to preview what will be imported.</p>
+            <p className="text-sm text-content-muted">Choose a file to preview what will be imported.</p>
           )}
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50/60 px-5 py-3">
+        <div className="flex justify-end gap-2 border-t border-line bg-surface-sunken px-5 py-3">
           <Button onClick={onClose}>Cancel</Button>
           <Button
             variant="primary"

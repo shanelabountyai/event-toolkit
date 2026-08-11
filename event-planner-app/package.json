@@ -34,7 +34,8 @@
     "e2e:setup": "python3 -m venv .venv && .venv/bin/python -m pip install --quiet --upgrade pip playwright && .venv/bin/python -m playwright install chromium firefox",
     "e2e": ".venv/bin/python scripts/suite-e2e.py chromium",
     "e2e:promo": ".venv/bin/python scripts/promo-e2e.py chromium",
-    "e2e:logistics": ".venv/bin/python scripts/logistics-e2e.py chromium"
+    "e2e:logistics": ".venv/bin/python scripts/logistics-e2e.py chromium",
+    "a11y": ".venv/bin/python scripts/a11y-e2e.py"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",

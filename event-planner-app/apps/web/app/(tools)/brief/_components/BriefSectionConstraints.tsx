@@ -38,7 +38,7 @@ export function BriefSectionConstraints({ brief, onSave }: BriefSectionProps) {
         <div className="space-y-4">
           <ReadField label="Constraints">
             {items.length === 0 ? (
-              <span className="text-sm italic text-slate-400">None recorded</span>
+              <span className="text-sm italic text-content-subtle">None recorded</span>
             ) : (
               <ul className="list-disc space-y-1 pl-5">
                 {items.map((c, i) => (
@@ -57,7 +57,7 @@ export function BriefSectionConstraints({ brief, onSave }: BriefSectionProps) {
                   <li key={l.id}>
                     {l.lesson}
                     {l.category ? (
-                      <span className="ml-1 text-xs text-slate-500">({l.category})</span>
+                      <span className="ml-1 text-xs text-content-muted">({l.category})</span>
                     ) : null}
                   </li>
                 ))}

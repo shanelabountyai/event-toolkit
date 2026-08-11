@@ -21,8 +21,8 @@ export default async function SignInPage({
     <Card>
       <CardBody className="space-y-5">
         <div className="space-y-1.5">
-          <h1 className="text-lg font-semibold tracking-tight text-slate-900">Sign in</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-lg font-semibold tracking-tight text-content">Sign in</h1>
+          <p className="text-sm text-content-muted">
             We&rsquo;ll email you a link. There is no password to remember or lose.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default async function SignInPage({
         {configured ? (
           <SignInForm defaultEmail={email} />
         ) : (
-          <p className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900 ring-1 ring-inset ring-amber-200">
+          <p className="rounded-lg bg-warning-subtle px-3 py-2.5 text-sm text-warning-text ring-1 ring-inset ring-warning-border">
             Accounts aren&rsquo;t configured on this deployment. You can still use every tool
             without one — your work is saved in this browser.
           </p>
@@ -41,10 +41,10 @@ export default async function SignInPage({
           rather than buried. A planner who never wants an account should not have to work out
           that they are allowed to leave.
         */}
-        <div className="border-t border-slate-200 pt-4">
-          <p className="text-sm text-slate-600">
+        <div className="border-t border-line pt-4">
+          <p className="text-sm text-content-muted">
             Don&rsquo;t want an account?{" "}
-            <Link href="/brief" className="font-medium text-slate-900 underline underline-offset-2">
+            <Link href="/brief" className="font-medium text-content underline underline-offset-2">
               Use the tools without signing in
             </Link>
             . Everything is saved in this browser, and you can move it into a workspace later.

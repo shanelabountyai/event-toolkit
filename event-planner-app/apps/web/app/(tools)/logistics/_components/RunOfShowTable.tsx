@@ -103,7 +103,7 @@ export function RunOfShowTable({
             ordered.map((session) => {
               const clashing = overlaps.has(session.id);
               return (
-                <tr key={session.id} className={clashing ? "bg-amber-50/60" : undefined}>
+                <tr key={session.id} className={clashing ? "bg-warning-subtle/60" : undefined}>
                   <Td>
                     <TextInput
                       value={session.label}
@@ -114,7 +114,7 @@ export function RunOfShowTable({
                     {clashing ? (
                       <p className="mt-1 flex items-center gap-1.5">
                         <Badge tone="warning">Room clash</Badge>
-                        <span className="text-xs text-amber-800">
+                        <span className="text-xs text-warning-text">
                           Overlaps another session in {session.location}
                         </span>
                       </p>

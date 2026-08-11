@@ -79,12 +79,12 @@ export function RetroPage({ retroId }: { retroId: string }) {
     setRetro(await saveRetro(next));
   }, []);
 
-  if (loading) return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  if (loading) return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   if (!retro || !brief) {
     return (
-      <div className="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <h1 className="text-lg font-semibold text-slate-900">That retro no longer exists</h1>
-        <Link href="/retro" className="mt-5 inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700">
+      <div className="mx-auto max-w-lg rounded-xl border border-line bg-surface p-8 text-center shadow-sm">
+        <h1 className="text-lg font-semibold text-content">That retro no longer exists</h1>
+        <Link href="/retro" className="mt-5 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
           Back to retros
         </Link>
       </div>
@@ -161,9 +161,9 @@ export function RetroPage({ retroId }: { retroId: string }) {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Post-mortem</p>
-          <h1 className="text-xl font-semibold text-slate-900">{retro.eventName}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+          <p className="text-xs font-medium uppercase tracking-wide text-content-muted">Post-mortem</p>
+          <h1 className="text-xl font-semibold text-content">{retro.eventName}</h1>
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-content-muted">
             <Badge tone={retro.status === "completed" ? "success" : "neutral"}>
               {retro.status === "completed" ? "Completed" : "Draft"}
             </Badge>
@@ -176,21 +176,21 @@ export function RetroPage({ retroId }: { retroId: string }) {
           <Button variant="primary" disabled={!canComplete(retro)} onClick={() => setConfirming(true)}>
             {retro.status === "completed" ? "Re-complete" : "Complete retro"}
           </Button>
-          <Link href={`/brief/${brief.id}`} className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline">
+          <Link href={`/brief/${brief.id}`} className="rounded-md px-2.5 py-1.5 text-sm font-medium text-content-muted underline-offset-4 hover:text-content hover:underline">
             ← Back to brief
           </Link>
         </div>
       </header>
 
       {notice ? (
-        <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-900">
+        <p role="status" className="rounded-lg border border-success-border bg-success-subtle px-4 py-2 text-sm text-success-text">
           {notice}{" "}
           <button type="button" className="font-medium underline" onClick={() => setNotice(null)}>Dismiss</button>
         </p>
       ) : null}
 
       {blocking.length > 0 ? (
-        <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-900">
+        <p className="rounded-lg border border-warning-border bg-warning-subtle px-4 py-2 text-sm text-warning-text">
           {blocking.length} lesson{blocking.length === 1 ? "" : "s"} still need text before this
           retro can be completed.
         </p>
@@ -199,18 +199,18 @@ export function RetroPage({ retroId }: { retroId: string }) {
       {/* Ingestion status — three tiles, each honest about what wasn't available. */}
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
-          <CardHeader><h2 className="text-sm font-semibold text-slate-900">Issue log</h2></CardHeader>
-          <CardBody className="text-sm text-slate-700">
+          <CardHeader><h2 className="text-sm font-semibold text-content">Issue log</h2></CardHeader>
+          <CardBody className="text-sm text-content-muted">
             {issue.available ? (
               <>
-                <p className="text-lg font-semibold text-slate-900">{issue.totalIssues} issues</p>
-                <p className="text-xs text-slate-600">
+                <p className="text-lg font-semibold text-content">{issue.totalIssues} issues</p>
+                <p className="text-xs text-content-muted">
                   {issue.bySeverity.high} high · {issue.bySeverity.medium} medium · {issue.bySeverity.low} low
                 </p>
-                <p className="text-xs text-slate-500">{issue.openAtIngestion} still open</p>
+                <p className="text-xs text-content-muted">{issue.openAtIngestion} still open</p>
               </>
             ) : (
-              <p className="text-slate-500">
+              <p className="text-content-muted">
                 Not available — no logistics pack was built for this event.
               </p>
             )}
@@ -218,43 +218,43 @@ export function RetroPage({ retroId }: { retroId: string }) {
         </Card>
 
         <Card>
-          <CardHeader><h2 className="text-sm font-semibold text-slate-900">Budget variance</h2></CardHeader>
-          <CardBody className="text-sm text-slate-700">
+          <CardHeader><h2 className="text-sm font-semibold text-content">Budget variance</h2></CardHeader>
+          <CardBody className="text-sm text-content-muted">
             {budget.available ? (
               <>
-                <p className="text-lg font-semibold text-slate-900">
+                <p className="text-lg font-semibold text-content">
                   {formatMoney(budget.totalActual, "USD")}
                 </p>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-content-muted">
                   against {formatMoney(budget.totalBudgeted, "USD")} budgeted
                   {budget.variancePct === null ? "" : ` (${Math.round(budget.variancePct)}%)`}
                 </p>
                 {!budget.varianceAtClose?.isFinal ? (
-                  <p className="text-xs text-amber-700">Budget not reconciled — figures are provisional.</p>
+                  <p className="text-xs text-warning-text">Budget not reconciled — figures are provisional.</p>
                 ) : null}
               </>
             ) : (
-              <p className="text-slate-500">Not available — no budget was built for this event.</p>
+              <p className="text-content-muted">Not available — no budget was built for this event.</p>
             )}
           </CardBody>
         </Card>
 
         <Card>
-          <CardHeader><h2 className="text-sm font-semibold text-slate-900">ROI scorecard</h2></CardHeader>
-          <CardBody className="text-sm text-slate-700">
+          <CardHeader><h2 className="text-sm font-semibold text-content">ROI scorecard</h2></CardHeader>
+          <CardBody className="text-sm text-content-muted">
             {roi.available ? (
               <>
-                <p className="text-lg font-semibold capitalize text-slate-900">{roi.recommendation}</p>
-                <p className="text-xs text-slate-600">
+                <p className="text-lg font-semibold capitalize text-content">{roi.recommendation}</p>
+                <p className="text-xs text-content-muted">
                   From a {roi.reportStatus} report
                   {roi.scorePct === null ? "" : ` · ${Math.round(roi.scorePct * 100)}%`}
                 </p>
                 {roi.reportStatus === "draft" ? (
-                  <p className="text-xs text-amber-700">The ROI report is still a draft.</p>
+                  <p className="text-xs text-warning-text">The ROI report is still a draft.</p>
                 ) : null}
               </>
             ) : (
-              <p className="text-slate-500">Not available — no ROI report for this event yet.</p>
+              <p className="text-content-muted">Not available — no ROI report for this event yet.</p>
             )}
           </CardBody>
         </Card>
@@ -265,25 +265,25 @@ export function RetroPage({ retroId }: { retroId: string }) {
         {DISPOSITIONS.map((disposition) => {
           const group = retro.lessons.filter((l) => l.disposition === disposition);
           return (
-            <section key={disposition} className="rounded-xl border border-slate-200 bg-slate-50/60">
+            <section key={disposition} className="rounded-xl border border-line bg-surface-sunken">
               <div className="flex items-center justify-between gap-2 px-4 py-3">
                 <span className="flex items-center gap-2">
-                  <h2 className="text-sm font-semibold text-slate-900">{DISPOSITION_LABELS[disposition]}</h2>
+                  <h2 className="text-sm font-semibold text-content">{DISPOSITION_LABELS[disposition]}</h2>
                   <Badge>{group.length}</Badge>
                 </span>
                 <Button size="sm" variant="ghost" onClick={() => addManual(disposition)}>
                   + Add
                 </Button>
               </div>
-              <p className="px-4 pb-2 text-xs text-slate-500">{DISPOSITION_DEFINITIONS[disposition]}</p>
+              <p className="px-4 pb-2 text-xs text-content-muted">{DISPOSITION_DEFINITIONS[disposition]}</p>
 
               <div className="space-y-3 px-4 pb-4">
                 {group.length === 0 ? (
-                  <p className="text-xs text-slate-500">Nothing here yet.</p>
+                  <p className="text-xs text-content-muted">Nothing here yet.</p>
                 ) : (
                   group.map((lesson) => (
-                    <article key={lesson.id} className="rounded-lg border border-slate-200 bg-white p-3">
-                      <p className="mb-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+                    <article key={lesson.id} className="rounded-lg border border-line bg-surface p-3">
+                      <p className="mb-1 flex flex-wrap items-center gap-1.5 text-xs text-content-muted">
                         <Badge tone={lesson.sourceType === "manual" ? "neutral" : "info"}>
                           {SOURCE_TYPE_LABELS[lesson.sourceType]}
                         </Badge>
@@ -320,12 +320,12 @@ export function RetroPage({ retroId }: { retroId: string }) {
                             <option key={d} value={d}>{DISPOSITION_LABELS[d]}</option>
                           ))}
                         </Select>
-                        <label className="flex items-center gap-1.5 text-xs text-slate-600">
+                        <label className="flex items-center gap-1.5 text-xs text-content-muted">
                           <input
                             type="checkbox"
                             checked={lesson.carryForward}
                             onChange={(e) => patchLesson(lesson.id, { carryForward: e.target.checked })}
-                            className="h-3.5 w-3.5 rounded border-slate-300"
+                            className="h-3.5 w-3.5 rounded border-line-strong"
                           />
                           Carry forward
                         </label>
@@ -353,8 +353,8 @@ export function RetroPage({ retroId }: { retroId: string }) {
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Success metrics</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Success metrics</h2>
+            <p className="text-xs text-content-muted">
               Final retro corrections. A reason is required, and the previous value stays visible
               here so a correction always reads as a correction.
             </p>
@@ -396,8 +396,8 @@ export function RetroPage({ retroId }: { retroId: string }) {
           </Table>
 
           {adjusting ? (
-            <div className="flex flex-wrap items-end gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <label className="text-xs text-slate-600">
+            <div className="flex flex-wrap items-end gap-2 rounded-lg border border-line bg-surface-sunken p-3">
+              <label className="text-xs text-content-muted">
                 New actual
                 <NumberInput
                   className="mt-1 w-32 text-right"
@@ -405,7 +405,7 @@ export function RetroPage({ retroId }: { retroId: string }) {
                   onChange={(e) => setAdjustValue(Number(e.target.value) || 0)}
                 />
               </label>
-              <label className="flex-1 text-xs text-slate-600">
+              <label className="flex-1 text-xs text-content-muted">
                 Reason (required)
                 <TextInput
                   className="mt-1"
@@ -422,7 +422,7 @@ export function RetroPage({ retroId }: { retroId: string }) {
           ) : null}
 
           {retro.successMetricAdjustments.length > 0 ? (
-            <ul className="space-y-1 text-xs text-slate-600">
+            <ul className="space-y-1 text-xs text-content-muted">
               {retro.successMetricAdjustments.map((adjustment) => (
                 <li key={`${adjustment.metricId}-${adjustment.adjustedAt}`}>
                   <strong>{adjustment.metricName}:</strong>{" "}
@@ -436,16 +436,16 @@ export function RetroPage({ retroId }: { retroId: string }) {
       </Card>
 
       {confirming ? (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
-            <h2 className="text-base font-semibold text-slate-900">Complete this retro?</h2>
-            <p className="mt-2 text-sm text-slate-600">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-accent/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-surface p-5 shadow-xl">
+            <h2 className="text-base font-semibold text-content">Complete this retro?</h2>
+            <p className="mt-2 text-sm text-content-muted">
               {preview.total} lesson{preview.total === 1 ? "" : "s"} will carry forward onto the
               brief — {preview.repeat} repeat, {preview.fix} fix, {preview.drop} drop. They will
               be suggested during intake on your next {brief.type.replace("_", " ")}.
             </p>
             {retro.status === "completed" ? (
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-content-muted">
                 This retro was completed before — re-completing updates the entries it already
                 wrote rather than adding duplicates.
               </p>

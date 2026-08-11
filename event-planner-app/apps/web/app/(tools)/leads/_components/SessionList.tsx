@@ -48,22 +48,22 @@ export function SessionList() {
   }, []);
 
   if (rows === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Lead Triage &amp; Follow-Up</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-xl font-semibold text-content">Lead Triage &amp; Follow-Up</h1>
+          <p className="mt-1 text-sm text-content-muted">
             Turn badge scans and registration exports into a deduped, scored, routed list with a
             follow-up draft per lead — in hours, not a week.
           </p>
         </div>
         <Link
           href="/leads/new"
-          className="inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          className="inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
         >
           New triage session
         </Link>
@@ -71,7 +71,7 @@ export function SessionList() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Sessions</h2>
+          <h2 className="text-base font-semibold text-content">Sessions</h2>
         </CardHeader>
         <CardBody>
           <Table>
@@ -100,11 +100,11 @@ export function SessionList() {
                       <Td>
                         <Link
                           href={`/leads/${session.id}`}
-                          className="font-medium text-slate-900 underline-offset-4 hover:underline"
+                          className="font-medium text-content underline-offset-4 hover:underline"
                         >
                           {session.eventName}
                         </Link>
-                        <span className="block text-xs text-slate-500">
+                        <span className="block text-xs text-content-muted">
                           Closed {formatIsoDateTime(session.eventClosedAt)}
                           {session.eventBriefId ? " · linked to a brief" : ""}
                         </span>
@@ -120,12 +120,12 @@ export function SessionList() {
                         ) : null}
                       </Td>
                       <Td className="text-right tabular-nums">{leads.length}</Td>
-                      <Td className="text-xs text-slate-600">
+                      <Td className="text-xs text-content-muted">
                         {tiers.hot}H / {tiers.warm}W / {tiers.cold}C
                       </Td>
                       <Td className="text-right tabular-nums">{progress.routedPct}%</Td>
                       <Td className="text-right tabular-nums">{progress.draftReadyPct}%</Td>
-                      <Td className="text-xs text-slate-600">
+                      <Td className="text-xs text-content-muted">
                         {progress.hoursSinceClose === null ? "—" : `${progress.hoursSinceClose}h`}
                       </Td>
                     </tr>

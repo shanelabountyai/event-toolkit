@@ -55,12 +55,12 @@ export function BriefSectionBudget({ brief, onSave }: BriefSectionProps) {
                   <Td className="text-right tabular-nums">
                     {formatMoney(a.plannedAmount, currency)}
                   </Td>
-                  <Td className="text-right tabular-nums text-slate-400">
+                  <Td className="text-right tabular-nums text-content-subtle">
                     {a.actualAmount === null || a.actualAmount === undefined
                       ? "—"
                       : formatMoney(a.actualAmount, currency)}
                   </Td>
-                  <Td className="text-slate-600">{a.notes || "—"}</Td>
+                  <Td className="text-content-muted">{a.notes || "—"}</Td>
                 </tr>
               ))}
             </tbody>

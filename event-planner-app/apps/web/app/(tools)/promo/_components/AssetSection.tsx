@@ -30,7 +30,7 @@ export function AssetSection({
   }, [holdsHighlight]);
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-slate-50/60">
+    <section className="rounded-xl border border-line bg-surface-sunken">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -38,11 +38,11 @@ export function AssetSection({
         className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
       >
         <span className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-slate-900">{label}</span>
+          <span className="text-sm font-semibold text-content">{label}</span>
           <Badge>{assets.length}</Badge>
           {editedCount > 0 ? <Badge tone="info">{editedCount} edited</Badge> : null}
         </span>
-        <span aria-hidden className="text-slate-400">{open ? "▾" : "▸"}</span>
+        <span aria-hidden className="text-content-subtle">{open ? "▾" : "▸"}</span>
       </button>
 
       {open ? (

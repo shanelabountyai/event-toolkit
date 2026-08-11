@@ -185,7 +185,7 @@ function ChecklistPrint({ pack }: { pack: LogisticsPack }) {
                     {item.status === "done" ? "[x]" : "[ ]"}
                   </span>
                   {item.item || "Untitled"}
-                  <span className="ml-2 text-slate-600">
+                  <span className="ml-2 text-content-muted">
                     ({CHECKLIST_STATUS_LABELS[item.status]}
                     {item.owner ? `, ${item.owner}` : ""}
                     {due ? `, by ${due.label}` : item.dueNote ? `, ${item.dueNote}` : ""})

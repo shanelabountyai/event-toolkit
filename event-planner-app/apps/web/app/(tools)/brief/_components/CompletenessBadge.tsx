@@ -26,10 +26,10 @@ export function CompletenessMeter({
   return (
     <div className="space-y-2">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="text-sm font-medium text-slate-700">Completeness</span>
-        <span className="text-sm tabular-nums text-slate-600">
+        <span className="text-sm font-medium text-content-muted">Completeness</span>
+        <span className="text-sm tabular-nums text-content-muted">
           {result.percent}%{" "}
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-content-subtle">
             ({result.passed}/{result.total} checks)
           </span>
         </span>
@@ -41,14 +41,14 @@ export function CompletenessMeter({
             <li
               key={check.key}
               className={`flex items-start gap-1.5 text-xs ${
-                check.ok ? "text-slate-500" : "text-amber-700"
+                check.ok ? "text-content-muted" : "text-warning-text"
               }`}
             >
               <span aria-hidden="true">{check.ok ? "✓" : "○"}</span>
               <span>
                 {check.label}
                 {check.kind === "required" ? (
-                  <span className="ml-1 text-[10px] uppercase tracking-wide text-slate-400">
+                  <span className="ml-1 text-[10px] uppercase tracking-wide text-content-subtle">
                     required
                   </span>
                 ) : null}

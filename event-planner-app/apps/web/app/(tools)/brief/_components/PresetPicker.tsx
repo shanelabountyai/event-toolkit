@@ -56,13 +56,13 @@ export function PresetPicker() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <Link href="/brief" className="text-sm text-slate-500 hover:underline">
+        <Link href="/brief" className="text-sm text-content-muted hover:underline">
           ← All briefs
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-content">
           Start a new event brief
         </h1>
-        <p className="max-w-2xl text-sm text-slate-600">
+        <p className="max-w-2xl text-sm text-content-muted">
           Pick the event type. Presets pre-fill success metrics, a risk register, a milestone
           timeline, budget categories and a suggested RACI roster — all of it editable or
           removable later.
@@ -70,7 +70,7 @@ export function PresetPicker() {
       </header>
 
       {error ? (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="rounded-md border border-danger-border bg-danger-subtle px-4 py-3 text-sm text-danger-text">
           {error}
         </div>
       ) : null}
@@ -80,10 +80,10 @@ export function PresetPicker() {
           <Card key={preset.type} className="flex flex-col">
             <CardBody className="flex flex-1 flex-col gap-3">
               <div>
-                <h2 className="text-base font-semibold text-slate-900">{preset.label}</h2>
-                <p className="mt-1 text-sm text-slate-600">{preset.tagline}</p>
+                <h2 className="text-base font-semibold text-content">{preset.label}</h2>
+                <p className="mt-1 text-sm text-content-muted">{preset.tagline}</p>
               </div>
-              <ul className="flex-1 space-y-1 text-xs text-slate-500">
+              <ul className="flex-1 space-y-1 text-xs text-content-muted">
                 <li>
                   {preset.successMetrics.length > 0
                     ? `${preset.successMetrics.length} default success metrics`

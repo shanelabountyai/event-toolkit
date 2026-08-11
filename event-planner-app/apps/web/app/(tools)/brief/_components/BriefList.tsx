@@ -109,15 +109,15 @@ export function BriefList() {
   };
 
   if (rows === null) {
-    return <p className="text-sm text-slate-500">Loading briefs…</p>;
+    return <p className="text-sm text-content-muted">Loading briefs…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Event briefs</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-2xl font-semibold tracking-tight text-content">Event briefs</h1>
+          <p className="mt-1 text-sm text-content-muted">
             Every brief is stored in this browser. Start here, then launch the rest of the suite
             from a brief.
           </p>
@@ -143,19 +143,25 @@ export function BriefList() {
       </header>
 
       {error ? (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="rounded-md border border-danger-border bg-danger-subtle px-4 py-3 text-sm text-danger-text">
           {error}
         </div>
       ) : null}
       {notice ? (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="rounded-md border border-success-border bg-success-subtle px-4 py-3 text-sm text-success-text">
           {notice}
         </div>
       ) : null}
 
       {rows.length === 0 ? <EmptyState /> : null}
 
-      <div className="grid gap-4">
+      {/*
+        grid-cols-1, not bare grid. A grid item defaults to min-width:auto, so the `truncate`
+        below (which sets white-space:nowrap) gave this track a min-content width of 933px and
+        slid the whole landing page sideways on a phone. grid-cols-1 expands to
+        repeat(1, minmax(0, 1fr)), which caps the track.
+      */}
+      <div className="grid grid-cols-1 gap-4">
         {rows.map(({ brief, intakeInProgress, intakeStep }) => {
           const completeness = computeCompleteness(brief);
           return (
@@ -164,11 +170,11 @@ export function BriefList() {
                 <div className="min-w-0">
                   <Link
                     href={`/brief/${brief.id}`}
-                    className="text-base font-semibold text-slate-900 hover:underline"
+                    className="text-base font-semibold text-content hover:underline"
                   >
                     {brief.name || "Untitled brief"}
                   </Link>
-                  <p className="mt-0.5 truncate text-sm text-slate-500">
+                  <p className="mt-0.5 truncate text-sm text-content-muted">
                     {brief.goals.primaryObjective || "No primary objective yet"}
                   </p>
                 </div>
@@ -182,25 +188,25 @@ export function BriefList() {
                 </div>
               </CardHeader>
               <CardBody className="flex flex-wrap items-center justify-between gap-3">
-                <dl className="flex flex-wrap gap-x-8 gap-y-1 text-sm text-slate-600">
+                <dl className="flex flex-wrap gap-x-8 gap-y-1 text-sm text-content-muted">
                   <div>
-                    <dt className="text-xs uppercase tracking-wide text-slate-400">Dates</dt>
+                    <dt className="text-xs uppercase tracking-wide text-content-subtle">Dates</dt>
                     <dd>{formatDateRange(brief)}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs uppercase tracking-wide text-slate-400">Last updated</dt>
+                    <dt className="text-xs uppercase tracking-wide text-content-subtle">Last updated</dt>
                     <dd>{formatRelative(brief.updatedAt)}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs uppercase tracking-wide text-slate-400">Revision</dt>
+                    <dt className="text-xs uppercase tracking-wide text-content-subtle">Revision</dt>
                     <dd>
                       v{brief.version} · schema {brief.schemaVersion}
                     </dd>
                   </div>
                   {completeness.missingRecommended.length > 0 ? (
                     <div>
-                      <dt className="text-xs uppercase tracking-wide text-slate-400">Gaps</dt>
-                      <dd className="text-amber-700">
+                      <dt className="text-xs uppercase tracking-wide text-content-subtle">Gaps</dt>
+                      <dd className="text-warning-text">
                         {completeness.missingRecommended.length} section
                         {completeness.missingRecommended.length === 1 ? "" : "s"} empty
                       </dd>
@@ -241,8 +247,8 @@ function EmptyState() {
   return (
     <Card>
       <CardBody className="py-12 text-center">
-        <h2 className="text-lg font-semibold text-slate-900">No briefs yet</h2>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600">
+        <h2 className="text-lg font-semibold text-content">No briefs yet</h2>
+        <p className="mx-auto mt-2 max-w-xl text-sm text-content-muted">
           An event brief is the shared spine for everything that follows — objectives, audience,
           budget shell, RACI, success metrics, risks and timeline in one structured document.
           Pick an event-type preset and the guided intake fills in sensible defaults you can edit.

@@ -32,11 +32,11 @@ export function RecommendedInterventions({
   if (interventions.length === 0) return null;
 
   return (
-    <Card className="border-amber-200">
-      <CardHeader className="border-amber-200 bg-amber-50/60">
+    <Card className="border-warning-border">
+      <CardHeader className="border-warning-border bg-warning-subtle/60">
         <div>
-          <h2 className="text-base font-semibold text-amber-900">Recommended next steps</h2>
-          <p className="text-xs text-amber-800">
+          <h2 className="text-base font-semibold text-warning-text">Recommended next steps</h2>
+          <p className="text-xs text-warning-text">
             Registrations are behind the target curve. These are the levers still available, most
             urgent first.
           </p>
@@ -47,13 +47,13 @@ export function RecommendedInterventions({
           {interventions.map((item) => {
             const asset = matchAsset(item, assets);
             return (
-              <li key={item.id} className="rounded-lg border border-slate-200 bg-white p-3">
-                <p className="text-sm font-medium text-slate-900">{item.title}</p>
-                <p className="mt-0.5 text-sm text-slate-600">{item.detail}</p>
+              <li key={item.id} className="rounded-lg border border-line bg-surface p-3">
+                <p className="text-sm font-medium text-content">{item.title}</p>
+                <p className="mt-0.5 text-sm text-content-muted">{item.detail}</p>
                 {asset ? (
                   <Link
                     href={`/promo/kit?briefId=${briefId}#asset-${asset.id}`}
-                    className="mt-1.5 inline-block text-sm font-medium text-slate-900 underline underline-offset-4 hover:text-slate-600"
+                    className="mt-1.5 inline-block text-sm font-medium text-content underline underline-offset-4 hover:text-content-muted"
                   >
                     Open “{asset.label}” →
                   </Link>

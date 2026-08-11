@@ -70,14 +70,14 @@ export function AssetCard({
       id={`asset-${asset.id}`}
       className={
         highlighted
-          ? "scroll-mt-24 rounded-lg border-2 border-sky-400 bg-sky-50/40 p-4 shadow-sm"
-          : "scroll-mt-24 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+          ? "scroll-mt-24 rounded-lg border-2 border-accent bg-accent-subtle/40 p-4 shadow-sm"
+          : "scroll-mt-24 rounded-lg border border-line bg-surface p-4 shadow-sm"
       }
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">{asset.label}</h3>
-          <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+          <h3 className="text-sm font-semibold text-content">{asset.label}</h3>
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-content-muted">
             {asset.channel ? <span>{SOCIAL_CHANNEL_LABELS[asset.channel]}</span> : null}
             {asset.suggestedSendDate ? (
               <span>Suggested send: {formatIsoDate(asset.suggestedSendDate)}</span>
@@ -101,7 +101,7 @@ export function AssetCard({
         onChange={(e) => onEdit(e.target.value)}
         rows={Math.min(20, Math.max(5, draft.split("\n").length + 1))}
         aria-label={`${asset.label} copy`}
-        className="mt-3 block w-full resize-y rounded-md border-0 bg-white px-3 py-2 font-mono text-xs leading-relaxed text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-800"
+        className="mt-3 block w-full resize-y rounded-md border-0 bg-surface px-3 py-2 font-mono text-xs leading-relaxed text-content shadow-sm ring-1 ring-inset ring-line-strong focus:ring-2 focus:ring-inset focus:ring-focus"
       />
 
       <div className="mt-3 flex flex-wrap items-center gap-2">

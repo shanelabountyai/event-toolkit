@@ -66,7 +66,7 @@ export function PacingCurveChart({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="overflow-x-auto rounded-lg border border-line bg-surface p-3 shadow-sm">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="h-auto w-full min-w-[520px]"
@@ -101,12 +101,12 @@ export function PacingCurveChart({
           ) : null}
         </svg>
 
-        <p className="mt-2 flex flex-wrap gap-4 text-xs text-slate-500">
+        <p className="mt-2 flex flex-wrap gap-4 text-xs text-content-muted">
           <span className="flex items-center gap-1.5">
-            <span aria-hidden className="inline-block h-0.5 w-5 bg-slate-900" /> Actual
+            <span aria-hidden className="inline-block h-0.5 w-5 bg-accent" /> Actual
           </span>
           <span className="flex items-center gap-1.5">
-            <span aria-hidden className="inline-block h-0.5 w-5 border-t-2 border-dashed border-slate-400" /> Target
+            <span aria-hidden className="inline-block h-0.5 w-5 border-t-2 border-dashed border-line-strong" /> Target
           </span>
         </p>
       </div>
@@ -132,8 +132,8 @@ export function PacingCurveChart({
                 <tr key={entry.id}>
                   <Td>{formatIsoDate(entry.date)}</Td>
                   <Td className="text-right tabular-nums">{entry.cumulativeRegistrations.toLocaleString()}</Td>
-                  <Td className="text-right tabular-nums text-slate-500">{target.toLocaleString()}</Td>
-                  <Td className={`text-right tabular-nums ${diff < 0 ? "text-red-700" : "text-emerald-700"}`}>
+                  <Td className="text-right tabular-nums text-content-muted">{target.toLocaleString()}</Td>
+                  <Td className={`text-right tabular-nums ${diff < 0 ? "text-danger-text" : "text-success-text"}`}>
                     {diff > 0 ? "+" : ""}
                     {diff.toLocaleString()}
                   </Td>

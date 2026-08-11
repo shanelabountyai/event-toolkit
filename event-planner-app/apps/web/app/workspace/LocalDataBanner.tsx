@@ -26,14 +26,14 @@ export function LocalDataBanner({ workspaceId }: { workspaceId: string }) {
   if (!count) return null;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-900 px-5 py-4 text-white">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-accent px-5 py-4 text-accent-fg">
       <p className="text-sm">
         You have {count === 1 ? "1 event" : `${count} events`} saved in this browser.{" "}
-        <span className="text-slate-300">Move them in to reach them from anywhere.</span>
+        <span className="text-content-subtle">Move them in to reach them from anywhere.</span>
       </p>
       <Link
         href={`/workspace/${workspaceId}/migrate`}
-        className="rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100"
+        className="rounded-lg bg-surface px-3 py-1.5 text-sm font-medium text-content hover:bg-surface-hover"
       >
         Review what moves
       </Link>

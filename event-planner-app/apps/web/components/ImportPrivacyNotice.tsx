@@ -37,8 +37,8 @@ export function ImportPrivacyNotice() {
   if (!state || dismissed) return null;
 
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl bg-amber-50 px-4 py-3 ring-1 ring-inset ring-amber-200">
-      <p className="max-w-prose text-sm text-amber-900">
+    <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl bg-warning-subtle px-4 py-3 ring-1 ring-inset ring-warning-border">
+      <p className="max-w-prose text-sm text-warning-text">
         {state.mode === "workspace" ? (
           <>
             You&rsquo;re about to upload other people&rsquo;s personal data — names, emails, job
@@ -61,7 +61,7 @@ export function ImportPrivacyNotice() {
           window.sessionStorage.setItem("event-toolkit:import-notice", "1");
           setDismissed(true);
         }}
-        className="shrink-0 rounded-lg px-2.5 py-1.5 text-sm font-medium text-amber-900 hover:bg-amber-100"
+        className="shrink-0 rounded-lg px-2.5 py-1.5 text-sm font-medium text-warning-text hover:bg-warning-subtle"
       >
         Understood
       </button>

@@ -7,12 +7,18 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   tone?: BadgeTone;
 }
 
+/**
+ * Tones map to semantic tokens, so a badge is legible in both themes.
+ *
+ * `info` used to be sky and `success` emerald while other parts of the app used blue and green
+ * for the same meanings. One family each, named by what it means.
+ */
 const TONES: Record<BadgeTone, string> = {
-  neutral: "bg-slate-100 text-slate-700 ring-slate-200",
-  info: "bg-sky-50 text-sky-700 ring-sky-200",
-  success: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  warning: "bg-amber-50 text-amber-800 ring-amber-200",
-  danger: "bg-red-50 text-red-700 ring-red-200",
+  neutral: "bg-surface-sunken text-content-muted ring-line",
+  info: "bg-accent-subtle text-accent-text ring-accent/20",
+  success: "bg-success-subtle text-success-text ring-success-border",
+  warning: "bg-warning-subtle text-warning-text ring-warning-border",
+  danger: "bg-danger-subtle text-danger-text ring-danger-border",
 };
 
 export function Badge({ tone = "neutral", className, ...rest }: BadgeProps) {

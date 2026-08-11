@@ -29,10 +29,10 @@ function EmptySection({ title, message, action }: { title: string; message: stri
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
+        <h2 className="text-base font-semibold text-content">{title}</h2>
       </CardHeader>
       <CardBody className="space-y-3">
-        <p className="text-sm text-slate-600">{message}</p>
+        <p className="text-sm text-content-muted">{message}</p>
         {action}
       </CardBody>
     </Card>
@@ -65,8 +65,8 @@ export function BudgetSection({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Budget</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Budget</h2>
+          <p className="text-xs text-content-muted">
             Read straight from the Budget Builder — nothing is re-entered or re-derived here.
           </p>
         </div>
@@ -107,8 +107,8 @@ export function LeadsSection({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Leads</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Leads</h2>
+          <p className="text-xs text-content-muted">
             Source: {LEAD_SOURCE_MODE_LABELS[costSummary.leadSourceMode]}
           </p>
         </div>
@@ -118,16 +118,16 @@ export function LeadsSection({
       </CardHeader>
       <CardBody className="space-y-3">
         {leadSources.length === 0 ? (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             No lead triage session is linked to this event. Enter a lead count manually, or run
             one in Lead Triage first.
           </p>
         ) : leadSources.length === 1 ? (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             Auto-linked to “{leadSources[0].eventName}” ({leadSources[0].leadCount} leads).
           </p>
         ) : (
-          <label className="block text-xs text-slate-600">
+          <label className="block text-xs text-content-muted">
             More than one triage session is linked — choose which to use
             <Select
               className="mt-1 w-72"
@@ -144,8 +144,8 @@ export function LeadsSection({
           </label>
         )}
 
-        <div className="flex flex-wrap items-end gap-2 border-t border-slate-200 pt-3">
-          <label className="text-xs text-slate-600">
+        <div className="flex flex-wrap items-end gap-2 border-t border-line pt-3">
+          <label className="text-xs text-content-muted">
             Or enter a lead count manually
             <NumberInput
               className="mt-1 w-32 text-right"
@@ -193,8 +193,8 @@ export function PipelineSection({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Pipeline</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Pipeline</h2>
+          <p className="text-xs text-content-muted">
             {summary.opportunitiesCount} opportunities · {summary.meetingsCount} meetings
           </p>
         </div>
@@ -222,14 +222,14 @@ export function PipelineSection({
               <Td className="text-right tabular-nums">{summary.influencedCount}</Td>
               <Td className="text-right tabular-nums">{formatMoney(summary.influencedAmount, "USD")}</Td>
             </tr>
-            <tr className="text-slate-500">
+            <tr className="text-content-muted">
               <Td>{ATTRIBUTION_LABELS.outside_window}</Td>
               <Td className="text-right tabular-nums">{outsideWindowCount}</Td>
               <Td className="text-right">—</Td>
             </tr>
           </tbody>
         </Table>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           Closed/won so far: {formatMoney(summary.wonAmount, "USD")} across {summary.wonCount} deals.
           Shown for completeness — the scorecard weighs pipeline, since most cycles outlast this
           reporting window.
@@ -266,7 +266,7 @@ export function SurveySection({
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-base font-semibold text-slate-900">Attendee sentiment</h2>
+        <h2 className="text-base font-semibold text-content">Attendee sentiment</h2>
         {summary.npsSmallSample ? <Badge tone="warning">Small sample</Badge> : null}
       </CardHeader>
       <CardBody>
@@ -276,7 +276,7 @@ export function SurveySection({
           <Stat label="Avg CSAT" value={summary.csatAverage === null ? "Not available" : String(summary.csatAverage)} />
         </dl>
         {summary.npsSmallSample ? (
-          <p className="mt-2 text-xs text-amber-800">
+          <p className="mt-2 text-xs text-warning-text">
             Fewer than 5 scored responses — the NPS figure is shown but not scored.
           </p>
         ) : null}
@@ -290,7 +290,7 @@ export function CostSummaryPanel({ costs, currency }: { costs: CostSummary; curr
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-base font-semibold text-slate-900">Cost per outcome</h2>
+        <h2 className="text-base font-semibold text-content">Cost per outcome</h2>
       </CardHeader>
       <CardBody>
         <dl className="grid grid-cols-3 gap-3">
@@ -364,10 +364,10 @@ export function YoyComparisonPanel({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">
+          <h2 className="text-base font-semibold text-content">
             Against {report.yoyComparison.comparatorEventName}
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-muted">
             {report.yoyComparison.selectionMode === "auto_suggested"
               ? "Auto-suggested — the most recent finalised report of the same event type."
               : "Chosen by you."}
@@ -416,7 +416,7 @@ export function YoyComparisonPanel({
                   {row.figure.deltaPct === null ? (
                     "—"
                   ) : (
-                    <span className={row.figure.deltaPct >= 0 ? "text-emerald-700" : "text-red-700"}>
+                    <span className={row.figure.deltaPct >= 0 ? "text-success-text" : "text-danger-text"}>
                       {row.figure.deltaPct > 0 ? "+" : ""}
                       {row.figure.deltaPct}%
                     </span>
@@ -433,15 +433,15 @@ export function YoyComparisonPanel({
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: "danger" | "success" }) {
   return (
-    <div className="rounded-md bg-slate-50 px-3 py-2">
-      <dt className="text-xs text-slate-500">{label}</dt>
+    <div className="rounded-md bg-surface-sunken px-3 py-2">
+      <dt className="text-xs text-content-muted">{label}</dt>
       <dd
         className={
           tone === "danger"
-            ? "text-lg font-semibold text-red-700"
+            ? "text-lg font-semibold text-danger-text"
             : tone === "success"
-              ? "text-lg font-semibold text-emerald-700"
-              : "text-lg font-semibold text-slate-900"
+              ? "text-lg font-semibold text-success-text"
+              : "text-lg font-semibold text-content"
         }
       >
         {value}

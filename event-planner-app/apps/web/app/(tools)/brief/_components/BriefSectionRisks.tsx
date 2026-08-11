@@ -66,12 +66,12 @@ export function BriefSectionRisks({ brief, onSave }: BriefSectionProps) {
           </div>
           <div className="grid gap-4">
             {rows.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500">
+              <p className="rounded-lg border border-dashed border-line-strong px-4 py-6 text-center text-sm text-content-muted">
                 No risks yet.
               </p>
             ) : null}
             {rows.map((r) => (
-              <div key={r.id} className="space-y-3 rounded-lg border border-slate-200 p-3">
+              <div key={r.id} className="space-y-3 rounded-lg border border-line p-3">
                 <TextInput
                   aria-label="Risk"
                   value={r.risk}
@@ -170,9 +170,9 @@ export function BriefSectionRisks({ brief, onSave }: BriefSectionProps) {
                 <Td>
                   <LikertBadge level={r.impact} />
                 </Td>
-                <Td className="text-slate-600">{RISK_STATUS_LABELS[r.status]}</Td>
-                <Td className="text-slate-600">{r.owner || "—"}</Td>
-                <Td className="text-slate-600">{r.mitigation || "—"}</Td>
+                <Td className="text-content-muted">{RISK_STATUS_LABELS[r.status]}</Td>
+                <Td className="text-content-muted">{r.owner || "—"}</Td>
+                <Td className="text-content-muted">{r.mitigation || "—"}</Td>
               </tr>
             ))}
           </tbody>

@@ -20,7 +20,7 @@ export function RevokeInvitationButton({
       <Button type="submit" size="sm" disabled={pending}>
         {pending ? "Revoking…" : "Revoke"}
       </Button>
-      {state.error ? <span className="text-xs text-red-700">{state.error}</span> : null}
+      {state.error ? <span className="text-xs text-danger-text">{state.error}</span> : null}
     </form>
   );
 }

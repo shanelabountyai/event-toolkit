@@ -220,8 +220,8 @@ export function EventBasicsStep({ brief, onChange, highlightMissing }: StepProps
         </Field>
       </div>
 
-      <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
-        <legend className="px-1 text-sm font-medium text-slate-700">
+      <fieldset className="space-y-4 rounded-lg border border-line bg-surface-sunken p-4">
+        <legend className="px-1 text-sm font-medium text-content-muted">
           {showVenue && showPlatform
             ? "Venue and platform"
             : showVenue

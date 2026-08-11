@@ -90,10 +90,10 @@ export function PackOverview({
           <Link
             key={artifact.key}
             href={`${base}/${artifact.key}`}
-            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-slate-300 hover:bg-slate-50"
+            className="rounded-xl border border-line bg-surface p-4 shadow-sm hover:border-line-strong hover:bg-surface-sunken"
           >
-            <p className="text-sm font-medium text-slate-900">{artifact.label}</p>
-            <p className="mt-1 text-xs text-slate-600">{artifact.summary}</p>
+            <p className="text-sm font-medium text-content">{artifact.label}</p>
+            <p className="mt-1 text-xs text-content-muted">{artifact.summary}</p>
             <div className="mt-3">
               <ProgressBar
                 value={artifact.total === 0 ? 0 : (artifact.count / artifact.total) * 100}
@@ -103,13 +103,13 @@ export function PackOverview({
         ))}
       </section>
 
-      <section className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <section className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3 shadow-sm">
         <Badge tone={completeness.openIssues > 0 ? "danger" : "success"}>
           {completeness.openIssues} open issue{completeness.openIssues === 1 ? "" : "s"}
         </Badge>
         <Link
           href={`${base}/issues`}
-          className="text-sm font-medium text-slate-700 underline underline-offset-4 hover:text-slate-900"
+          className="text-sm font-medium text-content-muted underline underline-offset-4 hover:text-content"
         >
           Open the issue log
         </Link>
@@ -120,8 +120,8 @@ export function PackOverview({
           <Card>
             <CardHeader>
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Known risks</h2>
-                <p className="text-xs text-slate-500">
+                <h2 className="text-base font-semibold text-content">Known risks</h2>
+                <p className="text-xs text-content-muted">
                   From the event brief. Changing a status here writes back to the brief itself.
                 </p>
               </div>
@@ -172,8 +172,8 @@ export function PackOverview({
           <Card>
             <CardHeader>
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Milestones</h2>
-                <p className="text-xs text-slate-500">
+                <h2 className="text-base font-semibold text-content">Milestones</h2>
+                <p className="text-xs text-content-muted">
                   Also written back to the brief, so the brief stays the single source of truth.
                 </p>
               </div>
@@ -195,7 +195,7 @@ export function PackOverview({
                     brief.timeline.milestones.map((milestone) => (
                       <tr key={milestone.id}>
                         <Td>{milestone.label}</Td>
-                        <Td className="text-xs text-slate-600">
+                        <Td className="text-xs text-content-muted">
                           {milestone.phase.replace(/_/g, " ")}
                         </Td>
                         <Td>{formatIsoDate(milestone.targetDate)}</Td>

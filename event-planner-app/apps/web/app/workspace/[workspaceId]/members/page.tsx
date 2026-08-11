@@ -51,11 +51,11 @@ export default async function MembersPage({
   return (
     <main className="mx-auto w-full max-w-3xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href="/workspace" className="text-sm text-slate-600 hover:text-slate-900">
+        <Link href="/workspace" className="text-sm text-content-muted hover:text-content">
           ← All workspaces
         </Link>
-        <h1 className="text-xl font-semibold tracking-tight text-slate-900">{workspace.name}</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-xl font-semibold tracking-tight text-content">{workspace.name}</h1>
+        <p className="text-sm text-content-muted">
           You are {ROLE_LABELS[actorRole].toLowerCase()} here.{" "}
           {!manages ? "Only owners and admins can change who has access." : null}
         </p>
@@ -64,27 +64,27 @@ export default async function MembersPage({
       <LocalDataBanner workspaceId={workspaceId} />
 
       <div className="flex flex-wrap gap-3 text-sm">
-        <Link href={`/workspace/${workspaceId}/share`} className="font-medium text-slate-900 underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/share`} className="font-medium text-content underline underline-offset-2">
           On-site links
         </Link>
-        <Link href={`/workspace/${workspaceId}/migrate`} className="font-medium text-slate-900 underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/migrate`} className="font-medium text-content underline underline-offset-2">
           Move browser data in
         </Link>
-        <Link href={`/workspace/${workspaceId}/privacy`} className="font-medium text-slate-900 underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/privacy`} className="font-medium text-content underline underline-offset-2">
           Attendee data requests
         </Link>
-        <Link href={`/workspace/${workspaceId}/retention`} className="font-medium text-slate-900 underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/retention`} className="font-medium text-content underline underline-offset-2">
           Retention
         </Link>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-sm font-semibold text-content">
             {members.length === 1 ? "1 person" : `${members.length} people`}
           </h2>
         </CardHeader>
-        <ul className="divide-y divide-slate-200">
+        <ul className="divide-y divide-line">
           {members.map((m) => (
             <MemberRow
               key={m.userId}
@@ -108,16 +108,16 @@ export default async function MembersPage({
         <>
           <Card>
             <CardHeader>
-              <h2 className="text-sm font-semibold text-slate-900">Invite someone</h2>
+              <h2 className="text-sm font-semibold text-content">Invite someone</h2>
             </CardHeader>
             <CardBody className="space-y-4">
               <InviteForm workspaceId={workspaceId} />
-              <div className="space-y-1.5 border-t border-slate-200 pt-3 text-xs text-slate-600">
+              <div className="space-y-1.5 border-t border-line pt-3 text-xs text-content-muted">
                 {/* Roles are explained where they are chosen. A dropdown of five words is a
                     dropdown somebody guesses at, and guessing wrong here hands out attendee data. */}
                 {(Object.keys(ROLE_DESCRIPTIONS) as Role[]).map((role) => (
                   <p key={role}>
-                    <span className="font-medium text-slate-900">{ROLE_LABELS[role]}</span> —{" "}
+                    <span className="font-medium text-content">{ROLE_LABELS[role]}</span> —{" "}
                     {ROLE_DESCRIPTIONS[role]}
                   </p>
                 ))}
@@ -128,9 +128,9 @@ export default async function MembersPage({
           {invitations.length > 0 ? (
             <Card>
               <CardHeader>
-                <h2 className="text-sm font-semibold text-slate-900">Pending invitations</h2>
+                <h2 className="text-sm font-semibold text-content">Pending invitations</h2>
               </CardHeader>
-              <ul className="divide-y divide-slate-200">
+              <ul className="divide-y divide-line">
                 {invitations.map((invite) => {
                   const expired = invite.expiresAt <= new Date();
                   return (
@@ -139,8 +139,8 @@ export default async function MembersPage({
                       className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5"
                     >
                       <div className="space-y-0.5">
-                        <p className="text-sm font-medium text-slate-900">{invite.email}</p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-sm font-medium text-content">{invite.email}</p>
+                        <p className="text-xs text-content-muted">
                           {ROLE_LABELS[invite.role as Role]} ·{" "}
                           {expired
                             ? "expired"
@@ -160,22 +160,22 @@ export default async function MembersPage({
 
           <Card>
             <CardHeader>
-              <h2 className="text-sm font-semibold text-slate-900">Access log</h2>
-              <span className="text-xs text-slate-500">Every change to who can see what</span>
+              <h2 className="text-sm font-semibold text-content">Access log</h2>
+              <span className="text-xs text-content-muted">Every change to who can see what</span>
             </CardHeader>
             {events.length === 0 ? (
               <CardBody>
-                <p className="text-sm text-slate-600">Nothing recorded yet.</p>
+                <p className="text-sm text-content-muted">Nothing recorded yet.</p>
               </CardBody>
             ) : (
-              <ul className="divide-y divide-slate-200 text-sm">
+              <ul className="divide-y divide-line text-sm">
                 {[...events]
                   .sort((a, b) => b.at.getTime() - a.at.getTime())
                   .slice(0, 25)
                   .map((event) => (
                     <li key={event.id} className="flex flex-wrap justify-between gap-3 px-5 py-2.5">
-                      <span className="text-slate-800">{describeEvent(event.action, event.detail)}</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-content">{describeEvent(event.action, event.detail)}</span>
+                      <span className="text-xs text-content-muted">
                         {event.at.toLocaleString(undefined, {
                           day: "numeric",
                           month: "short",

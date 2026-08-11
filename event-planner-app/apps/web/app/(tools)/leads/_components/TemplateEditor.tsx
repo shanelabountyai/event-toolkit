@@ -42,7 +42,7 @@ export function TemplateEditor({
     return (
       <Card>
         <CardBody>
-          <p className="text-sm text-slate-600">No templates yet.</p>
+          <p className="text-sm text-content-muted">No templates yet.</p>
         </CardBody>
       </Card>
     );
@@ -67,8 +67,8 @@ export function TemplateEditor({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Follow-up templates</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Follow-up templates</h2>
+            <p className="text-xs text-content-muted">
               One per tier. Drafts are rendered from these — no AI, so what you write is exactly
               what goes out.
             </p>
@@ -90,7 +90,7 @@ export function TemplateEditor({
         </CardHeader>
         <CardBody className="space-y-4">
           {editedCount > 0 ? (
-            <p className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-900">
+            <p className="rounded-lg border border-accent/20 bg-accent-subtle px-3 py-2 text-xs text-accent-text">
               {editedCount} draft{editedCount === 1 ? " has" : "s have"} been edited by hand.
               &ldquo;Generate all drafts&rdquo; leaves those alone.
             </p>
@@ -104,8 +104,8 @@ export function TemplateEditor({
                 onClick={() => setActiveId(template.id)}
                 className={
                   template.id === active.id
-                    ? "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white"
-                    : "rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+                    ? "rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg"
+                    : "rounded-md bg-surface px-3 py-1.5 text-sm font-medium text-content-muted ring-1 ring-inset ring-line-strong hover:bg-surface-sunken"
                 }
               >
                 {template.tier === "all" ? "All tiers" : LEAD_TIER_LABELS[template.tier]}
@@ -114,7 +114,7 @@ export function TemplateEditor({
             <Badge>{active.deliveryModeVariant.replace("_", " ")}</Badge>
           </div>
 
-          <label className="block text-xs text-slate-600">
+          <label className="block text-xs text-content-muted">
             Subject
             <TextInput
               className="mt-1"
@@ -123,7 +123,7 @@ export function TemplateEditor({
             />
           </label>
 
-          <label className="block text-xs text-slate-600">
+          <label className="block text-xs text-content-muted">
             Body
             <TextArea
               className="mt-1 font-mono text-xs"
@@ -133,10 +133,10 @@ export function TemplateEditor({
             />
           </label>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-muted">
             Merge tokens:{" "}
             {MERGE_TOKENS.map((token) => (
-              <code key={token} className="mr-1 rounded bg-slate-100 px-1">{`{{${token}}}`}</code>
+              <code key={token} className="mr-1 rounded bg-surface-hover px-1">{`{{${token}}}`}</code>
             ))}
           </p>
         </CardBody>
@@ -144,7 +144,7 @@ export function TemplateEditor({
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Preview</h2>
+          <h2 className="text-base font-semibold text-content">Preview</h2>
           {leads.length > 0 ? (
             <Select
               className="w-64"
@@ -163,15 +163,15 @@ export function TemplateEditor({
         <CardBody>
           {previewLead ? (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-slate-900">
+              <p className="text-sm font-medium text-content">
                 {renderTemplate(active.subjectTemplate, values)}
               </p>
-              <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-3 font-mono text-xs text-slate-800">
+              <pre className="whitespace-pre-wrap rounded-lg bg-surface-sunken p-3 font-mono text-xs text-content">
                 {renderTemplate(active.bodyTemplate, values)}
               </pre>
             </div>
           ) : (
-            <p className="text-sm text-slate-500">Import some leads to preview a draft.</p>
+            <p className="text-sm text-content-muted">Import some leads to preview a draft.</p>
           )}
         </CardBody>
       </Card>
@@ -180,11 +180,11 @@ export function TemplateEditor({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-accent/40 p-4"
         >
-          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
-            <h2 className="text-base font-semibold text-slate-900">Overwrite edited drafts?</h2>
-            <p className="mt-1 text-sm text-slate-600">
+          <div className="w-full max-w-md rounded-xl bg-surface p-5 shadow-xl">
+            <h2 className="text-base font-semibold text-content">Overwrite edited drafts?</h2>
+            <p className="mt-1 text-sm text-content-muted">
               {editedCount} draft{editedCount === 1 ? "" : "s"} you edited by hand will be replaced
               with freshly generated copy. This can&rsquo;t be undone.
             </p>

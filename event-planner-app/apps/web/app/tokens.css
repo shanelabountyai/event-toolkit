@@ -23,6 +23,12 @@
   --grey-300: #c3cbd6;
   --grey-400: #97a2b2;
   --grey-500: #6b7688;
+  /*
+   * A step between grey-500 and grey-600, added because grey-500 measured 4.31:1 on the sunken
+   * surface — a near-miss that still fails. Subtle text needs to be quieter than muted without
+   * being unreadable, and there was no value in the ramp that did both.
+   */
+  --grey-550: #5d6879;
   --grey-600: #505b6b;
   --grey-700: #3b4553;
   --grey-800: #262e3a;
@@ -36,6 +42,13 @@
   --indigo-100: #e0e7ff;
   --indigo-400: #818cf8;
   --indigo-500: #6366f1;
+  /*
+   * Dark-mode button fill. A filled button has to satisfy two thresholds at once — its white
+   * label against the fill (4.5) and the fill against what it sits on (3.0) — and indigo-500
+   * measured 4.47 on the first. Chosen by scanning for a value that clears both rather than by
+   * nudging until it looked right.
+   */
+  --indigo-fill-dark: #655ef4;
   --indigo-600: #4f46e5;
   --indigo-700: #4338ca;
 
@@ -66,7 +79,8 @@
   /* ---- Semantic: text ---------------------------------------------------- */
   --color-text: var(--grey-900);
   --color-text-muted: var(--grey-600);
-  --color-text-subtle: var(--grey-500);
+  /* 5.3:1 on the sunken surface. grey-500 sat at 4.31 and failed. */
+  --color-text-subtle: var(--grey-550);
   --color-text-inverse: var(--grey-0);
 
   /* ---- Semantic: lines --------------------------------------------------- */
@@ -123,15 +137,25 @@
   --color-surface-hover: var(--grey-800);
 
   --color-text: #e8ecf1;
-  --color-text-muted: var(--grey-400);
-  --color-text-subtle: var(--grey-500);
+  --color-text-muted: var(--grey-300);
+  /* 5.6:1 on the dark surface. grey-500 measured 3.73 here — dark themes need the quiet tones
+     brought *up*, not down, which is the mistake mirroring a light ramp always produces. */
+  --color-text-subtle: #8a94a5;
   --color-text-inverse: var(--grey-950);
 
   --color-border: #232c38;
   --color-border-strong: var(--grey-700);
 
-  --color-accent: var(--indigo-500);
-  --color-accent-hover: var(--indigo-400);
+  /*
+   * Fill and text are different jobs and take different values here.
+   *
+   * The fill needs a white label to be legible on it. Accent *text* on a dark surface needs the
+   * opposite — indigo-600 measures 2.7:1 there and is unreadable, so accent-text goes lighter
+   * while the fill goes slightly darker. Treating them as one value is what produced the
+   * near-miss.
+   */
+  --color-accent: var(--indigo-fill-dark);
+  --color-accent-hover: var(--indigo-500);
   --color-accent-fg: var(--grey-0);
   --color-accent-subtle: #1e2340;
   --color-accent-text: var(--indigo-400);

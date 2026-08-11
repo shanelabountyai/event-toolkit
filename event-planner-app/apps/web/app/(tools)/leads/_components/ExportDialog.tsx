@@ -65,8 +65,8 @@ export function ExportDialog({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Export for sales</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Export for sales</h2>
+            <p className="text-xs text-content-muted">
               Sorted tier first, then score — the top of each file is the first call to make.
               Draft subject and body travel with each lead.
             </p>
@@ -74,11 +74,11 @@ export function ExportDialog({
         </CardHeader>
         <CardBody className="space-y-4">
           {leads.length === 0 ? (
-            <p className="text-sm text-slate-600">Nothing to export yet.</p>
+            <p className="text-sm text-content-muted">Nothing to export yet.</p>
           ) : (
             <>
               {undrafted > 0 ? (
-                <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                <p className="rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                   {undrafted} lead{undrafted === 1 ? " has" : "s have"} no follow-up draft yet — they
                   will export with empty draft columns.
                 </p>
@@ -117,7 +117,7 @@ export function ExportDialog({
               </div>
 
               {done ? (
-                <p role="status" className="text-sm text-emerald-700">
+                <p role="status" className="text-sm text-success-text">
                   {done}
                 </p>
               ) : null}
@@ -128,10 +128,10 @@ export function ExportDialog({
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">What happens next</h2>
+          <h2 className="text-base font-semibold text-content">What happens next</h2>
         </CardHeader>
         <CardBody>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             Export is the whole handoff in v1 — nothing is sent, and nothing is pushed to a CRM.
             Each owner works their file and sends the drafts themselves.
           </p>

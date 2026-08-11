@@ -73,16 +73,16 @@ export function ChecklistView({
       </div>
 
       {groups.length === 0 ? (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-content-muted">
           No checklist items yet — add one from a category above.
         </p>
       ) : (
         groups.map((group) => (
           <section key={group.category} className="break-inside-avoid space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-sm font-semibold text-slate-900">
+              <h3 className="text-sm font-semibold text-content">
                 {group.category}
-                <span className="ml-2 font-normal text-slate-500">
+                <span className="ml-2 font-normal text-content-muted">
                   {group.done}/{group.total} done
                 </span>
               </h3>
@@ -159,11 +159,11 @@ export function ChecklistView({
                             ))}
                           </Select>
                           {due ? (
-                            <span className="mt-1 block text-xs text-slate-500">
+                            <span className="mt-1 block text-xs text-content-muted">
                               {formatSessionRange(due.startTime, due.endTime)}
                             </span>
                           ) : item.dueNote ? (
-                            <span className="mt-1 block text-xs text-slate-500">{item.dueNote}</span>
+                            <span className="mt-1 block text-xs text-content-muted">{item.dueNote}</span>
                           ) : null}
                         </Td>
                         <Td className="no-print text-right">

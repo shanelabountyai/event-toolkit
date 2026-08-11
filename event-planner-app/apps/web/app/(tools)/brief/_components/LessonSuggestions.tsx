@@ -29,11 +29,11 @@ export function LessonSuggestions({
   if (visible.length === 0) return null;
 
   return (
-    <Card className="bg-amber-50/40">
-      <CardHeader className="border-amber-100">
+    <Card className="bg-warning-subtle/40">
+      <CardHeader className="border-warning-border">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Lessons from past events</h3>
-          <p className="text-xs text-slate-600">
+          <h3 className="text-sm font-semibold text-content">Lessons from past events</h3>
+          <p className="text-xs text-content-muted">
             Carried forward from your previous briefs. Add one as a constraint so you don&apos;t
             repeat it.
           </p>
@@ -45,11 +45,11 @@ export function LessonSuggestions({
           return (
             <div
               key={lesson.id}
-              className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-amber-100 bg-white px-3 py-2.5"
+              className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-warning-border bg-surface px-3 py-2.5"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-sm text-slate-800">{lesson.lesson}</p>
-                <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+                <p className="text-sm text-content">{lesson.lesson}</p>
+                <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-content-muted">
                   <span>from {lesson.sourceBriefName}</span>
                   <Badge tone={lesson.exactTypeMatch ? "info" : "neutral"}>
                     {EVENT_TYPE_LABELS[lesson.sourceBriefType]}

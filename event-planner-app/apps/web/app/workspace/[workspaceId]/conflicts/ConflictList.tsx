@@ -43,13 +43,13 @@ export function ConflictList() {
     setBusy(null);
   }
 
-  if (conflicts === null) return <p className="text-sm text-slate-500">Checking…</p>;
+  if (conflicts === null) return <p className="text-sm text-content-muted">Checking…</p>;
 
   if (conflicts.length === 0) {
     return (
       <Card>
         <CardBody>
-          <p className="text-sm text-slate-600">Nothing outstanding. Everything on this device has saved.</p>
+          <p className="text-sm text-content-muted">Nothing outstanding. Everything on this device has saved.</p>
         </CardBody>
       </Card>
     );
@@ -60,10 +60,10 @@ export function ConflictList() {
       {conflicts.map((conflict) => (
         <Card key={conflict.id}>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-900">
+            <h2 className="text-sm font-semibold text-content">
               {KIND_LABELS[conflict.kind] ?? conflict.kind}
             </h2>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-content-muted">
               Theirs saved{" "}
               {new Date(conflict.theirUpdatedAt).toLocaleString(undefined, {
                 day: "numeric",
@@ -75,7 +75,7 @@ export function ConflictList() {
           </CardHeader>
           <CardBody className="space-y-3">
             {conflict.resolution === "server_wins" ? (
-              <p className="rounded-lg bg-slate-50 px-3 py-2.5 text-sm text-slate-700 ring-1 ring-inset ring-slate-200">
+              <p className="rounded-lg bg-surface-sunken px-3 py-2.5 text-sm text-content-muted ring-1 ring-inset ring-line">
                 This was deleted by somebody else while you were editing it. Keeping your version
                 would bring it back — which may be wrong if it was deleted on purpose, including at
                 an attendee&rsquo;s request.
@@ -83,8 +83,8 @@ export function ConflictList() {
             ) : null}
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <Side title="Yours" body={conflict.mine} tone="border-slate-300" />
-              <Side title="Theirs (currently saved)" body={conflict.theirs} tone="border-emerald-300" />
+              <Side title="Yours" body={conflict.mine} tone="border-line-strong" />
+              <Side title="Theirs (currently saved)" body={conflict.theirs} tone="border-success-border" />
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -108,7 +108,7 @@ export function ConflictList() {
                 Decide later
               </Button>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-content-muted">
               Keeping yours replaces their version for everybody. Keeping theirs discards your
               change on this device.
             </p>
@@ -127,9 +127,9 @@ export function ConflictList() {
  */
 function Side({ title, body, tone }: { title: string; body: unknown; tone: string }) {
   return (
-    <div className={`space-y-1 rounded-lg border ${tone} bg-white p-2.5`}>
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{title}</p>
-      <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words text-[11px] leading-snug text-slate-700">
+    <div className={`space-y-1 rounded-lg border ${tone} bg-surface p-2.5`}>
+      <p className="text-xs font-medium uppercase tracking-wide text-content-muted">{title}</p>
+      <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words text-[11px] leading-snug text-content-muted">
         {body === null ? "(deleted)" : JSON.stringify(body, null, 1)}
       </pre>
     </div>

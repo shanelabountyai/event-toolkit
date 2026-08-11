@@ -12,7 +12,7 @@ const LABELS: Record<SaveState, string> = {
 
 export function SaveIndicator({ state, className }: { state: SaveState; className?: string }) {
   const tone =
-    state === "error" ? "text-red-600" : state === "dirty" || state === "saving" ? "text-amber-600" : "text-slate-400";
+    state === "error" ? "text-danger-text" : state === "dirty" || state === "saving" ? "text-warning" : "text-content-subtle";
   return (
     <span className={`text-xs ${tone} ${className ?? ""}`} role="status" aria-live="polite">
       {LABELS[state]}

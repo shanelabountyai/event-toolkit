@@ -17,7 +17,7 @@ export function Th({ className, ...rest }: React.ThHTMLAttributes<HTMLTableCellE
     <th
       scope="col"
       className={cx(
-        "border-b border-slate-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500",
+        "border-b border-line px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-subtle",
         className,
       )}
       {...rest}
@@ -28,7 +28,7 @@ export function Th({ className, ...rest }: React.ThHTMLAttributes<HTMLTableCellE
 export function Td({ className, ...rest }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cx("border-b border-slate-100 px-3 py-2 align-top text-slate-800", className)}
+      className={cx("border-b border-line px-3 py-2 align-top text-content", className)}
       {...rest}
     />
   );
@@ -37,7 +37,7 @@ export function Td({ className, ...rest }: React.TdHTMLAttributes<HTMLTableCellE
 export function EmptyRow({ colSpan, children }: { colSpan: number; children: React.ReactNode }) {
   return (
     <tr>
-      <td colSpan={colSpan} className="px-3 py-6 text-center text-sm text-slate-500">
+      <td colSpan={colSpan} className="px-3 py-6 text-center text-sm text-content-subtle">
         {children}
       </td>
     </tr>

@@ -33,14 +33,14 @@ export function PromoLanding() {
   }, [briefId, router]);
 
   if (briefId || briefs === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Promo Campaign Kit</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Promo Campaign Kit</h1>
+        <p className="mt-1 text-sm text-content-muted">
           Landing page, a five-email sequence, per-channel social posts and sales snippets —
           generated from an event brief you already have.
         </p>
@@ -48,11 +48,11 @@ export function PromoLanding() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Choose an event</h2>
+          <h2 className="text-base font-semibold text-content">Choose an event</h2>
         </CardHeader>
         <CardBody>
           {briefs.length === 0 ? (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-content-muted">
               No briefs in this browser yet.{" "}
               <Link href="/brief/new" className="font-medium underline underline-offset-4">
                 Create one first
@@ -60,18 +60,18 @@ export function PromoLanding() {
               .
             </p>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-line">
               {briefs.map((brief) => (
                 <li key={brief.id}>
                   <Link
                     href={`/promo/kit?briefId=${brief.id}`}
-                    className="flex flex-wrap items-center justify-between gap-2 py-3 hover:bg-slate-50"
+                    className="flex flex-wrap items-center justify-between gap-2 py-3 hover:bg-surface-sunken"
                   >
                     <span>
-                      <span className="block text-sm font-medium text-slate-900">
+                      <span className="block text-sm font-medium text-content">
                         {brief.name || "Untitled brief"}
                       </span>
-                      <span className="block text-xs text-slate-500">
+                      <span className="block text-xs text-content-muted">
                         {formatDateRange(brief)} · updated {formatRelative(brief.updatedAt)}
                       </span>
                     </span>

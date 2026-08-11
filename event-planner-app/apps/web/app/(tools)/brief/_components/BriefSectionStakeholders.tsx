@@ -48,8 +48,8 @@ export function BriefSectionStakeholders({ brief, onSave }: BriefSectionProps) {
                     {s.raci} — {RACI_LABELS[s.raci]}
                   </Badge>
                 </Td>
-                <Td className="text-slate-600">{s.department || "—"}</Td>
-                <Td className="text-slate-600">{s.email || "—"}</Td>
+                <Td className="text-content-muted">{s.department || "—"}</Td>
+                <Td className="text-content-muted">{s.email || "—"}</Td>
               </tr>
             ))}
           </tbody>

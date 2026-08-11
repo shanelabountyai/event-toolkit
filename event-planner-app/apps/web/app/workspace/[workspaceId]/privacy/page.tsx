@@ -28,11 +28,11 @@ export default async function PrivacyPage({ params }: { params: Promise<{ worksp
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href={`/workspace/${workspaceId}/members`} className="text-sm text-slate-600 hover:text-slate-900">
+        <Link href={`/workspace/${workspaceId}/members`} className="text-sm text-content-muted hover:text-content">
           ← {workspace.name}
         </Link>
-        <h1 className="text-xl font-semibold tracking-tight text-slate-900">Attendee data requests</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-xl font-semibold tracking-tight text-content">Attendee data requests</h1>
+        <p className="text-sm text-content-muted">
           Find everything this workspace holds about one person, export it, or delete it. Use this
           when somebody asks what you have about them, or asks you to remove it.
         </p>
@@ -43,7 +43,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ worksp
       ) : (
         <Card>
           <CardBody>
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-content-muted">
               Your role doesn&rsquo;t include access to attendee data, so this screen has nothing to
               show you. That&rsquo;s deliberate — it&rsquo;s the same permission that hides the Leads
               tool, and this page is not a way around it.
@@ -54,34 +54,34 @@ export default async function PrivacyPage({ params }: { params: Promise<{ worksp
 
       <Card>
         <CardHeader>
-          <h2 className="text-sm font-semibold text-slate-900">What you should know</h2>
+          <h2 className="text-sm font-semibold text-content">What you should know</h2>
         </CardHeader>
-        <CardBody className="space-y-2 text-sm text-slate-600">
+        <CardBody className="space-y-2 text-sm text-content-muted">
           <p>
-            <span className="font-medium text-slate-900">Deletion is permanent.</span> Records are
+            <span className="font-medium text-content">Deletion is permanent.</span> Records are
             removed, not hidden, and the removal reaches every signed-in device on its next sync.
           </p>
           <p>
-            <span className="font-medium text-slate-900">Totals aren&rsquo;t recalculated.</span>{" "}
+            <span className="font-medium text-content">Totals aren&rsquo;t recalculated.</span>{" "}
             Lead counts, cost per lead and the ROI scorecard stay as they were. They contain no
             personal data, and rewriting a past report to pretend somebody was never there would not
             remove anything about them.
           </p>
           <p>
-            <span className="font-medium text-slate-900">
+            <span className="font-medium text-content">
               Attendee data is deleted automatically after {policy.months} months
             </span>{" "}
             from an event&rsquo;s last activity.{" "}
             <Link
               href={`/workspace/${workspaceId}/retention`}
-              className="font-medium text-slate-900 underline underline-offset-2"
+              className="font-medium text-content underline underline-offset-2"
             >
               Change that
             </Link>
             . Briefs, budgets and post-mortems are never purged.
           </p>
           <p>
-            <span className="font-medium text-slate-900">You are the data controller</span>, not this
+            <span className="font-medium text-content">You are the data controller</span>, not this
             product. It gives you the mechanism; the relationship with the person asking is yours.
           </p>
         </CardBody>

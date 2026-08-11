@@ -122,7 +122,7 @@ export function PacingView() {
   }, [brief, config, set, entries]);
 
   if (loading || loadingData) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
   if (!briefId || notFound || !brief) {
     return <PromoBriefMissing notFound={notFound} />;
@@ -135,19 +135,19 @@ export function PacingView() {
         <PromoTabs brief={brief} active="pacing" />
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-content">
               This brief has no registration goal yet
             </h2>
           </CardHeader>
           <CardBody>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-content-muted">
               Pacing compares real registrations against a target curve, so it needs a success
               metric whose name mentions “registration” with a target above zero — for example
               <em> Registrations, target 500</em>.
             </p>
             <Link
               href={`/brief/${brief.id}`}
-              className="mt-3 inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+              className="mt-3 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
             >
               Add a registration metric to the brief
             </Link>
@@ -183,7 +183,7 @@ export function PacingView() {
             ))}
           </Select>
         </Field>
-        <p className="mb-1 text-xs text-slate-500">
+        <p className="mb-1 text-xs text-content-muted">
           Campaign window: {window.totalDays} day{window.totalDays === 1 ? "" : "s"} · goal{" "}
           {metric.target.toLocaleString()} {metric.unit && metric.unit !== "count" ? metric.unit : "registrations"}
         </p>

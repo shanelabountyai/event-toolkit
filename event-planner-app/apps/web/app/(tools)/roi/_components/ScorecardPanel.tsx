@@ -32,10 +32,10 @@ export function ScorecardPanel({ scorecard }: { scorecard: Scorecard | null }) {
     return (
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Repeat, change or kill</h2>
+          <h2 className="text-base font-semibold text-content">Repeat, change or kill</h2>
         </CardHeader>
         <CardBody>
-          <p className="text-sm text-slate-600">Import some data to score this event.</p>
+          <p className="text-sm text-content-muted">Import some data to score this event.</p>
         </CardBody>
       </Card>
     );
@@ -45,8 +45,8 @@ export function ScorecardPanel({ scorecard }: { scorecard: Scorecard | null }) {
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Repeat, change or kill</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Repeat, change or kill</h2>
+          <p className="text-xs text-content-muted">
             {scorecard.scoreableDimensionCount} of {scorecard.dimensions.length} dimensions scored
             {scorecard.scorePct !== null ? ` · ${Math.round(scorecard.scorePct * 100)}%` : ""}
           </p>
@@ -56,7 +56,7 @@ export function ScorecardPanel({ scorecard }: { scorecard: Scorecard | null }) {
         </Badge>
       </CardHeader>
       <CardBody className="space-y-3">
-        <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
+        <p className="rounded-lg bg-surface-sunken px-3 py-2 text-sm text-content-muted">
           {scorecard.recommendationRationale}
         </p>
 
@@ -80,7 +80,7 @@ export function ScorecardPanel({ scorecard }: { scorecard: Scorecard | null }) {
                 <Td>
                   <Badge tone={TONES[dimension.verdict]}>{VERDICT_LABELS[dimension.verdict]}</Badge>
                 </Td>
-                <Td className="text-xs text-slate-600">{dimension.thresholdsApplied}</Td>
+                <Td className="text-xs text-content-muted">{dimension.thresholdsApplied}</Td>
                 <Td className="text-right tabular-nums">
                   {dimension.points === null ? "—" : `${dimension.points}/2`}
                 </Td>
@@ -89,7 +89,7 @@ export function ScorecardPanel({ scorecard }: { scorecard: Scorecard | null }) {
           </tbody>
         </Table>
 
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           Pipeline drives this, not closed/won revenue — most deal cycles run longer than the
           window this report covers, so won figures are shown but not weighted.
         </p>

@@ -32,12 +32,12 @@ export function InviteForm({ workspaceId }: { workspaceId: string }) {
       </div>
 
       {state.error ? (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger-text">
           {state.error}
         </p>
       ) : null}
-      {state.ok ? <p className="text-sm text-emerald-700">{state.ok}</p> : null}
-      <p className="text-xs text-slate-500">The invitation expires in 14 days and can be revoked.</p>
+      {state.ok ? <p className="text-sm text-success-text">{state.ok}</p> : null}
+      <p className="text-xs text-content-muted">The invitation expires in 14 days and can be revoked.</p>
     </form>
   );
 }

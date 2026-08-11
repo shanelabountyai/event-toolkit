@@ -51,14 +51,14 @@ export function BudgetList() {
   }, []);
 
   if (rows === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Budget Builder &amp; Tracker</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Budget Builder &amp; Tracker</h1>
+        <p className="mt-1 text-sm text-content-muted">
           Line-item budgets with budgeted, committed and actual tracking, variance flags and a
           finance-ready export. Opening an event for the first time builds its template.
         </p>
@@ -66,7 +66,7 @@ export function BudgetList() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Budgets</h2>
+          <h2 className="text-base font-semibold text-content">Budgets</h2>
         </CardHeader>
         <CardBody>
           <Table>
@@ -95,11 +95,11 @@ export function BudgetList() {
                     <Td>
                       <Link
                         href={`/budget/${row.brief.id}`}
-                        className="font-medium text-slate-900 underline-offset-4 hover:underline"
+                        className="font-medium text-content underline-offset-4 hover:underline"
                       >
                         {row.brief.name || "Untitled brief"}
                       </Link>
-                      <span className="block text-xs text-slate-500">{formatDateRange(row.brief)}</span>
+                      <span className="block text-xs text-content-muted">{formatDateRange(row.brief)}</span>
                     </Td>
                     <Td>
                       <Badge>{EVENT_TYPE_LABELS[row.brief.type]}</Badge>

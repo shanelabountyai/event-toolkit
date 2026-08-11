@@ -61,7 +61,7 @@ export function TriagePage({ sessionId, tab }: { sessionId: string; tab: TriageT
       active={tab === "overview" ? "" : tab}
     >
       {notice ? (
-        <p role="status" className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-2 text-sm text-sky-900">
+        <p role="status" className="rounded-lg border border-accent/20 bg-accent-subtle px-4 py-2 text-sm text-accent-text">
           {notice}{" "}
           <button type="button" className="font-medium underline" onClick={() => setNotice(null)}>
             Dismiss
@@ -174,17 +174,17 @@ function Overview({ state }: { state: ReturnType<typeof useTriageSession> }) {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">What&rsquo;s left</h2>
+          <h2 className="text-base font-semibold text-content">What&rsquo;s left</h2>
         </CardHeader>
         <CardBody>
           <ol className="space-y-2">
             {next.map((step) => (
               <li key={step.label} className="flex items-center justify-between gap-3">
                 <span className="flex items-center gap-2 text-sm">
-                  <span aria-hidden className={step.done ? "text-emerald-600" : "text-slate-300"}>
+                  <span aria-hidden className={step.done ? "text-success" : "text-content-subtle"}>
                     {step.done ? "✓" : "○"}
                   </span>
-                  <span className={step.done ? "text-slate-500" : "text-slate-900"}>{step.label}</span>
+                  <span className={step.done ? "text-content-muted" : "text-content"}>{step.label}</span>
                 </span>
                 <Link href={step.href}>
                   <Button size="sm" variant={step.done ? "ghost" : "secondary"}>
@@ -200,7 +200,7 @@ function Overview({ state }: { state: ReturnType<typeof useTriageSession> }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold text-slate-900">Lead pool</h2>
+            <h2 className="text-base font-semibold text-content">Lead pool</h2>
           </CardHeader>
           <CardBody>
             <p className="flex flex-wrap gap-2">
@@ -208,11 +208,11 @@ function Overview({ state }: { state: ReturnType<typeof useTriageSession> }) {
               <Badge tone="warning">{tiers.warm} warm</Badge>
               <Badge tone="neutral">{tiers.cold} cold</Badge>
             </p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-content-muted">
               {leads.length} leads from {batches.length} file{batches.length === 1 ? "" : "s"}.
             </p>
             {leads.length > 0 ? (
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-content-muted">
                 Top lead: {contactName([...leads].sort((a, b) => b.score - a.score)[0].contact)} (
                 {[...leads].sort((a, b) => b.score - a.score)[0].score} points)
               </p>
@@ -222,23 +222,23 @@ function Overview({ state }: { state: ReturnType<typeof useTriageSession> }) {
 
         <Card>
           <CardHeader>
-            <h2 className="text-base font-semibold text-slate-900">Event</h2>
+            <h2 className="text-base font-semibold text-content">Event</h2>
           </CardHeader>
-          <CardBody className="space-y-1 text-sm text-slate-700">
+          <CardBody className="space-y-1 text-sm text-content-muted">
             <p>Closed {formatIsoDateTime(session.eventClosedAt)}</p>
             {brief ? (
               <>
-                <p className="text-xs text-slate-600">Objective: {brief.goals?.primaryObjective || "—"}</p>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-content-muted">Objective: {brief.goals?.primaryObjective || "—"}</p>
+                <p className="text-xs text-content-muted">
                   Target personas:{" "}
                   {(brief.audience?.targetPersonas ?? []).map((p) => p.name).join(", ") || "none"}
                 </p>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-content-muted">
                   Shown read-only — this tool never writes to the brief.
                 </p>
               </>
             ) : (
-              <p className="text-xs text-slate-500">Standalone session, not linked to a brief.</p>
+              <p className="text-xs text-content-muted">Standalone session, not linked to a brief.</p>
             )}
           </CardBody>
         </Card>

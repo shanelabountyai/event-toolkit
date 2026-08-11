@@ -49,25 +49,25 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
     <Card>
       <CardBody className="space-y-5">
         <div className="space-y-1.5">
-          <h1 className="text-lg font-semibold tracking-tight text-slate-900">
+          <h1 className="text-lg font-semibold tracking-tight text-content">
             Join {invitation.workspaceName}
           </h1>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             You&rsquo;ve been invited as{" "}
-            <span className="font-medium text-slate-900">{ROLE_LABELS[role]}</span>.
+            <span className="font-medium text-content">{ROLE_LABELS[role]}</span>.
           </p>
-          <p className="text-sm text-slate-600">{ROLE_DESCRIPTIONS[role]}</p>
+          <p className="text-sm text-content-muted">{ROLE_DESCRIPTIONS[role]}</p>
         </div>
 
         {!user ? (
           <div className="space-y-3">
-            <p className="rounded-lg bg-slate-50 px-3 py-2.5 text-sm text-slate-700 ring-1 ring-inset ring-slate-200">
+            <p className="rounded-lg bg-surface-sunken px-3 py-2.5 text-sm text-content-muted ring-1 ring-inset ring-line">
               Sign in as <span className="font-medium">{invitation.email}</span> to accept. The
               invitation only works for that address.
             </p>
             <Link
               href={`/sign-in?email=${encodeURIComponent(invitation.email)}`}
-              className="inline-flex rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+              className="inline-flex rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
             >
               Sign in to accept
             </Link>
@@ -75,7 +75,7 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
         ) : user.email !== invitation.email ? (
           // Stated rather than silently failing on submit: being signed in as the wrong person is
           // the single most likely reason a forwarded invitation does not work.
-          <p className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900 ring-1 ring-inset ring-amber-200">
+          <p className="rounded-lg bg-warning-subtle px-3 py-2.5 text-sm text-warning-text ring-1 ring-inset ring-warning-border">
             This invitation was sent to <span className="font-medium">{invitation.email}</span>, but
             you&rsquo;re signed in as <span className="font-medium">{user.email}</span>. Sign out and
             sign back in with the invited address.
@@ -92,8 +92,8 @@ function Message({ title, children }: { title: string; children: React.ReactNode
   return (
     <Card>
       <CardBody className="space-y-2">
-        <h1 className="text-lg font-semibold tracking-tight text-slate-900">{title}</h1>
-        <p className="text-sm text-slate-600">{children}</p>
+        <h1 className="text-lg font-semibold tracking-tight text-content">{title}</h1>
+        <p className="text-sm text-content-muted">{children}</p>
       </CardBody>
     </Card>
   );

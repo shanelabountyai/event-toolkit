@@ -111,7 +111,7 @@ export function CalibrationView() {
     };
   }, []);
 
-  if (!inputs) return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  if (!inputs) return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
 
   const summary = summarise(runCalibration(inputs));
   const sensitivity = attributionSensitivity(inputs);
@@ -120,14 +120,14 @@ export function CalibrationView() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Calibration</h1>
-        <p className="mt-1 max-w-3xl text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Calibration</h1>
+        <p className="mt-1 max-w-3xl text-sm text-content-muted">
           Every tool in this suite shipped with defaults marked{" "}
           <em>&ldquo;assumption — pending validation&rdquo;</em>: scoring weights, variance
           thresholds, attribution windows, retro timing. This page reads what the suite has
           actually recorded and reports what it says about each one.
         </p>
-        <p className="mt-2 max-w-3xl text-sm text-slate-600">
+        <p className="mt-2 max-w-3xl text-sm text-content-muted">
           On a new install almost everything here will say &ldquo;not enough data yet&rdquo;.
           That is the honest answer — it exists so the first real event produces evidence
           instead of a hunch. <strong>docs/PILOT.md</strong> is the runbook for generating that
@@ -146,11 +146,11 @@ export function CalibrationView() {
           <Card key={f.id}>
             <CardHeader>
               <div>
-                <h2 className="text-base font-semibold text-slate-900">{f.label}</h2>
-                <p className="text-xs text-slate-500">PRD {f.prd} · {f.assumption}</p>
+                <h2 className="text-base font-semibold text-content">{f.label}</h2>
+                <p className="text-xs text-content-muted">PRD {f.prd} · {f.assumption}</p>
               </div>
               <span className="flex items-center gap-2">
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-content-muted">
                   n={f.sampleSize}
                   {f.sampleSize < f.minSample ? ` of ${f.minSample} needed` : ""}
                 </span>
@@ -158,9 +158,9 @@ export function CalibrationView() {
               </span>
             </CardHeader>
             <CardBody className="space-y-2">
-              <p className="text-sm text-slate-800">{f.evidence}</p>
+              <p className="text-sm text-content">{f.evidence}</p>
               {f.suggestion ? (
-                <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                <p className="rounded-lg bg-surface-sunken px-3 py-2 text-sm text-content-muted">
                   {f.suggestion}
                 </p>
               ) : null}
@@ -172,16 +172,16 @@ export function CalibrationView() {
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-content">
               Attribution window sensitivity
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-content-muted">
               How much the sourced-pipeline figure moves as the window moves.
             </p>
           </div>
         </CardHeader>
         <CardBody className="space-y-3">
-          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          <p className="rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-sm text-warning-text">
             This is not validation, and it cannot become validation. Which opportunities the
             event actually <em>caused</em> is not knowable from a spreadsheet of created dates —
             no window setting makes it knowable. What this shows is how much of your headline
@@ -198,7 +198,7 @@ export function CalibrationView() {
               </thead>
               <tbody>
                 {sensitivity.map((row) => (
-                  <tr key={row.sourcedWindowDays} className={row.sourcedWindowDays === 30 ? "bg-sky-50/60" : undefined}>
+                  <tr key={row.sourcedWindowDays} className={row.sourcedWindowDays === 30 ? "bg-accent-subtle/60" : undefined}>
                     <Td>
                       {row.sourcedWindowDays} days
                       {row.sourcedWindowDays === 30 ? (
@@ -212,7 +212,7 @@ export function CalibrationView() {
               </tbody>
             </Table>
           ) : (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-content-muted">
               No pipeline data imported yet. Import a CRM opportunity export into an{" "}
               <Link href="/roi" className="font-medium underline underline-offset-4">ROI report</Link>{" "}
               and this table will show how sensitive the number is.
@@ -223,10 +223,10 @@ export function CalibrationView() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">What this can&rsquo;t tell you</h2>
+          <h2 className="text-base font-semibold text-content">What this can&rsquo;t tell you</h2>
         </CardHeader>
         <CardBody>
-          <ul className="list-inside list-disc space-y-1 text-sm text-slate-600">
+          <ul className="list-inside list-disc space-y-1 text-sm text-content-muted">
             <li>
               <strong>Duplicates you never caught.</strong> Rejected pairs are visible; missed
               ones leave no trace. This page can tell you the threshold is too loose, never that

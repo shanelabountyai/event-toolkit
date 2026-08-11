@@ -17,7 +17,7 @@ export function AcceptForm({ token, workspaceName }: { token: string; workspaceN
         {pending ? "Joining…" : `Join ${workspaceName}`}
       </Button>
       {state.error ? (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-danger-text">
           {state.error}
         </p>
       ) : null}

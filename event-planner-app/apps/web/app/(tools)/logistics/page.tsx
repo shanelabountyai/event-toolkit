@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function LogisticsIndexPage() {
   return (
-    <Suspense fallback={<p className="py-16 text-center text-sm text-slate-500">Loading…</p>}>
+    <Suspense fallback={<p className="py-16 text-center text-sm text-content-muted">Loading…</p>}>
       <LogisticsEntry />
     </Suspense>
   );

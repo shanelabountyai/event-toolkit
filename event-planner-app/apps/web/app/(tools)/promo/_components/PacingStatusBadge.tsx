@@ -33,26 +33,26 @@ export function PacingSummary({
   ];
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <PacingStatusBadge status={assessment.status} />
-          <span className="text-sm text-slate-600">
+          <span className="text-sm text-content-muted">
             {assessment.status === "on_pace"
               ? `${assessment.pctOfGoal}% of the goal, at or ahead of the target curve.`
               : `${assessment.shortfallPct}% below where the target curve expects you to be.`}
           </span>
         </div>
         {assessment.latestEntryDate ? null : (
-          <span className="text-xs text-slate-500">No registration data entered yet.</span>
+          <span className="text-xs text-content-muted">No registration data entered yet.</span>
         )}
       </div>
 
       <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-md bg-slate-50 px-3 py-2">
-            <dt className="text-xs text-slate-500">{s.label}</dt>
-            <dd className="text-lg font-semibold text-slate-900">{s.value}</dd>
+          <div key={s.label} className="rounded-md bg-surface-sunken px-3 py-2">
+            <dt className="text-xs text-content-muted">{s.label}</dt>
+            <dd className="text-lg font-semibold text-content">{s.value}</dd>
           </div>
         ))}
       </dl>

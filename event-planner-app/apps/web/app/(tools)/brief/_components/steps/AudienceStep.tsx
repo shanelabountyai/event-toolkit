@@ -78,8 +78,8 @@ export function AudienceStep({ brief, onChange, highlightMissing }: StepProps) {
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-sm font-semibold text-slate-800">Target personas</h3>
-            <p className="text-xs text-slate-500">
+            <h3 className="text-sm font-semibold text-content">Target personas</h3>
+            <p className="text-xs text-content-muted">
               Counts toward completeness. The {preset.label.toLowerCase()} preset added{" "}
               {preset.personas.length} starter persona
               {preset.personas.length === 1 ? "" : "s"} you can rewrite or delete.
@@ -101,7 +101,7 @@ export function AudienceStep({ brief, onChange, highlightMissing }: StepProps) {
         </div>
 
         {personas.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500">
+          <p className="rounded-lg border border-dashed border-line-strong px-4 py-6 text-center text-sm text-content-muted">
             No personas yet — add at least one to reach 100% completeness.
           </p>
         ) : null}
@@ -110,7 +110,7 @@ export function AudienceStep({ brief, onChange, highlightMissing }: StepProps) {
           {personas.map((persona, index) => (
             <div
               key={index}
-              className="space-y-4 rounded-lg border border-slate-200 bg-white p-4"
+              className="space-y-4 rounded-lg border border-line bg-surface p-4"
             >
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Persona name" htmlFor={`persona-name-${index}`}>

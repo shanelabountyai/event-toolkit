@@ -9,15 +9,25 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: Size;
 }
 
+/**
+ * Primary is the accent, not near-black.
+ *
+ * The accent token existed and the primary button ignored it, so the product had a defined
+ * interactive colour that nothing interactive used. On a dark canvas a near-black button is also
+ * close to invisible.
+ *
+ * No `focus-visible:outline-*` here: `globals.css` sets one focus ring for the whole app, and a
+ * per-variant override is how that becomes four slightly different rings.
+ */
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-slate-900 text-white hover:bg-slate-700 focus-visible:outline-slate-900 disabled:bg-slate-300 disabled:text-slate-500",
+    "bg-accent text-accent-fg hover:bg-accent-hover disabled:bg-line-strong disabled:text-content-subtle",
   secondary:
-    "bg-white text-slate-800 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 focus-visible:outline-slate-400 disabled:text-slate-400",
+    "bg-surface text-content ring-1 ring-inset ring-line-strong hover:bg-surface-hover disabled:text-content-subtle",
   ghost:
-    "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-slate-400 disabled:text-slate-300",
+    "bg-transparent text-content-muted hover:bg-surface-hover hover:text-content disabled:text-content-subtle",
   danger:
-    "bg-white text-red-700 ring-1 ring-inset ring-red-200 hover:bg-red-50 focus-visible:outline-red-500 disabled:text-red-300",
+    "bg-surface text-danger-text ring-1 ring-inset ring-danger-border hover:bg-danger-subtle disabled:opacity-50",
 };
 
 const SIZES: Record<Size, string> = {
