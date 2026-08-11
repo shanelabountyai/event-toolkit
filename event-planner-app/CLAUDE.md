@@ -49,7 +49,12 @@ python scripts/logistics-e2e.py chromium   # PRD 3 in depth, incl. the §5 propa
 catches what the headless checks cannot: a route that throws on mount, a missing Suspense
 boundary, a component that crashes on an empty state.
 
-`pnpm verify` is what CI (`.github/workflows/ci.yml`) runs on every push/PR — if it fails locally it will fail in CI.
+`pnpm verify` is what CI runs on every push/PR — if it fails locally it will fail in CI.
+
+The workflow lives at the **repository root** (`../.github/workflows/ci.yml`), not in this
+directory, and runs with `working-directory: event-planner-app`. GitHub only reads workflows
+from the repo root; a copy inside `event-planner-app/.github/` is silently ignored, which is
+how this repo went nine commits with CI that had never once executed.
 
 ## Repo map
 

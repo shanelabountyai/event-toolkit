@@ -1,0 +1,42 @@
+name: CI
+
+# The app lives one directory down, so every step runs from there. This file must stay at the
+# repository root: GitHub only reads .github/workflows/ from the root, and an identical file
+# inside event-planner-app/ is silently ignored — which is exactly what happened when the app
+# was folded into this repo from its own standalone repository.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: event-planner-app
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # Read the pinned version from packageManager rather than repeating it here — the two
+          # drifting apart is a build that fails for a reason nobody can see in the diff.
+          package_json_file: event-planner-app/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: event-planner-app/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # One step, because `verify` already chains typecheck → lint → fixtures → the seven
+      # per-tool check scripts → build, and stops at the first failure. Running them separately
+      # here only built the app twice.
+      - name: Verify
+        run: pnpm verify

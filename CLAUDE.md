@@ -33,6 +33,10 @@ pnpm promo-check    # PRD 2 logic only — fastest loop when changing generation
 pnpm store-check    # PRD 1 persistence only
 ```
 
+CI runs `pnpm verify` from `.github/workflows/ci.yml` at the **repo root** — it must stay
+there. GitHub ignores workflows nested inside subdirectories, and the app carries its own
+`.github/` from when it was a standalone repo.
+
 There is no test framework. Each tool's logic is covered by one headless `scripts/*-check.ts`
 script run through `tsx` against `fake-indexeddb`, using a hand-rolled `check(label, condition)`
 helper that exits non-zero on failure. **A new tool adds its own `scripts/<tool>-check.ts` and
