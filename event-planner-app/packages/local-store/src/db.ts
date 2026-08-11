@@ -32,17 +32,19 @@ import type {
   SurveyResponse,
 } from "@event-toolkit/roi-report-core";
 import type { RetroDocument } from "@event-toolkit/postmortem-core";
+import type { OutboxEntry } from "./outbox";
 import type { BudgetLineItem, BudgetSettings } from "@event-toolkit/schema";
 
 export const DB_NAME = "event-toolkit";
 /**
  * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store, and
  * v4 the PRD 4 (Budget Builder) stores, v5 the PRD 5 (Lead Triage) stores and v6 the
- * PRD 6 (ROI Report) stores, and v7 the PRD 7 (Post-Mortem) store.
+ * PRD 6 (ROI Report) stores, and v7 the PRD 7 (Post-Mortem) store, and v8 the PRD 9 sync
+ * outbox.
  * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
  * is guarded so a database at any earlier version upgrades in place.
  */
-export const DB_VERSION = 7;
+export const DB_VERSION = 8;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -66,6 +68,8 @@ export const STORE_SURVEY_RESPONSES = "surveyResponses";
 export const STORE_SURVEY_IMPORT_BATCHES = "surveyImportBatches";
 export const STORE_ATTRIBUTION_SETTINGS = "attributionSettings";
 export const STORE_RETROS = "retros";
+/** PRD 9 FR-2: durable queue of unsynced mutations. Empty and unused in local-only mode. */
+export const STORE_OUTBOX = "outbox";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -260,6 +264,11 @@ interface EventToolkitDB extends DBSchema {
     value: RetroDocument;
     indexes: { eventBriefId: string };
   };
+  [STORE_OUTBOX]: {
+    key: string;
+    value: OutboxEntry;
+    indexes: { documentId: string; queuedAt: string };
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
@@ -425,6 +434,13 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         if (!db.objectStoreNames.contains(STORE_RETROS)) {
           const retros = db.createObjectStore(STORE_RETROS, { keyPath: "id" });
           retros.createIndex("eventBriefId", "eventBriefId");
+        }
+        // v8 — PRD 9's outbox. Additive and guarded like every upgrade before it, so a database
+        // at any earlier version upgrades in place without touching a planner's existing data.
+        if (!db.objectStoreNames.contains(STORE_OUTBOX)) {
+          const outbox = db.createObjectStore(STORE_OUTBOX, { keyPath: "id" });
+          outbox.createIndex("documentId", "documentId");
+          outbox.createIndex("queuedAt", "queuedAt");
         }
       },
     });

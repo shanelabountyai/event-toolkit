@@ -23,7 +23,8 @@
     "@event-toolkit/roi-report-core": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "idb": "^8.0.3",
-    "@event-toolkit/access": "workspace:*"
+    "@event-toolkit/access": "workspace:*",
+    "@event-toolkit/sync-engine": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

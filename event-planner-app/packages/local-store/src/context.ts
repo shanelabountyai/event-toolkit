@@ -120,7 +120,14 @@ export const STORE_TOOLS: Record<string, Tool> = {
  * Per-device diagnostics the planner generates about their own use of the app. Not workspace
  * data, and gating it would break the app for a role that can legitimately use it.
  */
-const UNGATED_STORES = new Set(["usageEvents"]);
+export const UNGATED_STORES = new Set([
+  "usageEvents",
+  // The outbox holds the user's own pending writes across every kind. Permission was already
+  // checked when each edit was made; gating the queue itself would mean a Coordinator could not
+  // flush their own logistics edits because the same queue also holds a brief edit they may not
+  // make. The queue is plumbing, not data.
+  "outbox",
+]);
 
 export type StoreVerb = "read" | "write";
 

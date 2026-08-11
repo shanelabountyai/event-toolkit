@@ -158,6 +158,9 @@ importers:
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../schema
+      '@event-toolkit/sync-engine':
+        specifier: workspace:*
+        version: link:../sync-engine
       idb:
         specifier: ^8.0.3
         version: 8.0.3

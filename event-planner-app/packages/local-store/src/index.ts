@@ -18,6 +18,7 @@ export {
   STORE_ATTRIBUTION_SETTINGS,
   STORE_PIPELINE_IMPORT_BATCHES,
   STORE_PIPELINE_OPPORTUNITIES,
+  STORE_OUTBOX,
   STORE_RETROS,
   STORE_ROI_REPORTS,
   STORE_SCORING_RUBRICS,
@@ -177,6 +178,29 @@ export {
   resetStoreContext,
   setStoreContext,
   STORE_TOOLS,
+  UNGATED_STORES,
   type StoreContext,
   type StoreVerb,
 } from "./context";
+
+/** PRD 9 FR-2 — the durable outbox. No-ops entirely in local-only mode. */
+export {
+  clearOutbox,
+  enqueue,
+  hasPendingWrites,
+  listPending,
+  markFailed,
+  markSynced,
+  pendingCount,
+  type EnqueueInput,
+  type OutboxEntry,
+} from "./outbox";
+
+/** PRD 8 FR-9 — the read half of local-data migration. Uploads nothing. */
+export {
+  collectLocalRecords,
+  DEVICE_LOCAL_STORES,
+  unknownKinds,
+  type CollectedData,
+  type MigrationPreview,
+} from "./migration";
