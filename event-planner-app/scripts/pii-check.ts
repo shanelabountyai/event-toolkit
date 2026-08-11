@@ -26,6 +26,7 @@ import {
   unregisteredKinds,
 } from "../packages/pii-registry/src/index";
 import { SYNC_KINDS } from "../packages/sync-engine/src/index";
+import { REDACTED, redact, redactErrorReport, redactString } from "../apps/web/lib/redact";
 
 let failures = 0;
 function check(label: string, condition: boolean, detail?: string): void {
@@ -201,6 +202,58 @@ function main(): void {
       return original.contact.email === "Dana.Okoro@Example.com";
     })(),
   );
+
+  console.log("\nLog redaction (FR-5)");
+  {
+    const dump = JSON.stringify(redact(lead()));
+    check("an attendee's email never reaches a log", !dump.includes("Dana.Okoro@Example.com"));
+    check("…nor their phone number", !dump.includes("555 0100"));
+    check("…nor their name", !dump.includes("Dana") && !dump.includes("Okoro"));
+    check(
+      "the record id survives, so the entry is still diagnosable",
+      dump.includes("lead-1") && dump.includes("ts-1"),
+      "redaction that removes the ability to debug is redaction that gets switched off",
+    );
+    check("non-personal fields survive", dump.includes("71") && dump.includes("hot"));
+
+    check(
+      "⭐ an email interpolated into an error message is scrubbed",
+      !redactString("failed to parse row for dana.okoro@example.com").includes("okoro@"),
+      "the common case is not a logged record, it is a helpful error message",
+    );
+    check(
+      "a phone number in free text is scrubbed",
+      redactString("called +1 555 0100 twice").includes(REDACTED),
+    );
+
+    const reported = JSON.stringify(
+      redactErrorReport(new Error("bad email: dana.okoro@example.com"), {
+        workspaceId: "ws-1",
+        kind: "leadRecords",
+      }),
+    );
+    check("an Error's message is scrubbed", !reported.includes("dana.okoro"));
+    check(
+      "…while the workspace and kind survive for diagnosis",
+      reported.includes("ws-1") && reported.includes("leadRecords"),
+    );
+    check(
+      "a survey comment nested anywhere is redacted",
+      !JSON.stringify(
+        redact({ batch: { rows: [{ comment: "Sam was rude", respondentEmail: "x@y.com" }] } }),
+      ).includes("rude"),
+    );
+    check(
+      "a circular reference does not crash the logger",
+      (() => {
+        const a: Record<string, unknown> = { id: "x" };
+        a.self = a;
+        return JSON.stringify(redact(a)).includes("circular");
+      })(),
+      "a logger that throws while logging an error loses both",
+    );
+    check("primitives pass through", redact(42) === 42 && redact(null) === null);
+  }
 
   if (failures > 0) {
     console.error(`\n${failures} PII registry check(s) failed.\n`);
