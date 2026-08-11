@@ -24,7 +24,14 @@ import {
   listAccessEvents,
   listInvitations,
   listMembers,
+  appendIssueViaShareLink,
+  createShareLink,
   deleteSubject,
+  listPacksInWorkspace,
+  loadPackRecords,
+  resolveShareLink,
+  revokeShareLink,
+  shareLinks,
   exportSubject,
   getRetentionPolicy,
   migrateRecords,
@@ -362,6 +369,86 @@ async function main(): Promise<void> {
     capabilityForKind("somethingTheClientInvented", "edit") === "workspace:delete",
     "the server must never take the client's word for what a kind is",
   );
+
+  console.log("\nShare links (PRD 8 FR-8)");
+  {
+    const ws4 = await createWorkspace(db, "Share test", alice.id);
+    const owner4 = ctx(ws4.id, alice.id, "owner");
+    const packId = "pack-share-1";
+
+    await migrateRecords(db, owner4, [
+      { kind: "logisticsPack", documentId: packId, document: { id: packId, eventBriefId: "b1", version: 1 } },
+      { kind: "logisticsPack.session", documentId: "sess-1", document: { id: "sess-1", label: "Keynote", packId } },
+      { kind: "logisticsPack.contact", documentId: "con-1", document: { id: "con-1", name: "Venue", packId } },
+      // Belongs to a different pack — must not leak into this one's share view.
+      { kind: "logisticsPack.session", documentId: "sess-x", document: { id: "sess-x", label: "Other event", packId: "pack-other" } },
+    ]);
+
+    check("packs are listed from the envelope", (await listPacksInWorkspace(db, owner4)).some((p) => p.id === packId));
+
+    const future = new Date(Date.now() + 3 * 86_400_000);
+    const link = await createShareLink(db, owner4, packId, future);
+    check("a link is created with a long token", link.token.length >= 32);
+
+    const resolved = await resolveShareLink(db, link.token);
+    check("a live link resolves", resolved?.grant.logisticsPackId === packId);
+    check("…to its own workspace", resolved?.workspaceId === ws4.id);
+    check("a forged token resolves to nothing", (await resolveShareLink(db, "nope")) === null);
+
+    const loaded = await loadPackRecords(db, ws4.id, packId);
+    check("the pack loads", loaded !== null);
+    check(
+      "⭐ another pack's items are not included",
+      !loaded!.items.some((i) => i.documentId === "sess-x"),
+      "a share-link request is the least trusted request this product serves",
+    );
+    check("its own items are", loaded!.items.some((i) => i.documentId === "sess-1"));
+
+    await appendIssueViaShareLink(db, ws4.id, packId, {
+      id: "issue-share-1",
+      timestamp: new Date().toISOString(),
+      description: "Projector dead",
+      severity: "high",
+      status: "open",
+    });
+    const withIssue = await loadPackRecords(db, ws4.id, packId);
+    check("an issue logged via the link lands on the pack", withIssue!.items.some((i) => i.documentId === "issue-share-1"));
+
+    await appendIssueViaShareLink(db, ws4.id, packId, {
+      id: "issue-share-1",
+      timestamp: new Date().toISOString(),
+      description: "Projector dead",
+      severity: "high",
+      status: "open",
+    });
+    const again = await loadPackRecords(db, ws4.id, packId);
+    check(
+      "⭐ a retried submit does not duplicate it",
+      again!.items.filter((i) => i.documentId === "issue-share-1").length === 1,
+      "venue wifi retries; an issue log full of doubles is an issue log nobody reads",
+    );
+
+    check(
+      "a finance user cannot create a link",
+      await throws(() => createShareLink(db, ctx(ws4.id, cara.id, "finance"), packId, future), PermissionError),
+    );
+    check(
+      "⭐ a coordinator CAN create one — running logistics is their job",
+      (await createShareLink(db, ctx(ws4.id, cara.id, "coordinator"), packId, future)) !== undefined,
+    );
+
+    await revokeShareLink(db, owner4, link.id);
+    check("a revoked link resolves to nothing", (await resolveShareLink(db, link.token)) === null);
+
+    const expiredLink = await createShareLink(db, owner4, packId, future);
+    await db.update(shareLinks).set({ expiresAt: new Date(Date.now() - 1000) }).where(eq(shareLinks.id, expiredLink.id));
+    check("an expired link resolves to nothing", (await resolveShareLink(db, expiredLink.token)) === null);
+
+    check(
+      "creating and revoking are both logged",
+      (await listAccessEvents(db, owner4)).filter((e) => e.action.startsWith("share_link.")).length >= 3,
+    );
+  }
 
   console.log("\nPrivacy operations (PRD 10)");
   {

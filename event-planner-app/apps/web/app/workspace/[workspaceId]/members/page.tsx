@@ -63,6 +63,15 @@ export default async function MembersPage({
 
       <LocalDataBanner workspaceId={workspaceId} />
 
+      <div className="flex flex-wrap gap-3 text-sm">
+        <Link href={`/workspace/${workspaceId}/share`} className="font-medium text-slate-900 underline underline-offset-2">
+          On-site links
+        </Link>
+        <Link href={`/workspace/${workspaceId}/migrate`} className="font-medium text-slate-900 underline underline-offset-2">
+          Move browser data in
+        </Link>
+      </div>
+
       <Card>
         <CardHeader>
           <h2 className="text-sm font-semibold text-slate-900">
