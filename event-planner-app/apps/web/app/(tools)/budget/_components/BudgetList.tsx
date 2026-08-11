@@ -69,7 +69,7 @@ export function BudgetList() {
           <h2 className="text-base font-semibold text-content">Budgets</h2>
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table stack>
             <thead>
               <tr>
                 <Th>Event</Th>
@@ -92,7 +92,7 @@ export function BudgetList() {
               ) : (
                 rows.map((row) => (
                   <tr key={row.brief.id}>
-                    <Td>
+                    <Td label="Event">
                       <Link
                         href={`/budget/${row.brief.id}`}
                         className="font-medium text-content underline-offset-4 hover:underline"
@@ -101,17 +101,17 @@ export function BudgetList() {
                       </Link>
                       <span className="block text-xs text-content-muted">{formatDateRange(row.brief)}</span>
                     </Td>
-                    <Td>
+                    <Td label="Type">
                       <Badge>{EVENT_TYPE_LABELS[row.brief.type]}</Badge>
                     </Td>
-                    <Td className="text-right tabular-nums">
+                    <Td label="Budgeted" className="text-right tabular-nums">
                       {row.settings ? formatMoney(row.totalBudgeted, row.settings.currency) : "—"}
                     </Td>
-                    <Td className="text-right tabular-nums">
+                    <Td label="Actual" className="text-right tabular-nums">
                       {row.settings ? formatMoney(row.totalActual, row.settings.currency) : "—"}
                     </Td>
-                    <Td>{row.settings ? <FlagPill flag={row.flag} /> : <Badge tone="neutral">Not started</Badge>}</Td>
-                    <Td>
+                    <Td label="Status">{row.settings ? <FlagPill flag={row.flag} /> : <Badge tone="neutral">Not started</Badge>}</Td>
+                    <Td label="Reconciled">
                       {row.settings?.reconciledAt ? (
                         <Badge tone="success">Yes</Badge>
                       ) : (

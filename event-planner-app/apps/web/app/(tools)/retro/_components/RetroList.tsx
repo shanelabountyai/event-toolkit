@@ -130,7 +130,7 @@ export function RetroList() {
           <h2 className="text-base font-semibold text-content">Events</h2>
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table stack>
             <thead>
               <tr>
                 <Th>Event</Th>
@@ -148,11 +148,11 @@ export function RetroList() {
                   const preview = retro ? previewCarryForward(retro) : null;
                   return (
                     <tr key={brief.id}>
-                      <Td>
+                      <Td label="Event">
                         <span className="font-medium text-content">{brief.name || "Untitled brief"}</span>
                         <span className="block text-xs text-content-muted">{formatDateRange(brief)}</span>
                       </Td>
-                      <Td>
+                      <Td label="Retro">
                         {retro ? (
                           <Badge tone={retro.status === "completed" ? "success" : "neutral"}>
                             {retro.status === "completed" ? "Completed" : "Draft"}
@@ -161,12 +161,12 @@ export function RetroList() {
                           <span className="text-xs text-content-subtle">Not started</span>
                         )}
                       </Td>
-                      <Td className="text-xs text-content-muted">
+                      <Td label="Lessons" className="text-xs text-content-muted">
                         {preview
                           ? `${preview.total} carried · ${preview.repeat}R / ${preview.fix}F / ${preview.drop}D`
                           : "—"}
                       </Td>
-                      <Td className="text-xs text-content-muted">
+                      <Td label="Completed" className="text-xs text-content-muted">
                         {retro?.completedAt ? formatIsoDateTime(retro.completedAt) : "—"}
                       </Td>
                       <Td className="text-right">

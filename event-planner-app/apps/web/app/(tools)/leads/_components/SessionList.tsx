@@ -74,7 +74,7 @@ export function SessionList() {
           <h2 className="text-base font-semibold text-content">Sessions</h2>
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table stack>
             <thead>
               <tr>
                 <Th>Event</Th>
@@ -97,7 +97,7 @@ export function SessionList() {
                   const tiers = tierCounts(leads);
                   return (
                     <tr key={session.id}>
-                      <Td>
+                      <Td label="Event">
                         <Link
                           href={`/leads/${session.id}`}
                           className="font-medium text-content underline-offset-4 hover:underline"
@@ -109,7 +109,7 @@ export function SessionList() {
                           {session.eventBriefId ? " · linked to a brief" : ""}
                         </span>
                       </Td>
-                      <Td>
+                      <Td label="Status">
                         <Badge tone={session.status === "routed" ? "success" : "neutral"}>
                           {TRIAGE_STATUS_LABELS[session.status]}
                         </Badge>
@@ -119,13 +119,13 @@ export function SessionList() {
                           </Badge>
                         ) : null}
                       </Td>
-                      <Td className="text-right tabular-nums">{leads.length}</Td>
-                      <Td className="text-xs text-content-muted">
+                      <Td label="Leads" className="text-right tabular-nums">{leads.length}</Td>
+                      <Td label="Tiers" className="text-xs text-content-muted">
                         {tiers.hot}H / {tiers.warm}W / {tiers.cold}C
                       </Td>
-                      <Td className="text-right tabular-nums">{progress.routedPct}%</Td>
-                      <Td className="text-right tabular-nums">{progress.draftReadyPct}%</Td>
-                      <Td className="text-xs text-content-muted">
+                      <Td label="Routed" className="text-right tabular-nums">{progress.routedPct}%</Td>
+                      <Td label="Drafted" className="text-right tabular-nums">{progress.draftReadyPct}%</Td>
+                      <Td label="Since close" className="text-xs text-content-muted">
                         {progress.hoursSinceClose === null ? "—" : `${progress.hoursSinceClose}h`}
                       </Td>
                     </tr>

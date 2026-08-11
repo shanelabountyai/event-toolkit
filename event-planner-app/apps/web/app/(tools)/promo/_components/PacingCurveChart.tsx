@@ -69,33 +69,33 @@ export function PacingCurveChart({
       <div className="overflow-x-auto rounded-lg border border-line bg-surface p-3 shadow-sm">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          className="h-auto w-full min-w-[520px]"
+          className="h-auto w-full"
           role="img"
           aria-label={`Registration pacing: actual versus ${style === "linear" ? "linear" : "backloaded"} target curve toward a goal of ${registrationTarget}.`}
         >
           {yTicks.map((value) => (
             <g key={value}>
-              <line x1={PAD.left} x2={W - PAD.right} y1={y(value)} y2={y(value)} stroke="#e2e8f0" strokeWidth={1} />
-              <text x={PAD.left - 8} y={y(value) + 4} textAnchor="end" className="fill-slate-400 text-[10px]">
+              <line x1={PAD.left} x2={W - PAD.right} y1={y(value)} y2={y(value)} stroke="var(--color-border)" strokeWidth={1} />
+              <text x={PAD.left - 8} y={y(value) + 4} textAnchor="end" className="fill-content-subtle text-[11px]">
                 {value.toLocaleString()}
               </text>
             </g>
           ))}
 
-          <line x1={PAD.left} x2={W - PAD.right} y1={y(0)} y2={y(0)} stroke="#cbd5e1" strokeWidth={1} />
-          <text x={PAD.left} y={H - 8} className="fill-slate-400 text-[10px]">
+          <line x1={PAD.left} x2={W - PAD.right} y1={y(0)} y2={y(0)} stroke="var(--color-border-strong)" strokeWidth={1} />
+          <text x={PAD.left} y={H - 8} className="fill-content-subtle text-[11px]">
             {formatIsoDate(pacingWindow.campaignStartDate)}
           </text>
-          <text x={W - PAD.right} y={H - 8} textAnchor="end" className="fill-slate-400 text-[10px]">
+          <text x={W - PAD.right} y={H - 8} textAnchor="end" className="fill-content-subtle text-[11px]">
             {formatIsoDate(pacingWindow.eventStartDate)}
           </text>
 
-          <polyline points={targetLine} fill="none" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 4" />
+          <polyline points={targetLine} fill="none" stroke="var(--color-text-subtle)" strokeWidth={2} strokeDasharray="5 4" />
           {actualPoints.length > 0 ? (
             <>
-              <polyline points={actualLine} fill="none" stroke="#0f172a" strokeWidth={2.5} />
+              <polyline points={actualLine} fill="none" stroke="var(--color-accent)" strokeWidth={2.5} />
               {actualPoints.map((p) => (
-                <circle key={p.date} cx={x(p.date)} cy={y(p.actual!)} r={3.5} fill="#0f172a" />
+                <circle key={p.date} cx={x(p.date)} cy={y(p.actual!)} r={3.5} fill="var(--color-accent)" />
               ))}
             </>
           ) : null}

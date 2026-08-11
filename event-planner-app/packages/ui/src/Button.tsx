@@ -30,9 +30,14 @@ const VARIANTS: Record<Variant, string> = {
     "bg-surface text-danger-text ring-1 ring-inset ring-danger-border hover:bg-danger-subtle disabled:opacity-50",
 };
 
+/**
+ * md is 44px tall — the minimum comfortable touch target. sm stays smaller because it is used
+ * inside dense desktop tables that are hidden below the md breakpoint anyway; where a small
+ * control survives onto a phone it gets padding to reach 44 at the call site.
+ */
 const SIZES: Record<Size, string> = {
-  sm: "px-2.5 py-1.5 text-xs",
-  md: "px-3.5 py-2 text-sm",
+  sm: "min-h-9 px-2.5 py-1.5 text-xs",
+  md: "min-h-11 px-3.5 py-2 text-sm",
 };
 
 export function Button({
