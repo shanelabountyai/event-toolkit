@@ -26,7 +26,8 @@
     "workspace-store-check": "tsx scripts/workspace-store-check.ts",
     "sync-check": "tsx scripts/sync-check.ts",
     "pii-check": "tsx scripts/pii-check.ts",
-    "server-db-check": "tsx scripts/server-db-check.ts"
+    "server-db-check": "tsx scripts/server-db-check.ts",
+    "db-smoke": "tsx scripts/db-smoke.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
