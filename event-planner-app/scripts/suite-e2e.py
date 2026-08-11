@@ -170,6 +170,15 @@ def main():
               "budget" in retro_body.lower())
         page.screenshot(path=str(SHOT / f"retro-{engine}.png"), full_page=True)
 
+        print("\nCalibration")
+        cal = visit("/calibration", "Calibration", "calibration page renders", "text=Calibration")
+        check("it reports honestly that there is not enough data yet",
+              "not enough data" in cal.lower() or "No data yet" in cal)
+        check("…and never claims the attribution window is validated",
+              "not validation" in cal.lower())
+        check("every assumption is listed with its PRD", cal.count("PRD ") >= 6,
+              f"found {cal.count('PRD ')}")
+
         print("\nEmpty states — the paths most likely to crash")
         visit("/logistics", "Choose an event", "logistics with no briefId")
         visit("/promo", "Promo Campaign Kit", "promo with no briefId")

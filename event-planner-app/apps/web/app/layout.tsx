@@ -54,7 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <footer className="no-print border-t border-slate-200 bg-white">
             <div className="mx-auto max-w-6xl px-6 py-4 text-xs text-slate-500">
               v1 stores everything in this browser via IndexedDB — no account, no server, no
-              sync. Export a brief to Markdown, HTML or JSON to back it up or share it.
+              sync. Export a brief to Markdown, HTML or JSON to back it up or share it.{" "}
+              <Link href="/calibration" className="font-medium underline underline-offset-4 hover:text-slate-700">
+                Calibration
+              </Link>{" "}
+              shows what your recorded data says about the suite&rsquo;s default assumptions.
             </div>
           </footer>
         </div>

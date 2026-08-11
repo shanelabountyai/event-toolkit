@@ -33,6 +33,7 @@ pnpm budget-check # PRD 4 variance formula, reconciliation, reforecast, import/e
 pnpm leads-check  # PRD 5 dedupe, scoring, templates, assignment, export, brief-read-only
 pnpm roi-check    # PRD 6 attribution windows, NPS, cost math, scorecard bands, YoY, rendering
 pnpm retro-check  # PRD 7 candidate rules, carry-forward idempotency, and PRD 1's read path
+pnpm calibration-check # the calibration read-out: sample gating and no-overclaim rules
 ```
 
 Browser-level coverage (Playwright, Chromium and Firefox), none of it part of `pnpm verify`
@@ -89,6 +90,23 @@ PRD 1 (done) → PRD 2 (Promo Campaign Kit), PRD 3 (Logistics Pack), PRD 4 (Budg
 ReDoS), and this code path parses files a planner was handed by a vendor. Keep the CDN pin
 when upgrading. It is imported dynamically in `apps/web/lib/budget-file.ts` so its ~160kB
 stays off the budget page's first load.
+
+## Validating the documented assumptions
+
+`/calibration` reads what the suite has actually recorded and reports what it says about each
+default — dedupe threshold, lead tiers, variance bands, reforecast sensitivity, attribution
+window, scorecard coverage, NPS sample rule, retro timing. Logic lives in
+`apps/web/lib/calibration.ts` as pure functions, so `pnpm calibration-check` can test it; the
+page must be in-app rather than a script because the real data is in the planner's browser
+IndexedDB, which Node cannot reach.
+
+Three rules that file follows, and any new finding must too:
+1. Never conclude below a stated minimum sample — "not enough data yet" is the honest and most
+   common answer.
+2. Separate evidence (facts) from suggestion (a prompt to think, never an instruction).
+3. Never claim to validate causality. The attribution window in particular can only be
+   *characterised* — `attributionSensitivity` shows how far the headline number moves across
+   plausible windows, and the finding never returns "supports".
 
 ## Things every PRD's "Open Questions" section documents as an assumption, not a validated decision
 
