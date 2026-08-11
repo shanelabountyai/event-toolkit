@@ -10,3 +10,5 @@ dist/
 npm-debug.log*
 pnpm-debug.log*
 coverage/
+.vercel
+.env*

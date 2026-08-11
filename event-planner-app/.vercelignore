@@ -1,0 +1,9 @@
+# Belt and braces. The CLI already honours .gitignore, but a secret uploaded once is a secret
+# rotated, so the env files are named explicitly here too.
+.env
+.env.*
+!.env.example
+
+node_modules
+.next
+*.tsbuildinfo
