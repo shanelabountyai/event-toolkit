@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://event-toolkit.local/schema/event-brief.schema.json",
   "title": "EventBrief",
-  "description": "Canonical Event Brief document — the shared data spine for the Event Planner Productivity Suite. See schema/event-brief-schema.md for the human-readable field-by-field reference, PRD read/write ownership, and versioning policy.",
+  "description": "Canonical Event Brief document \u2014 the shared data spine for the Event Planner Productivity Suite. See schema/event-brief-schema.md for the human-readable field-by-field reference, PRD read/write ownership, and versioning policy.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -45,12 +45,20 @@
     },
     "type": {
       "type": "string",
-      "enum": ["conference", "webinar", "trade_show", "custom"],
+      "enum": [
+        "conference",
+        "webinar",
+        "trade_show",
+        "custom"
+      ],
       "description": "Event-type preset selected during intake."
     },
     "status": {
       "type": "string",
-      "enum": ["draft", "complete"],
+      "enum": [
+        "draft",
+        "complete"
+      ],
       "description": "Lifecycle state of the brief document itself. Self-declared; no approval workflow in v1."
     },
     "version": {
@@ -87,15 +95,21 @@
     },
     "stakeholders": {
       "type": "array",
-      "items": { "$ref": "#/$defs/Stakeholder" }
+      "items": {
+        "$ref": "#/$defs/Stakeholder"
+      }
     },
     "successMetrics": {
       "type": "array",
-      "items": { "$ref": "#/$defs/SuccessMetric" }
+      "items": {
+        "$ref": "#/$defs/SuccessMetric"
+      }
     },
     "riskRegister": {
       "type": "array",
-      "items": { "$ref": "#/$defs/RiskItem" }
+      "items": {
+        "$ref": "#/$defs/RiskItem"
+      }
     },
     "timeline": {
       "$ref": "#/$defs/Timeline"
@@ -105,196 +119,409 @@
     },
     "carryForwardLessons": {
       "type": "array",
-      "items": { "$ref": "#/$defs/LessonLearned" }
+      "items": {
+        "$ref": "#/$defs/LessonLearned"
+      }
     },
     "exportHistory": {
       "type": "array",
       "default": [],
-      "items": { "$ref": "#/$defs/ExportRecord" }
+      "items": {
+        "$ref": "#/$defs/ExportRecord"
+      }
     }
   },
   "$defs": {
     "Goals": {
       "type": "object",
-      "required": ["primaryObjective"],
+      "required": [
+        "primaryObjective"
+      ],
       "additionalProperties": true,
       "properties": {
-        "primaryObjective": { "type": "string", "minLength": 1 },
+        "primaryObjective": {
+          "type": "string",
+          "minLength": 1
+        },
         "objectives": {
           "type": "array",
           "default": [],
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "businessJustification": { "type": "string" }
+        "businessJustification": {
+          "type": "string"
+        }
       }
     },
     "Persona": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": true,
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "title": { "type": "string" },
-        "description": { "type": "string" },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "painPoints": {
           "type": "array",
           "default": [],
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "Audience": {
       "type": "object",
-      "required": ["description"],
+      "required": [
+        "description"
+      ],
       "additionalProperties": true,
       "properties": {
-        "description": { "type": "string", "minLength": 1 },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
         "targetPersonas": {
           "type": "array",
           "default": [],
-          "items": { "$ref": "#/$defs/Persona" }
+          "items": {
+            "$ref": "#/$defs/Persona"
+          }
         },
-        "estimatedSize": { "type": "integer", "minimum": 0 },
+        "estimatedSize": {
+          "type": "integer",
+          "minimum": 0
+        },
         "segments": {
           "type": "array",
           "default": [],
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "BudgetAllocation": {
       "type": "object",
-      "required": ["id", "category", "plannedAmount"],
+      "required": [
+        "id",
+        "category",
+        "plannedAmount"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "category": { "type": "string", "minLength": 1 },
-        "plannedAmount": { "type": "number" },
-        "actualAmount": { "type": ["number", "null"], "default": null },
-        "notes": { "type": "string" }
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plannedAmount": {
+          "type": "number"
+        },
+        "actualAmount": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "Budget": {
       "type": "object",
-      "required": ["currency"],
+      "required": [
+        "currency"
+      ],
       "additionalProperties": true,
       "properties": {
-        "totalBudget": { "type": "number" },
-        "currency": { "type": "string", "default": "USD" },
+        "totalBudget": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
         "allocations": {
           "type": "array",
           "default": [],
-          "items": { "$ref": "#/$defs/BudgetAllocation" }
+          "items": {
+            "$ref": "#/$defs/BudgetAllocation"
+          }
         },
-        "notes": { "type": "string" }
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "Dates": {
       "type": "object",
-      "required": ["timezone", "eventStartDate", "eventEndDate"],
+      "required": [
+        "timezone",
+        "eventStartDate",
+        "eventEndDate"
+      ],
       "additionalProperties": true,
       "properties": {
-        "timezone": { "type": "string", "description": "IANA timezone name, e.g. 'America/New_York'." },
-        "eventStartDate": { "type": "string", "format": "date" },
-        "eventEndDate": { "type": "string", "format": "date" }
+        "timezone": {
+          "type": "string",
+          "description": "IANA timezone name, e.g. 'America/New_York'."
+        },
+        "eventStartDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "eventEndDate": {
+          "type": "string",
+          "format": "date"
+        }
       }
     },
     "VenueOrPlatform": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "name": { "type": "string" },
-        "locationOrUrl": { "type": "string" },
-        "capacity": { "type": "integer", "minimum": 0 },
-        "notes": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "locationOrUrl": {
+          "type": "string"
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "Format": {
       "type": "object",
-      "required": ["deliveryMode"],
+      "required": [
+        "deliveryMode"
+      ],
       "additionalProperties": true,
       "properties": {
         "deliveryMode": {
           "type": "string",
-          "enum": ["in_person", "virtual", "hybrid"]
+          "enum": [
+            "in_person",
+            "virtual",
+            "hybrid"
+          ]
         },
-        "venueOrPlatform": { "$ref": "#/$defs/VenueOrPlatform" }
+        "venueOrPlatform": {
+          "$ref": "#/$defs/VenueOrPlatform"
+        }
       }
     },
     "Stakeholder": {
       "type": "object",
-      "required": ["id", "name", "role", "raci"],
+      "required": [
+        "id",
+        "name",
+        "role",
+        "raci"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "name": { "type": "string", "minLength": 1 },
-        "role": { "type": "string", "minLength": 1 },
-        "raci": { "type": "string", "enum": ["R", "A", "C", "I"] },
-        "email": { "type": "string", "format": "email" },
-        "department": { "type": "string" }
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raci": {
+          "type": "string",
+          "enum": [
+            "R",
+            "A",
+            "C",
+            "I"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "department": {
+          "type": "string"
+        }
       }
     },
     "SuccessMetric": {
       "type": "object",
-      "required": ["id", "metric", "target"],
+      "required": [
+        "id",
+        "metric",
+        "target"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "metric": { "type": "string", "minLength": 1 },
-        "target": { "type": "number" },
-        "unit": { "type": "string" },
-        "actual": { "type": ["number", "null"], "default": null },
-        "notes": { "type": "string" }
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "metric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "actual": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "RiskItem": {
       "type": "object",
-      "required": ["id", "risk", "likelihood", "impact", "status"],
+      "required": [
+        "id",
+        "risk",
+        "likelihood",
+        "impact",
+        "status"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "risk": { "type": "string", "minLength": 1 },
-        "likelihood": { "type": "string", "enum": ["low", "medium", "high"] },
-        "impact": { "type": "string", "enum": ["low", "medium", "high"] },
-        "mitigation": { "type": "string" },
-        "owner": { "type": "string" },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "risk": {
+          "type": "string",
+          "minLength": 1
+        },
+        "likelihood": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "mitigation": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
         "status": {
           "type": "string",
-          "enum": ["open", "mitigated", "occurred", "closed"],
+          "enum": [
+            "open",
+            "mitigated",
+            "occurred",
+            "closed"
+          ],
           "default": "open"
         }
       }
     },
     "Milestone": {
       "type": "object",
-      "required": ["id", "label", "phase", "targetDate", "status"],
+      "required": [
+        "id",
+        "label",
+        "phase",
+        "targetDate",
+        "status"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "label": { "type": "string", "minLength": 1 },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
         "phase": {
           "type": "string",
-          "enum": ["pre_event", "during_event", "post_event"]
+          "enum": [
+            "pre_event",
+            "during_event",
+            "post_event"
+          ]
         },
-        "targetDate": { "type": "string", "format": "date" },
-        "owner": { "type": "string" },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "owner": {
+          "type": "string"
+        },
         "status": {
           "type": "string",
-          "enum": ["not_started", "in_progress", "done", "at_risk"],
+          "enum": [
+            "not_started",
+            "in_progress",
+            "done",
+            "at_risk"
+          ],
           "default": "not_started"
         },
-        "notes": { "type": "string" }
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "Timeline": {
       "type": "object",
-      "required": ["milestones"],
+      "required": [
+        "milestones"
+      ],
       "additionalProperties": true,
       "properties": {
         "milestones": {
           "type": "array",
           "default": [],
-          "items": { "$ref": "#/$defs/Milestone" }
+          "items": {
+            "$ref": "#/$defs/Milestone"
+          }
         }
       }
     },
@@ -305,32 +532,93 @@
         "items": {
           "type": "array",
           "default": [],
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "notes": { "type": "string" }
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "LessonLearned": {
       "type": "object",
-      "required": ["id", "lesson", "addedAt"],
+      "required": [
+        "id",
+        "lesson",
+        "addedAt"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "sourceEventId": { "type": "string", "format": "uuid" },
-        "category": { "type": "string" },
-        "lesson": { "type": "string", "minLength": 1 },
-        "addedAt": { "type": "string", "format": "date-time" }
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "sourceEventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "category": {
+          "type": "string"
+        },
+        "lesson": {
+          "type": "string",
+          "minLength": 1
+        },
+        "addedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "repeat",
+            "fix",
+            "drop"
+          ],
+          "description": "Added in 1.1.0. What to do with this lesson next time."
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "issue_log",
+            "budget_variance",
+            "roi_scorecard",
+            "manual"
+          ],
+          "description": "Added in 1.1.0. Where the lesson came from."
+        }
       }
     },
     "ExportRecord": {
       "type": "object",
-      "required": ["id", "format", "generatedAt"],
+      "required": [
+        "id",
+        "format",
+        "generatedAt"
+      ],
       "additionalProperties": true,
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "format": { "type": "string", "enum": ["markdown", "pdf", "docx", "html"] },
-        "generatedAt": { "type": "string", "format": "date-time" },
-        "filename": { "type": "string" }
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "markdown",
+            "pdf",
+            "docx",
+            "html"
+          ]
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "filename": {
+          "type": "string"
+        }
       }
     }
   }

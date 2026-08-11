@@ -15,6 +15,7 @@
     "@event-toolkit/lead-triage-core": "workspace:*",
     "@event-toolkit/local-store": "workspace:*",
     "@event-toolkit/logistics": "workspace:*",
+    "@event-toolkit/postmortem-core": "workspace:*",
     "@event-toolkit/roi-report-core": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "@event-toolkit/ui": "workspace:*",

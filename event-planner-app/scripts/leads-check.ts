@@ -389,7 +389,10 @@ async function main(): Promise<void> {
 
   /* ---------------------------------------------------------------- */
   console.log("\nFR-13 · persistence, and the brief stays untouched");
-  const storedBrief = await saveBrief({ ...conference, id: "leads-brief" });
+  await saveBrief({ ...conference, id: "leads-brief" });
+  // Baseline read back through getBrief, so lazy schema migration (FR-9) has already been
+  // applied — otherwise "unchanged" would trip on the migration rather than on a real write.
+  const storedBrief = (await getBrief("leads-brief"))!;
   const versionBefore = storedBrief.version;
   const updatedBefore = storedBrief.updatedAt;
 

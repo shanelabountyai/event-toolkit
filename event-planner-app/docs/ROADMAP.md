@@ -19,7 +19,12 @@ PRDs 2–4 only depend on PRD 1 and were built as separate routes under `apps/we
 
 - [x] **PRD 5 — Lead Triage & Follow-Up Engine** — built. New `packages/lead-triage-core`: CSV parsing (papaparse), column-mapping suggestions, dedupe (exact-email auto-merge with conflicts recorded; fuzzy name+company queued for a human, never auto-merged), a configurable scoring rubric with live re-scoring, deterministic follow-up templates that never clobber an edited draft, owner assignment (mapped column → round robin → manual), and tier-then-score export per owner or combined. Strictly read-only against EventBrief. Routes under `/leads`. Logic covered by `pnpm leads-check`.
 - [x] **PRD 6 — Event ROI & Attribution Report** — built. New `packages/roi-report-core`: timing-based sourced/influenced attribution (a CRM column can override it but never resurrect an outside-window row), pipeline and survey CSV/XLSX import, NPS, cost per lead/meeting/opportunity, a five-dimension transparent scorecard with generated rationale, year-over-year deltas against finalised reports only, and deterministic full-report and executive-summary rendering. Calls PRD 4's `computeBudgetActualsSummary` directly and reads PRD 5's leads; writes to neither. Routes under `/roi`. Logic covered by `pnpm roi-check`.
-- [ ] **PRD 7 — Post-Mortem Generator** — depends on PRD 3 (issue log) + PRD 4 (variance) + PRD 6 (ROI). Writes `carryForwardLessons`, closing the loop back into PRD 1's intake.
+- [x] **PRD 7 — Post-Mortem Generator** — built, and the loop is closed. New `packages/postmortem-core`: candidate lessons generated from the issue log (including a clustered pattern rule for repeated high-severity issues on one artifact), budget variance and the ROI scorecard; a three-column repeat/fix/drop workspace; retro-prompt timing at 3 and 14 days; and the idempotent carry-forward write-back into `EventBrief.carryForwardLessons`, which PRD 1's intake reads with **zero changes to PRD 1**. Also the suite's first schema change: `LessonLearned.disposition` and `.sourceType`, additive, schema 1.1.0. Routes under `/retro`. Logic covered by `pnpm retro-check`.
+
+## Status
+
+All seven PRDs are built. Every tool's domain logic has a headless check script wired into
+`pnpm verify`; no browser end-to-end pass has been run for PRDs 3-7.
 
 ## Open questions to validate
 

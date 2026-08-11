@@ -6,7 +6,7 @@ Instructions for Claude Code (or any agent) working in this repo. Read this befo
 
 The **Event Planner Productivity Suite** — a standalone, local-first web app for corporate/field marketing event planners (conferences, webinars, trade shows). One Next.js monorepo, one shared `EventBrief` data schema, seven tools as routes in a single app. Full product context: `docs/SUITE-OVERVIEW.md`. Per-tool specs: `docs/prd/<tool>/PRD.md` + `HANDOFF.md`.
 
-**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRD 4 (Budget Builder) is built — line-item budgets with variance flagging, reforecast prompts, spreadsheet import/export and the actuals roll-up, under `/budget`, backed by `packages/budget-calc`. PRD 5 (Lead Triage) is built — import, dedupe, scoring, routing, follow-up drafts and per-owner export under `/leads`, backed by `packages/lead-triage-core`. PRD 6 (ROI Report) is built — attribution, cost per outcome, scorecard, YoY and report export under `/roi`, backed by `packages/roi-report-core`. PRD 7 is fully spec'd in `docs/prd/` but not yet built.
+**Current state:** PRD 1 (Event Brief Generator) is built and working — guided intake, brief generation/edit, IndexedDB persistence, Markdown/HTML export, completeness indicator, carry-forward lessons, usage log. PRD 2 (Promo Campaign Kit) is built — 18-asset template generation, edit tracking, regenerate-with-skip, and the registration pacing tracker, at `/promo/kit` and `/promo/pacing`. PRD 3 (Logistics Pack) is built — run of show, staffing, shipping, checklist, contacts, issue log and print routes under `/logistics`, backed by the new `packages/logistics`. PRD 4 (Budget Builder) is built — line-item budgets with variance flagging, reforecast prompts, spreadsheet import/export and the actuals roll-up, under `/budget`, backed by `packages/budget-calc`. PRD 5 (Lead Triage) is built — import, dedupe, scoring, routing, follow-up drafts and per-owner export under `/leads`, backed by `packages/lead-triage-core`. PRD 6 (ROI Report) is built — attribution, cost per outcome, scorecard, YoY and report export under `/roi`, backed by `packages/roi-report-core`. PRD 7 (Post-Mortem) is built — candidate lessons from the issue log, budget and ROI scorecard, a repeat/fix/drop workspace, and the idempotent carry-forward write-back that closes the loop back into PRD 1's intake, under `/retro`, backed by `packages/postmortem-core`. **All seven PRDs are now built.**
 
 ## Non-negotiable architecture rules
 
@@ -14,7 +14,7 @@ The **Event Planner Productivity Suite** — a standalone, local-first web app f
 2. **`packages/schema` has zero React/Next dependency.** Pure TypeScript types, JSON Schema, presets, factory functions, migrations. Any future tool package can depend on it without pulling in UI framework code.
 3. **`packages/local-store` is the only place IndexedDB is touched.** Keep its repository interface clean (`getBrief`, `listBriefs`, `saveBrief`, `deleteBrief`, `queryLessons`, ...) — it's the deliberate seam a future backend/sync layer replaces without touching any tool's UI code.
 4. **No backend, no database, no auth, no CRM/martech integration in v1.** This is a binding constraint from the suite's PRDs (standalone-first), not a shortcut to fix later. Check a tool's PRD "Non-Goals" section before adding server code, an API route with persistence, or an OAuth button.
-5. **Schema changes are additive by default.** Adding an optional field = MINOR version bump, update `docs/schema/event-brief-schema.md` + `packages/schema/src/event-brief.schema.json` + the TS types together, add a `CHANGELOG.md` entry. Renaming/removing a field, changing a type, or making an optional field required = MAJOR bump, requires a migration function in `packages/schema/src/migrations/`. Never break `migrateBrief()`'s ability to load an older brief.
+5. **Schema changes are additive by default.** (Done once, at 1.1.0, for PRD 7's `LessonLearned.disposition`/`sourceType` — follow that commit as the worked example.) Adding an optional field = MINOR version bump, update `docs/schema/event-brief-schema.md` + `packages/schema/src/event-brief.schema.json` + the TS types together, add a `CHANGELOG.md` entry. Renaming/removing a field, changing a type, or making an optional field required = MAJOR bump, requires a migration function in `packages/schema/src/migrations/`. Never break `migrateBrief()`'s ability to load an older brief.
 6. **Read the tool's PRD + HANDOFF before building it.** `docs/prd/<tool>/PRD.md` is the full spec (problem, user stories, numbered FRs, data model, UX flow, acceptance criteria). `docs/prd/<tool>/HANDOFF.md` is written to be self-contained — paste it into a fresh session and it has everything needed to start building that tool without reading the PRD first.
 
 ## Commands
@@ -32,6 +32,7 @@ pnpm logistics-check # PRD 3 seeding, propagation, conflicts, CSV and pack persi
 pnpm budget-check # PRD 4 variance formula, reconciliation, reforecast, import/export, roll-up
 pnpm leads-check  # PRD 5 dedupe, scoring, templates, assignment, export, brief-read-only
 pnpm roi-check    # PRD 6 attribution windows, NPS, cost math, scorecard bands, YoY, rendering
+pnpm retro-check  # PRD 7 candidate rules, carry-forward idempotency, and PRD 1's read path
 ```
 
 Browser-level end-to-end coverage lives in `scripts/promo-e2e.py` and `scripts/logistics-e2e.py`
@@ -50,6 +51,7 @@ packages/logistics/    PRD 3 domain types + selectors (zero React), the propagat
 packages/budget-calc/  PRD 4 variance, presets, reforecast + computeBudgetActualsSummary (PRD 6's seam)
 packages/lead-triage-core/ PRD 5 CSV parse, dedupe, scoring, templates, assignment, export
 packages/roi-report-core/  PRD 6 attribution, costs, NPS, scorecard, YoY, report rendering
+packages/postmortem-core/  PRD 7 candidate lessons, retro prompt, carry-forward write-back
 packages/ui/           shared primitives (Button, Card, Table, Badge, Form, ProgressBar)
 fixtures/              example EventBrief JSON docs, validated by `pnpm verify`
 scripts/               make-fixtures, validate-fixtures, sanity-check, store-check

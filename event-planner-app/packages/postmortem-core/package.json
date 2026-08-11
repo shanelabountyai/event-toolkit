@@ -1,0 +1,19 @@
+{
+  "name": "@event-toolkit/postmortem-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Post-mortem retro types, candidate-lesson generation and the carry-forward write-back. Zero React dependency.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@event-toolkit/budget-calc": "workspace:*",
+    "@event-toolkit/logistics": "workspace:*",
+    "@event-toolkit/roi-report-core": "workspace:*",
+    "@event-toolkit/schema": "workspace:*"
+  },
+  "devDependencies": { "typescript": "^5.9.3" }
+}

@@ -19,6 +19,7 @@
     "@event-toolkit/budget-calc": "workspace:*",
     "@event-toolkit/lead-triage-core": "workspace:*",
     "@event-toolkit/logistics": "workspace:*",
+    "@event-toolkit/postmortem-core": "workspace:*",
     "@event-toolkit/roi-report-core": "workspace:*",
     "@event-toolkit/schema": "workspace:*",
     "idb": "^8.0.3"

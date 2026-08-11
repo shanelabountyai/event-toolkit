@@ -41,6 +41,9 @@ importers:
       '@event-toolkit/logistics':
         specifier: workspace:*
         version: link:../../packages/logistics
+      '@event-toolkit/postmortem-core':
+        specifier: workspace:*
+        version: link:../../packages/postmortem-core
       '@event-toolkit/roi-report-core':
         specifier: workspace:*
         version: link:../../packages/roi-report-core
@@ -128,6 +131,9 @@ importers:
       '@event-toolkit/logistics':
         specifier: workspace:*
         version: link:../logistics
+      '@event-toolkit/postmortem-core':
+        specifier: workspace:*
+        version: link:../postmortem-core
       '@event-toolkit/roi-report-core':
         specifier: workspace:*
         version: link:../roi-report-core
@@ -144,6 +150,25 @@ importers:
 
   packages/logistics:
     dependencies:
+      '@event-toolkit/schema':
+        specifier: workspace:*
+        version: link:../schema
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/postmortem-core:
+    dependencies:
+      '@event-toolkit/budget-calc':
+        specifier: workspace:*
+        version: link:../budget-calc
+      '@event-toolkit/logistics':
+        specifier: workspace:*
+        version: link:../logistics
+      '@event-toolkit/roi-report-core':
+        specifier: workspace:*
+        version: link:../roi-report-core
       '@event-toolkit/schema':
         specifier: workspace:*
         version: link:../schema

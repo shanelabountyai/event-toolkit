@@ -30,17 +30,18 @@ import type {
   SurveyImportBatch,
   SurveyResponse,
 } from "@event-toolkit/roi-report-core";
+import type { RetroDocument } from "@event-toolkit/postmortem-core";
 import type { BudgetLineItem, BudgetSettings } from "@event-toolkit/schema";
 
 export const DB_NAME = "event-toolkit";
 /**
  * v2 adds the PRD 2 (Promo Campaign Kit) stores, v3 the PRD 3 (Logistics Pack) store, and
  * v4 the PRD 4 (Budget Builder) stores, v5 the PRD 5 (Lead Triage) stores and v6 the
- * PRD 6 (ROI Report) stores.
+ * PRD 6 (ROI Report) stores, and v7 the PRD 7 (Post-Mortem) store.
  * Every upgrade so far is purely additive — no data migration, and each `createObjectStore`
  * is guarded so a database at any earlier version upgrades in place.
  */
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 
 export const STORE_BRIEFS = "briefs";
 export const STORE_USAGE_EVENTS = "usageEvents";
@@ -63,6 +64,7 @@ export const STORE_PIPELINE_IMPORT_BATCHES = "pipelineImportBatches";
 export const STORE_SURVEY_RESPONSES = "surveyResponses";
 export const STORE_SURVEY_IMPORT_BATCHES = "surveyImportBatches";
 export const STORE_ATTRIBUTION_SETTINGS = "attributionSettings";
+export const STORE_RETROS = "retros";
 
 /** Where the intake wizard left off, so a closed tab resumes on the right step (FR-6). */
 export interface IntakeProgress {
@@ -120,7 +122,19 @@ export type UsageEventType =
   | "scorecard_computed"
   | "report_finalized"
   | "report_reverted_to_draft"
-  | "success_metrics_written";
+  | "success_metrics_written"
+  // PRD 7 (FR-14)
+  | "retro_created"
+  | "retro_prompt_shown"
+  | "issue_log_ingested"
+  | "budget_variance_ingested"
+  | "roi_scorecard_ingested"
+  | "lesson_added_manual"
+  | "lesson_disposition_changed"
+  | "success_metric_adjusted"
+  | "retro_completed"
+  | "carry_forward_written"
+  | "retro_exported";
 
 interface EventToolkitDB extends DBSchema {
   [STORE_BRIEFS]: {
@@ -239,6 +253,12 @@ interface EventToolkitDB extends DBSchema {
     key: string;
     value: AttributionSettings;
   };
+  /** One retro per brief, enforced at the repository layer (PRD 7). */
+  [STORE_RETROS]: {
+    key: string;
+    value: RetroDocument;
+    indexes: { eventBriefId: string };
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<EventToolkitDB>> | null = null;
@@ -349,6 +369,11 @@ export function getDb(): Promise<IDBPDatabase<EventToolkitDB>> {
         }
         if (!db.objectStoreNames.contains(STORE_ATTRIBUTION_SETTINGS)) {
           db.createObjectStore(STORE_ATTRIBUTION_SETTINGS, { keyPath: "id" });
+        }
+        // v7 — PRD 7.
+        if (!db.objectStoreNames.contains(STORE_RETROS)) {
+          const retros = db.createObjectStore(STORE_RETROS, { keyPath: "id" });
+          retros.createIndex("eventBriefId", "eventBriefId");
         }
       },
     });

@@ -9,6 +9,7 @@
 
 import "fake-indexeddb/auto";
 import {
+  CURRENT_SCHEMA_VERSION,
   createEmptyBrief,
   newLessonLearned,
   type EventBrief,
@@ -106,13 +107,16 @@ async function main(): Promise<void> {
     // successMetrics / riskRegister / timeline / constraints / carryForwardLessons absent
   } as unknown as EventBrief);
   const migrated = await getBrief(legacyId);
-  check("getBrief upgrades schemaVersion", migrated?.schemaVersion === "1.0.0");
+  check(
+    `getBrief upgrades schemaVersion to ${CURRENT_SCHEMA_VERSION}`,
+    migrated?.schemaVersion === CURRENT_SCHEMA_VERSION,
+  );
   check("absent arrays are defaulted", Array.isArray(migrated?.riskRegister));
   check("absent end date defaults to start", migrated?.dates.eventEndDate === "2026-03-01");
   const listed = await listBriefs();
   check(
     "listBriefs migrates too",
-    listed.every((b) => b.schemaVersion === "1.0.0"),
+    listed.every((b) => b.schemaVersion === CURRENT_SCHEMA_VERSION),
   );
 
   console.log("\nFR-11 · queryLessons matches on exact type, then falls back");

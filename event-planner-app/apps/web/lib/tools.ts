@@ -1,9 +1,8 @@
 /**
  * The suite's tool registry.
  *
- * PRDs 1-6 are built. The remaining one
- * are listed as explicitly disabled "coming soon" entries so the nav shell and the brief
- * view's "Launch a tool" links exist without any of their functionality being built.
+ * All seven PRDs are built. Every entry is live; the `available` flag drives both the global
+ * nav and the brief view's "Launch a tool" links.
  * Names/roles follow the normative PRD table in `packages/schema/event-brief-schema.md`.
  */
 
@@ -72,7 +71,7 @@ export const SUITE_TOOLS: SuiteTool[] = [
     name: "Post-Mortem Generator",
     href: "/retro",
     description: "Structured retro that writes lessons learned back onto the next brief.",
-    available: false,
+    available: true,
   },
 ];
 

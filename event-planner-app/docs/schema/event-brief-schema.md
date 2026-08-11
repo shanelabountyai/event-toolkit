@@ -190,6 +190,8 @@ The Event Brief is the **data spine** of the entire suite. One structured brief,
 | `category` | `string` | No | e.g. "Budget," "Vendor," "Logistics," "Content." |
 | `lesson` | `string` | Yes | The lesson itself, written as an actionable statement, e.g. "Book AV vendor 90 days out — 60 was too late." |
 | `addedAt` | `string` (ISO 8601 datetime) | Yes | When the lesson was recorded. |
+| `disposition` | `"repeat" \| "fix" \| "drop"` | No | *Added in 1.1.0.* What to do with this lesson next time. **repeat** — this worked, keep doing it exactly as-is. **fix** — worth keeping, but something specific about execution needs to change (vendor, timing, budget line). **drop** — don't repeat this in its current form; a structural problem, not a tuning problem. |
+| `sourceType` | `"issue_log" \| "budget_variance" \| "roi_scorecard" \| "manual"` | No | *Added in 1.1.0.* Which retro input produced this lesson, kept for traceability back to the evidence behind it. |
 
 > **Suite mechanic:** During PRD 1's guided intake, the tool queries the local store for `LessonLearned` entries across *all* prior briefs (not just this one) and surfaces relevant ones as suggested constraints/risks for the new brief. This is how PRD 7's retro output "feeds the next brief's intake" without any backend or integration — everything stays in the same local-first store.
 

@@ -9,7 +9,7 @@
 // suite depends on it.
 
 /** Semver version of the schema documents produced by this package. */
-export const CURRENT_SCHEMA_VERSION = "1.0.0";
+export const CURRENT_SCHEMA_VERSION = "1.1.0";
 
 /** Event-type preset selected during intake. */
 export type EventType = "conference" | "webinar" | "trade_show" | "custom";
@@ -187,6 +187,15 @@ export interface Constraints {
 }
 
 /**
+ * What to do with a lesson next time.
+ *
+ * repeat — this worked, keep doing it exactly as-is.
+ * fix    — worth keeping, but something specific about execution needs to change.
+ * drop   — don't repeat this in its current form; structural problem, not a tuning problem.
+ */
+export type LessonDisposition = "repeat" | "fix" | "drop";
+
+/**
  * A lesson learned from a *previous* event. Written by PRD 7 (Post-Mortem Generator) and
  * read by PRD 1 during intake to suggest constraints for the next brief (FR-11).
  */
@@ -200,6 +209,10 @@ export interface LessonLearned {
   lesson: string;
   /** ISO 8601 datetime. */
   addedAt: string;
+  /** Added in 1.1.0. Optional, so documents written before it still validate. */
+  disposition?: LessonDisposition;
+  /** Added in 1.1.0. Where the lesson came from, for traceability. */
+  sourceType?: "issue_log" | "budget_variance" | "roi_scorecard" | "manual";
 }
 
 /** Lightweight audit trail entry for a generated export. */
