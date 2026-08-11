@@ -13,9 +13,11 @@ The **Event Planner Productivity Suite** — a standalone, local-first web app f
 1. **One app, one schema.** Every tool is a new route under `apps/web/app/(tools)/`, not a new Next.js app. Every tool reads/writes the shared `EventBrief` object from `packages/schema` — never invent a parallel brief-level data model. Tool-specific data (e.g. a budget's line items, a promo kit's generated assets) lives in its own sibling type/package, not crammed into `EventBrief`.
 2. **`packages/schema` has zero React/Next dependency.** Pure TypeScript types, JSON Schema, presets, factory functions, migrations. Any future tool package can depend on it without pulling in UI framework code.
 3. **`packages/local-store` is the only place IndexedDB is touched.** Keep its repository interface clean (`getBrief`, `listBriefs`, `saveBrief`, `deleteBrief`, `queryLessons`, ...) — it's the deliberate seam a future backend/sync layer replaces without touching any tool's UI code.
-4. **No backend, no database, no auth, no CRM/martech integration in v1.** This is a binding constraint from the suite's PRDs (standalone-first), not a shortcut to fix later. Check a tool's PRD "Non-Goals" section before adding server code, an API route with persistence, or an OAuth button.
-5. **Schema changes are additive by default.** (Done once, at 1.1.0, for PRD 7's `LessonLearned.disposition`/`sourceType` — follow that commit as the worked example.) Adding an optional field = MINOR version bump, update `docs/schema/event-brief-schema.md` + `packages/schema/src/event-brief.schema.json` + the TS types together, add a `CHANGELOG.md` entry. Renaming/removing a field, changing a type, or making an optional field required = MAJOR bump, requires a migration function in `packages/schema/src/migrations/`. Never break `migrateBrief()`'s ability to load an older brief.
-6. **Read the tool's PRD + HANDOFF before building it.** `docs/prd/<tool>/PRD.md` is the full spec (problem, user stories, numbered FRs, data model, UX flow, acceptance criteria). `docs/prd/<tool>/HANDOFF.md` is written to be self-contained — paste it into a fresh session and it has everything needed to start building that tool without reading the PRD first.
+4. **v1 has no backend; v2 adds one beside it, never in place of it.** PRDs 1-7 are standalone-first and that is binding for them — check a tool's "Non-Goals" before adding server code to a v1 path. PRDs 8-10 (`prd/08-accounts-workspaces`, `09-hosted-sync`, `10-data-protection`) lift the constraint for the hosted tier only. **Local-only mode stays a real product**: no account, no network, no permission checks, and `workspace-store-check` proves the guard is inert there rather than merely permissive.
+5. **One permission function.** `can()` in `packages/access` is the only place an access question is answered. No route handler, repository or component writes its own role check. A wrong number in a budget is a bug; a wrong answer from `can()` is an attendee data leak.
+6. **Personal data is described in `PII_REGISTRY`, not traversed by hand.** Subject search, export, deletion and log redaction are all built on that one description. `pii-check` fails the build if a sync kind appears in neither the registry nor the explicit `NO_PII` allowlist — a new tool that forgets to register would otherwise ship a category of personal data invisible to every privacy operation.
+7. **Schema changes are additive by default.** (Done once, at 1.1.0, for PRD 7's `LessonLearned.disposition`/`sourceType` — follow that commit as the worked example.) Adding an optional field = MINOR version bump, update `docs/schema/event-brief-schema.md` + `packages/schema/src/event-brief.schema.json` + the TS types together, add a `CHANGELOG.md` entry. Renaming/removing a field, changing a type, or making an optional field required = MAJOR bump, requires a migration function in `packages/schema/src/migrations/`. Never break `migrateBrief()`'s ability to load an older brief.
+8. **Read the tool's PRD + HANDOFF before building it.** `docs/prd/<tool>/PRD.md` is the full spec (problem, user stories, numbered FRs, data model, UX flow, acceptance criteria). `docs/prd/<tool>/HANDOFF.md` is written to be self-contained — paste it into a fresh session and it has everything needed to start building that tool without reading the PRD first.
 
 ## Commands
 
@@ -34,7 +36,20 @@ pnpm leads-check  # PRD 5 dedupe, scoring, templates, assignment, export, brief-
 pnpm roi-check    # PRD 6 attribution windows, NPS, cost math, scorecard bands, YoY, rendering
 pnpm retro-check  # PRD 7 candidate rules, carry-forward idempotency, and PRD 1's read path
 pnpm calibration-check # the calibration read-out: sample gating and no-overclaim rules
+pnpm access-check      # v2: the full role x capability truth table, including the negatives
+pnpm db-schema-check   # v2: the generated migration SQL says what PRD 8 requires
+pnpm workspace-store-check # v2: workspace namespacing, the permission guard, outbox, migration preview
+pnpm sync-check        # v2: the conflict table, LogisticsPack explode/reassemble, disjoint edits
+pnpm pii-check         # v2: registry completeness, subject search/export/erase, log redaction
+pnpm server-db-check   # v2: the hosted tier against a real Postgres (PGlite, nothing to provision)
 ```
+
+**The hosted tier needs no database to develop against.** `packages/server-db` generates its
+migration offline with `drizzle-kit generate`, and `server-db-check` applies that migration to
+PGlite — Postgres compiled to WebAssembly — in process. So `pnpm verify` exercises the real
+schema and the real queries on a laptop and in CI with nothing provisioned. Production uses
+postgres.js against a real server; `packages/server-db/src/testing.ts` is imported only by check
+scripts.
 
 Browser-level coverage (Playwright, Chromium and Firefox), none of it part of `pnpm verify`
 because CI installs neither Python nor browser binaries. Run against `pnpm dev`:
@@ -68,6 +83,10 @@ packages/lead-triage-core/ PRD 5 CSV parse, dedupe, scoring, templates, assignme
 packages/roi-report-core/  PRD 6 attribution, costs, NPS, scorecard, YoY, report rendering
 packages/postmortem-core/  PRD 7 candidate lessons, retro prompt, carry-forward write-back
 packages/ui/           shared primitives (Button, Card, Table, Badge, Form, ProgressBar)
+packages/access/       v2 PRD 8: roles, capabilities, the single can(). Pure, no DB, no React
+packages/server-db/    v2 PRD 8-10: Drizzle schema, workspaces, records, privacy. The only Postgres
+packages/sync-engine/  v2 PRD 9: sync kinds, LogisticsPack explode/reassemble, conflict classifier
+packages/pii-registry/ v2 PRD 10: where personal data lives, as data. Search, export, erase
 fixtures/              example EventBrief JSON docs, validated by `pnpm verify`
 scripts/               make-fixtures, validate-fixtures, sanity-check, store-check
 docs/prd/               PRD + HANDOFF per tool (source of truth for scope)

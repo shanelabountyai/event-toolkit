@@ -14,3 +14,8 @@ coverage/
 # source archives — contents are extracted and tracked in this repo
 *.zip
 *.tar.gz
+
+# Cloud-sync duplicates. Something syncing ~/Documents copies files as "name 2.ext", and the
+# duplicates inside .next break `tsc` with duplicate-identifier errors. They are never real.
+* 2.*
+*\ 2.*
