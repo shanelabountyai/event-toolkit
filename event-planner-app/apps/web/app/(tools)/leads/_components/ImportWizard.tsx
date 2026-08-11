@@ -17,6 +17,7 @@ import {
 } from "@event-toolkit/lead-triage-core";
 import { Badge, Button, Card, CardBody, CardHeader, Select, Table, Td, Th, TextInput } from "@event-toolkit/ui";
 import { readLeadFile } from "@/lib/leads-file";
+import { ImportPrivacyNotice } from "@/components/ImportPrivacyNotice";
 
 type Step = "upload" | "mapping" | "preview" | "done";
 
@@ -74,6 +75,9 @@ export function ImportWizard({
 
   return (
     <div className="space-y-4">
+      {/* PRD 10 FR-13. Placed above everything, because it is about the file that is about to be
+          chosen rather than about the results below. */}
+      <ImportPrivacyNotice />
       {batches.length > 0 ? (
         <Card>
           <CardHeader>

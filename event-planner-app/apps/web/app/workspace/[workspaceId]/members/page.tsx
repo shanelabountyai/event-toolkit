@@ -70,6 +70,12 @@ export default async function MembersPage({
         <Link href={`/workspace/${workspaceId}/migrate`} className="font-medium text-slate-900 underline underline-offset-2">
           Move browser data in
         </Link>
+        <Link href={`/workspace/${workspaceId}/privacy`} className="font-medium text-slate-900 underline underline-offset-2">
+          Attendee data requests
+        </Link>
+        <Link href={`/workspace/${workspaceId}/retention`} className="font-medium text-slate-900 underline underline-offset-2">
+          Retention
+        </Link>
       </div>
 
       <Card>

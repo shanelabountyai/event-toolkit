@@ -25,7 +25,7 @@ import {
 } from "@event-toolkit/pii-registry";
 import { assertCan, type AccessContext } from "@event-toolkit/access";
 import { and, eq, inArray, isNull, lt, sql } from "drizzle-orm";
-import { accessEvents, records, retentionPolicies } from "./schema";
+import { accessEvents, records, retentionPolicies, workspaces } from "./schema";
 import type { Db } from "./db-type";
 
 const nextSeq = sql`nextval(pg_get_serial_sequence('records', 'seq'))`;
@@ -285,6 +285,12 @@ export async function purgeExpiredRecords(
     .onConflictDoUpdate({ target: retentionPolicies.workspaceId, set: { lastRunAt: now } });
 
   return { workspaceId, purged: expired.length, cutoff: cutoff.toISOString(), skipped: null };
+}
+
+/** Every workspace, for the daily purge. No context: a cron job is not a person. */
+export async function listAllWorkspaceIds(db: Db): Promise<string[]> {
+  const rows = await db.select({ id: workspaces.id }).from(workspaces);
+  return rows.map((r) => r.id);
 }
 
 /** Kinds whose every read is logged. Exported so the pull path can apply the same rule. */

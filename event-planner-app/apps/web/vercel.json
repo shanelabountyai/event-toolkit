@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "comment": "PRD 10 FR-4 — daily retention purge, 03:00 UTC.",
+      "path": "/api/cron/retention",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}

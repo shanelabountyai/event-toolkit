@@ -6,6 +6,7 @@
 
 import { NextResponse } from "next/server";
 import { isHostedConfigured } from "@/lib/auth";
+import { getDb, getRetentionPolicy } from "@event-toolkit/server-db";
 import { currentUser, myWorkspaces } from "@/lib/session";
 
 export const runtime = "nodejs";
@@ -20,11 +21,22 @@ export async function GET() {
   if (!user) return NextResponse.json({ signedIn: false, hosted: true, workspaces: [] });
 
   const workspaces = await myWorkspaces();
+  // The retention period travels with the workspace because FR-13 requires the import notice to
+  // name the period actually in force, not a number hard-coded into a sentence.
+  const withPolicy = await Promise.all(
+    workspaces.map(async (w) => ({
+      id: w.workspaceId,
+      name: w.name,
+      role: w.role,
+      retentionMonths: (await getRetentionPolicy(getDb(), w.workspaceId)).months,
+    })),
+  );
+
   return NextResponse.json({
     signedIn: true,
     hosted: true,
     userId: user.id,
     email: user.email,
-    workspaces: workspaces.map((w) => ({ id: w.workspaceId, name: w.name, role: w.role })),
+    workspaces: withPolicy,
   });
 }
