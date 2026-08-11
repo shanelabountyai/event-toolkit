@@ -1,0 +1,16 @@
+{
+  "name": "@event-toolkit/sync-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PRD 9 sync: the kind registry, LogisticsPack explode/reassemble, and the conflict classifier. Pure — no React, no network, no database.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@event-toolkit/logistics": "workspace:*"
+  },
+  "devDependencies": { "typescript": "^5.9.3" }
+}

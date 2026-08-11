@@ -167,6 +167,16 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/pii-registry:
+    dependencies:
+      '@event-toolkit/sync-engine':
+        specifier: workspace:*
+        version: link:../sync-engine
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/postmortem-core:
     dependencies:
       '@event-toolkit/budget-calc':
@@ -236,6 +246,16 @@ importers:
       drizzle-kit:
         specifier: ^0.31.5
         version: 0.31.10
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/sync-engine:
+    dependencies:
+      '@event-toolkit/logistics':
+        specifier: workspace:*
+        version: link:../logistics
+    devDependencies:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

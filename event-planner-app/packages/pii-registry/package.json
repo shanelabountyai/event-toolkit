@@ -1,0 +1,14 @@
+{
+  "name": "@event-toolkit/pii-registry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PRD 10: where personal data lives, described as data. Subject search, export and erasure implemented once against that description. Pure.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "dependencies": { "@event-toolkit/sync-engine": "workspace:*" },
+  "devDependencies": { "typescript": "^5.9.3" }
+}

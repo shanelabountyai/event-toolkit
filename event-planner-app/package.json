@@ -14,7 +14,7 @@
     "sanity": "tsx scripts/sanity-check.ts",
     "store-check": "tsx scripts/store-check.ts",
     "promo-check": "tsx scripts/promo-check.ts",
-    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm budget-check && pnpm leads-check && pnpm roi-check && pnpm retro-check && pnpm calibration-check && pnpm access-check  && pnpm db-schema-check && pnpm workspace-store-check && pnpm build",
+    "verify": "pnpm typecheck && pnpm lint && pnpm validate:fixtures && pnpm sanity && pnpm store-check && pnpm promo-check && pnpm logistics-check && pnpm budget-check && pnpm leads-check && pnpm roi-check && pnpm retro-check && pnpm calibration-check && pnpm access-check  && pnpm db-schema-check && pnpm workspace-store-check && pnpm sync-check && pnpm pii-check && pnpm build",
     "logistics-check": "tsx scripts/logistics-check.ts",
     "budget-check": "tsx scripts/budget-check.ts",
     "leads-check": "tsx scripts/leads-check.ts",
@@ -23,7 +23,9 @@
     "calibration-check": "tsx scripts/calibration-check.ts",
     "access-check": "tsx scripts/access-check.ts",
     "db-schema-check": "tsx scripts/db-schema-check.ts",
-    "workspace-store-check": "tsx scripts/workspace-store-check.ts"
+    "workspace-store-check": "tsx scripts/workspace-store-check.ts",
+    "sync-check": "tsx scripts/sync-check.ts",
+    "pii-check": "tsx scripts/pii-check.ts"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
