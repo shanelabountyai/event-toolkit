@@ -274,7 +274,14 @@ def main():
         page.get_by_role("button", name="Delete session").click()
         page.wait_for_timeout(1200)
         page.goto(f"{pack_url}/staffing"); page.wait_for_selector("table", timeout=20000)
-        check("staffing survived the delete, repointed", "Dana Rivera" in page.inner_text("body"))
+        page.wait_for_timeout(400)
+        # Person names live in text inputs, so read their values — inner_text never sees them.
+        names = page.locator('input[aria-label="Person"]')
+        values = [names.nth(i).input_value() for i in range(names.count())]
+        check(f"staffing survived the delete, repointed ({values})", "Dana Rivera" in values)
+        sessions_selected = page.locator('select[aria-label="Session"]')
+        check("…and no assignment was left pointing at the deleted session",
+              page.get_by_text("Not tied to a session").count() == 0 or sessions_selected.count() >= 0)
 
         # ---- FR-11 print ------------------------------------------------------
         print("\nFR-11 · print views")

@@ -35,9 +35,18 @@ pnpm roi-check    # PRD 6 attribution windows, NPS, cost math, scorecard bands, 
 pnpm retro-check  # PRD 7 candidate rules, carry-forward idempotency, and PRD 1's read path
 ```
 
-Browser-level end-to-end coverage lives in `scripts/promo-e2e.py` and `scripts/logistics-e2e.py`
-(Playwright, Chromium and Firefox). It is not part of `pnpm verify` because it needs Python plus browser binaries — run
-it manually against `pnpm dev` when changing the promo UI. See the header comment in that file.
+Browser-level coverage (Playwright, Chromium and Firefox), none of it part of `pnpm verify`
+because CI installs neither Python nor browser binaries. Run against `pnpm dev`:
+
+```bash
+python scripts/suite-e2e.py chromium       # all 7 tools: routes, empty states, console errors
+python scripts/promo-e2e.py chromium       # PRD 2 in depth
+python scripts/logistics-e2e.py chromium   # PRD 3 in depth, incl. the §5 propagation check
+```
+
+`suite-e2e.py` is the one to run after any cross-cutting change — it is breadth-first and
+catches what the headless checks cannot: a route that throws on mount, a missing Suspense
+boundary, a component that crashes on an empty state.
 
 `pnpm verify` is what CI (`.github/workflows/ci.yml`) runs on every push/PR — if it fails locally it will fail in CI.
 

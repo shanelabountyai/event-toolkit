@@ -23,8 +23,11 @@ PRDs 2–4 only depend on PRD 1 and were built as separate routes under `apps/we
 
 ## Status
 
-All seven PRDs are built. Every tool's domain logic has a headless check script wired into
-`pnpm verify`; no browser end-to-end pass has been run for PRDs 3-7.
+All seven PRDs are built and verified. Every tool's domain logic has a headless check script
+wired into `pnpm verify` (~450 assertions). Browser coverage runs separately via
+`scripts/suite-e2e.py` (all seven tools, both engines), plus in-depth runs for PRD 2 and
+PRD 3 — the latter including the §5 propagation check the handoff calls its definition of
+done. Zero console errors in Chromium and Firefox.
 
 ## Open questions to validate
 

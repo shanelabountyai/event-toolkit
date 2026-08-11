@@ -109,8 +109,10 @@ def main():
         check("Promo Campaign Kit is a real nav link, not 'soon'",
               nav.locator("a", has_text="Promo Campaign Kit").count() == 1,
               nav.inner_text().replace("\n", " | "))
-        check("unbuilt tools still read 'soon'",
-              nav.locator("span", has_text="Budget Builder").count() >= 1)
+        # Was "unbuilt tools still read 'soon'" — obsolete since PRD 7 shipped and every tool
+        # in the registry is live. The nav is now fully built out.
+        check(f"every tool in the nav is a real link ({nav.locator('a').count()})",
+              nav.locator("a").count() == 7 and "soon" not in nav.inner_text().lower())
 
         # ---- Generation guard --------------------------------------------
         print("\nGeneration guard")
