@@ -1,6 +1,6 @@
 # v2 platform tier — where PRDs 8, 9 and 10 stand
 
-Last updated: 11 August 2026.
+Last updated: 11 August 2026. **All three v2 PRDs are built.**
 
 The seven tools (PRDs 1–7) are built and unchanged. This document covers the hosted tier:
 accounts and workspaces (PRD 8), offline-first sync (PRD 9), and data protection (PRD 10).
