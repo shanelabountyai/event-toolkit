@@ -40,17 +40,40 @@ All fifteen check scripts run inside `pnpm verify`, which is what CI runs on eve
 under `apps/web/app/(tools)/`, and all seven original check scripts pass unchanged. That was PRD
 8's stated acceptance bar for the persistence seam, and it held.
 
+## Deployed
+
+**https://event-toolkit.vercel.app** — the seven tools, live.
+
+The GitHub repo is connected, so every push to `main` deploys. Root Directory is
+`event-planner-app/apps/web`; Vercel looks for `next` in the package.json there, and this repo
+keeps its Next app two levels down with `pnpm-workspace.yaml` in between.
+
+`AUTH_SECRET` and `CRON_SECRET` are set as sensitive production variables, generated separately
+from the local development ones in `.env.local`.
+
+**The deployment is publicly reachable and has no sign-in.** That is currently harmless rather
+than sloppy: every tool is client-side, and a visitor's data lives in their own browser's
+IndexedDB. There is no server-side data to expose because there is not yet a server holding any.
+That stops being true the moment PRD 8's auth ships, which is what gates it. If you want it
+private before then, turn on Vercel Authentication in Project Settings → Deployment Protection.
+
 ## Blocked on you
 
-Nothing here is difficult; all of it needs an account I cannot create.
+Two signups, roughly ten minutes. Neither blocks further building — see the note below.
 
-1. **A Postgres database.** Vercel Postgres or Neon. Gives `DATABASE_URL`.
-2. **An Auth.js secret.** `openssl rand -base64 32` → `AUTH_SECRET`.
-3. **A Resend account with a verified sending domain**, for verification emails, magic links and
-   invitations. Gives `AUTH_RESEND_KEY` and `EMAIL_FROM`.
-4. **A Vercel project**, for `AUTH_URL` and the daily retention cron.
+1. **A Postgres database.** [neon.tech](https://neon.tech) → new project → copy the *pooled*
+   connection string. Gives `DATABASE_URL`. Neon over Vercel Postgres for the more generous free
+   tier; it is the same Postgres either way.
+2. **A Resend account with a verified sending domain**, for verification emails, magic links and
+   invitations. Gives `AUTH_RESEND_KEY` and `EMAIL_FROM`. DNS verification is the slow part, so
+   start it first if you want it the same day.
 
 `.env.example` lists every variable by name. Nothing real is committed.
+
+**Neither is required to keep building.** PGlite persists to disk, so local development can run
+the whole hosted tier against a real Postgres with no account, and Auth.js can print magic links
+to the terminal instead of sending them. That wiring is not done yet — it is the fastest next
+step if you want to carry on before the signups.
 
 ## What gets built once those exist
 
