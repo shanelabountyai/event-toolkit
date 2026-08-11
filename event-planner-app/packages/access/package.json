@@ -1,0 +1,13 @@
+{
+  "name": "@event-toolkit/access",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The permission model: capabilities, roles and the single can() check. Pure TypeScript — no React, no Next, no database.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src"],
+  "scripts": { "typecheck": "tsc --noEmit" },
+  "devDependencies": { "typescript": "^5.9.3" }
+}
