@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const { dependencies } = require("./package.json") as { dependencies: Record<string, string> };
@@ -23,13 +21,13 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: workspacePackages,
   /**
-   * The pnpm workspace root, stated rather than inferred.
+   * `outputFileTracingRoot` is deliberately NOT set.
    *
-   * Next walks up looking for a lockfile and there are two candidates above this directory, so
-   * it warns that its guess may be wrong. A wrong guess means the wrong files are traced into the
-   * serverless bundle — which shows up as a module-not-found in production and nowhere else.
+   * Setting it silences a local "inferred your workspace root" warning and breaks the deploy:
+   * Vercel computes its own tracing root for a monorepo, and an explicit value fights it. The
+   * build compiles every route and then fails packaging with a module-not-found for Next's own
+   * server runtime — a failure that appears nowhere locally. The warning is cosmetic; this is not.
    */
-  outputFileTracingRoot: join(dirname(fileURLToPath(import.meta.url)), "..", ".."),
 };
 
 export default nextConfig;
