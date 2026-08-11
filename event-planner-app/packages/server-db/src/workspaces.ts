@@ -9,7 +9,7 @@
 
 import { assertCan, canRemoveMember, wouldLeaveNoOwner, type AccessContext, type Role } from "@event-toolkit/access";
 import { and, eq, isNull, gt } from "drizzle-orm";
-import { accessEvents, invitations, memberships, sessions, workspaces } from "./schema";
+import { accessEvents, invitations, memberships, sessions, users, workspaces } from "./schema";
 
 import type { Db } from "./db-type";
 
@@ -84,6 +84,35 @@ export async function roleOf(db: Db, workspaceId: string, userId: string): Promi
 export async function listMembers(db: Db, ctx: AccessContext) {
   assertCan(ctx, "members:view");
   return db.select().from(memberships).where(eq(memberships.workspaceId, ctx.workspaceId));
+}
+
+/**
+ * Members with the person attached — what a members screen actually renders.
+ *
+ * Gated on `members:view` like the raw list. A workspace's roster is not attendee data, but it is
+ * still a list of named people at a named company, and the roles beside them say who can reach
+ * the budget and who can reach the leads.
+ */
+export async function listMembersWithUsers(db: Db, ctx: AccessContext) {
+  assertCan(ctx, "members:view");
+  return db
+    .select({
+      userId: memberships.userId,
+      role: memberships.role,
+      joinedAt: memberships.joinedAt,
+      email: users.email,
+      name: users.name,
+    })
+    .from(memberships)
+    .innerJoin(users, eq(memberships.userId, users.id))
+    .where(eq(memberships.workspaceId, ctx.workspaceId));
+}
+
+/** One workspace, if this context may see it at all. */
+export async function getWorkspace(db: Db, ctx: AccessContext) {
+  if (!ctx.role) return null;
+  const [row] = await db.select().from(workspaces).where(eq(workspaces.id, ctx.workspaceId));
+  return row ?? null;
 }
 
 export async function listAccessEvents(db: Db, ctx: AccessContext) {
@@ -225,6 +254,43 @@ export async function revokeInvitation(db: Db, ctx: AccessContext, invitationId:
     .set({ revokedAt: new Date() })
     .where(and(eq(invitations.id, invitationId), eq(invitations.workspaceId, ctx.workspaceId)));
   await logEvent(db, ctx.workspaceId, ctx.userId, "invitation.revoked", invitationId);
+}
+
+/**
+ * Look up an invitation for display, without accepting it.
+ *
+ * Unauthenticated by necessity — the token *is* the authentication, which is why it is 32 bytes
+ * of CSPRNG output. Returns only what the accept screen needs to show: the workspace name, the
+ * role offered, and whether the link is still good. Never the invitee list or anything else about
+ * the workspace, because whoever holds this URL is not yet a member of it.
+ */
+export async function getInvitationByToken(db: Db, tokenValue: string, now: Date = new Date()) {
+  const [row] = await db
+    .select({
+      id: invitations.id,
+      email: invitations.email,
+      role: invitations.role,
+      expiresAt: invitations.expiresAt,
+      revokedAt: invitations.revokedAt,
+      acceptedAt: invitations.acceptedAt,
+      workspaceId: invitations.workspaceId,
+      workspaceName: workspaces.name,
+    })
+    .from(invitations)
+    .innerJoin(workspaces, eq(invitations.workspaceId, workspaces.id))
+    .where(eq(invitations.token, tokenValue));
+
+  if (!row) return null;
+  return {
+    ...row,
+    status: row.acceptedAt
+      ? ("accepted" as const)
+      : row.revokedAt
+        ? ("revoked" as const)
+        : row.expiresAt <= now
+          ? ("expired" as const)
+          : ("pending" as const),
+  };
 }
 
 export class InvitationError extends Error {

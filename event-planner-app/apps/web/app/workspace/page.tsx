@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Badge, Card, CardBody, CardHeader } from "@event-toolkit/ui";
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from "@event-toolkit/access";
@@ -38,14 +39,17 @@ export default async function WorkspacePage() {
           </CardHeader>
           <ul className="divide-y divide-slate-200">
             {memberships.map((m) => (
-              <li key={m.workspaceId} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-medium text-slate-900">{m.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {ROLE_DESCRIPTIONS[m.role as Role]}
-                  </p>
-                </div>
-                <Badge>{ROLE_LABELS[m.role as Role]}</Badge>
+              <li key={m.workspaceId}>
+                <Link
+                  href={`/workspace/${m.workspaceId}/members`}
+                  className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 hover:bg-slate-50"
+                >
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-slate-900">{m.name}</p>
+                    <p className="text-xs text-slate-500">{ROLE_DESCRIPTIONS[m.role as Role]}</p>
+                  </div>
+                  <Badge>{ROLE_LABELS[m.role as Role]}</Badge>
+                </Link>
               </li>
             ))}
           </ul>

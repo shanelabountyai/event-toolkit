@@ -8,8 +8,14 @@ export const dynamic = "force-dynamic";
 
 export const metadata = { title: "Sign in — Event Planner Suite" };
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ email?: string }>;
+}) {
   const configured = isHostedConfigured() && isEmailConfigured();
+  // Arrives from an invitation link, so the address is the one the invitation was sent to.
+  const { email } = await searchParams;
 
   return (
     <Card>
@@ -22,7 +28,7 @@ export default function SignInPage() {
         </div>
 
         {configured ? (
-          <SignInForm />
+          <SignInForm defaultEmail={email} />
         ) : (
           <p className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900 ring-1 ring-inset ring-amber-200">
             Accounts aren&rsquo;t configured on this deployment. You can still use every tool

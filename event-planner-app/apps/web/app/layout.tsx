@@ -45,16 +45,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   ),
                 )}
               </nav>
-              <span className="ml-auto text-xs text-slate-400">
-                Local-first · data stays in this browser
-              </span>
+              {/*
+                A plain link rather than a session-aware badge. Reading the session here would make
+                the root layout dynamic and opt every static page in the suite out of prerendering,
+                to save one click. /workspace sends you to sign-in if you are not signed in.
+              */}
+              <Link
+                href="/workspace"
+                className="ml-auto rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              >
+                Account
+              </Link>
             </div>
           </header>
           <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">{children}</main>
           <footer className="no-print border-t border-slate-200 bg-white">
             <div className="mx-auto max-w-6xl px-6 py-4 text-xs text-slate-500">
-              v1 stores everything in this browser via IndexedDB — no account, no server, no
-              sync. Export a brief to Markdown, HTML or JSON to back it up or share it.{" "}
+              Without an account, everything stays in this browser via IndexedDB — no server, no
+              sync — and that is a supported way to work, not a trial. Sign in to share a workspace
+              with colleagues across devices. Export a brief to Markdown, HTML or JSON either
+              way.{" "}
               <Link href="/calibration" className="font-medium underline underline-offset-4 hover:text-slate-700">
                 Calibration
               </Link>{" "}

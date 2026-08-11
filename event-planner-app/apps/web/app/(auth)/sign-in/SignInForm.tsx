@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { Button, Field, TextInput } from "@event-toolkit/ui";
 import { requestSignInLink, type SignInState } from "./actions";
 
-export function SignInForm() {
+export function SignInForm({ defaultEmail }: { defaultEmail?: string }) {
   const [state, formAction, pending] = useActionState<SignInState, FormData>(requestSignInLink, {});
 
   return (
@@ -17,6 +17,7 @@ export function SignInForm() {
           autoComplete="email"
           autoFocus
           required
+          defaultValue={defaultEmail}
           placeholder="you@company.com"
         />
       </Field>
