@@ -106,6 +106,26 @@ export async function collectLocalRecords(): Promise<CollectedData> {
 }
 
 /**
+ * A cheap "is there anything here?" for the banner that offers migration.
+ *
+ * Counts briefs rather than collecting every record. The banner renders on every workspace page,
+ * and reading the whole database each time to decide whether to show one sentence is work nobody
+ * asked for. An event without a brief does not exist in this suite, so the count is the answer.
+ */
+export async function countLocalEvents(): Promise<number> {
+  const previous: StoreContext = getStoreContext();
+  setStoreContext({ mode: "local" });
+  resetDbConnection();
+  try {
+    const db = await getDb();
+    return await db.count(STORE_BRIEFS);
+  } finally {
+    setStoreContext(previous);
+    resetDbConnection();
+  }
+}
+
+/**
  * Records this build has no sync kind for.
  *
  * Should always be empty. If it is not, a store exists that the migration would upload under a

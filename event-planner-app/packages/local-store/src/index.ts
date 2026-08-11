@@ -199,6 +199,7 @@ export {
 /** PRD 8 FR-9 — the read half of local-data migration. Uploads nothing. */
 export {
   collectLocalRecords,
+  countLocalEvents,
   DEVICE_LOCAL_STORES,
   unknownKinds,
   type CollectedData,

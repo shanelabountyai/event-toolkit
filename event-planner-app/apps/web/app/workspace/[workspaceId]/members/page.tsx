@@ -14,6 +14,7 @@ import { accessContextFor, currentUser } from "@/lib/session";
 import { InviteForm } from "./InviteForm";
 import { MemberRow } from "./MemberRow";
 import { RevokeInvitationButton } from "./RevokeInvitationButton";
+import { LocalDataBanner } from "../../LocalDataBanner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,6 +60,8 @@ export default async function MembersPage({
           {!manages ? "Only owners and admins can change who has access." : null}
         </p>
       </div>
+
+      <LocalDataBanner workspaceId={workspaceId} />
 
       <Card>
         <CardHeader>
