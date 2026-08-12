@@ -65,7 +65,7 @@ export function ShippingManifestTable({
         <Button onClick={() => setImporting(true)}>Import CSV</Button>
       </div>
 
-      <Table>
+      <Table stack>
         <thead>
           <tr>
             <Th className="w-48">Item</Th>
@@ -85,14 +85,14 @@ export function ShippingManifestTable({
           ) : (
             pack.shippingItems.map((item) => (
               <tr key={item.id}>
-                <Td>
+                <Td label="Item">
                   <TextInput
                     value={item.item}
                     aria-label="Item"
                     onChange={(e) => patch(item.id, { item: e.target.value })}
                   />
                 </Td>
-                <Td>
+                <Td label="Qty">
                   <NumberInput
                     min={1}
                     step={1}
@@ -102,35 +102,35 @@ export function ShippingManifestTable({
                     onChange={(e) => patch(item.id, { quantity: Math.max(1, Number(e.target.value) || 1) })}
                   />
                 </Td>
-                <Td>
+                <Td label="Ship to">
                   <TextInput
                     value={item.shipTo}
                     aria-label="Ship to"
                     onChange={(e) => patch(item.id, { shipTo: e.target.value })}
                   />
                 </Td>
-                <Td>
+                <Td label="Carrier">
                   <TextInput
                     value={item.carrier ?? ""}
                     aria-label="Carrier"
                     onChange={(e) => patch(item.id, { carrier: e.target.value })}
                   />
                 </Td>
-                <Td>
+                <Td label="Tracking">
                   <TextInput
                     value={item.trackingNumber ?? ""}
                     aria-label="Tracking number"
                     onChange={(e) => patch(item.id, { trackingNumber: e.target.value })}
                   />
                 </Td>
-                <Td>
+                <Td label="Ship by">
                   <DateInput
                     value={item.shipByDate ?? ""}
                     aria-label="Ship by date"
                     onChange={(e) => patch(item.id, { shipByDate: e.target.value })}
                   />
                 </Td>
-                <Td>
+                <Td label="Status">
                   <Select
                     value={item.status}
                     aria-label="Status"
@@ -146,7 +146,7 @@ export function ShippingManifestTable({
                     <Badge tone={STATUS_TONES[item.status]}>{SHIPPING_STATUS_LABELS[item.status]}</Badge>
                   </span>
                 </Td>
-                <Td>
+                <Td label="Owner">
                   <TextInput
                     value={item.owner ?? ""}
                     aria-label="Owner"

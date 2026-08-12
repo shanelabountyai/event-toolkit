@@ -58,7 +58,7 @@ export function ContactSheetTable({
               <span className="ml-2 font-normal text-content-muted">{group.contacts.length}</span>
             </h3>
 
-            <Table>
+            <Table stack>
               <thead>
                 <tr>
                   <Th className="w-44">Name</Th>
@@ -78,21 +78,21 @@ export function ContactSheetTable({
                     const availability = resolveSessionTime(pack, contact.availabilitySessionId);
                     return (
                       <tr key={contact.id} className="break-inside-avoid">
-                        <Td>
+                        <Td label="Name">
                           <TextInput
                             value={contact.name}
                             aria-label="Name"
                             onChange={(e) => patch(contact.id, { name: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Role">
                           <TextInput
                             value={contact.role}
                             aria-label="Role"
                             onChange={(e) => patch(contact.id, { role: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Phone">
                           <TextInput
                             type="tel"
                             value={contact.phone ?? ""}
@@ -100,7 +100,7 @@ export function ContactSheetTable({
                             onChange={(e) => patch(contact.id, { phone: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Email">
                           <TextInput
                             type="email"
                             value={contact.email ?? ""}
@@ -108,7 +108,7 @@ export function ContactSheetTable({
                             onChange={(e) => patch(contact.id, { email: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="On site during">
                           <Select
                             value={contact.availabilitySessionId ?? ""}
                             aria-label="Available during"
@@ -133,7 +133,7 @@ export function ContactSheetTable({
                             </span>
                           ) : null}
                         </Td>
-                        <Td>
+                        <Td label="Org">
                           <Select
                             value={contact.orgType}
                             aria-label="Organisation type"

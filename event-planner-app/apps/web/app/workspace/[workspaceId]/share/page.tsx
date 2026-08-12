@@ -46,7 +46,7 @@ export default async function SharePage({ params }: { params: Promise<{ workspac
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href={`/workspace/${workspaceId}/members`} className="text-sm text-content-muted hover:text-content">
+        <Link href={`/workspace/${workspaceId}/members`} className="inline-flex min-h-11 items-center text-sm text-content-muted hover:text-content">
           ← {workspace.name}
         </Link>
         <h1 className="text-xl font-semibold tracking-tight text-content">On-site links</h1>

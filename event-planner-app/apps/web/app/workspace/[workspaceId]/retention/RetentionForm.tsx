@@ -29,7 +29,12 @@ export function RetentionForm({
       </Field>
 
       <label className="flex items-start gap-2 text-sm text-content-muted">
-        <input type="checkbox" name="enabled" defaultChecked={enabled} className="mt-0.5" />
+        <input
+          type="checkbox"
+          name="enabled"
+          defaultChecked={enabled}
+          className="mt-0.5 h-5 w-5 accent-[var(--color-accent)]"
+        />
         <span>
           Delete automatically.
           {/* Turning it off is allowed and its consequence is stated, rather than the checkbox

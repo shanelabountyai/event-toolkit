@@ -74,7 +74,7 @@ export function MemberRow({
           )}
 
           {mayRemove ? (
-            <Button size="sm" variant="danger" onClick={() => setConfirming((v) => !v)}>
+            <Button variant="danger" onClick={() => setConfirming((v) => !v)}>
               Remove
             </Button>
           ) : null}

@@ -181,7 +181,7 @@ function AssignmentTable({
   const sessions = sessionsByStart(pack);
 
   return (
-    <Table className="mt-1">
+    <Table stack className="mt-1">
       <thead>
         <tr>
           <Th className="w-48">Person</Th>
@@ -202,7 +202,7 @@ function AssignmentTable({
             const clash = doubles.has(assignment.id);
             return (
               <tr key={assignment.id} className={clash ? "bg-warning-subtle/60" : undefined}>
-                <Td>
+                <Td label="Person">
                   <TextInput
                     list="staff-name-suggestions"
                     value={assignment.personName}
@@ -215,7 +215,7 @@ function AssignmentTable({
                     </p>
                   ) : null}
                 </Td>
-                <Td>
+                <Td label="Role">
                   <TextInput
                     value={assignment.assignmentRole}
                     aria-label="Role"
@@ -224,7 +224,7 @@ function AssignmentTable({
                   />
                 </Td>
                 {showSessionColumn ? (
-                  <Td>
+                  <Td label="Session or custom time">
                     <Select
                       value={assignment.sessionId ?? ""}
                       aria-label="Session"
@@ -245,7 +245,7 @@ function AssignmentTable({
                     </Select>
                   </Td>
                 ) : null}
-                <Td>
+                <Td label="When">
                   {resolved ? (
                     <span className="text-sm text-content-muted">
                       {formatSessionRange(resolved.startTime, resolved.endTime)}
@@ -266,7 +266,7 @@ function AssignmentTable({
                     </span>
                   )}
                 </Td>
-                <Td>
+                <Td label="Notes">
                   <TextInput
                     value={assignment.notes ?? ""}
                     aria-label="Notes"

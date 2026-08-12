@@ -80,7 +80,7 @@ export function RunOfShowTable({
 
   return (
     <>
-      <Table>
+      <Table stack>
         <thead>
           <tr>
             <Th className="w-56">Session</Th>
@@ -104,7 +104,7 @@ export function RunOfShowTable({
               const clashing = overlaps.has(session.id);
               return (
                 <tr key={session.id} className={clashing ? "bg-warning-subtle/60" : undefined}>
-                  <Td>
+                  <Td label="Session">
                     <TextInput
                       value={session.label}
                       aria-label="Session label"
@@ -120,35 +120,35 @@ export function RunOfShowTable({
                       </p>
                     ) : null}
                   </Td>
-                  <Td>
+                  <Td label="Start">
                     <DateTimeInput
                       value={session.startTime}
                       aria-label="Start time"
                       onChange={(e) => patch(session.id, { startTime: e.target.value })}
                     />
                   </Td>
-                  <Td>
+                  <Td label="End">
                     <DateTimeInput
                       value={session.endTime}
                       aria-label="End time"
                       onChange={(e) => patch(session.id, { endTime: e.target.value })}
                     />
                   </Td>
-                  <Td>
+                  <Td label="Location">
                     <TextInput
                       value={session.location ?? ""}
                       aria-label="Location"
                       onChange={(e) => patch(session.id, { location: e.target.value })}
                     />
                   </Td>
-                  <Td>
+                  <Td label="Owner">
                     <TextInput
                       value={session.owner ?? ""}
                       aria-label="Owner"
                       onChange={(e) => patch(session.id, { owner: e.target.value })}
                     />
                   </Td>
-                  <Td>
+                  <Td label="Type">
                     <Select
                       value={session.type}
                       aria-label="Session type"
@@ -161,7 +161,7 @@ export function RunOfShowTable({
                       ))}
                     </Select>
                   </Td>
-                  <Td>
+                  <Td label="Notes">
                     <TextInput
                       value={session.notes ?? ""}
                       aria-label="Notes"

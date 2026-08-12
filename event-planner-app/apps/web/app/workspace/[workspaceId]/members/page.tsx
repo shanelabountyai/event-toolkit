@@ -51,7 +51,7 @@ export default async function MembersPage({
   return (
     <main className="mx-auto w-full max-w-3xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href="/workspace" className="text-sm text-content-muted hover:text-content">
+        <Link href="/workspace" className="inline-flex min-h-11 items-center text-sm text-content-muted hover:text-content">
           ← All workspaces
         </Link>
         <h1 className="text-xl font-semibold tracking-tight text-content">{workspace.name}</h1>
@@ -63,17 +63,17 @@ export default async function MembersPage({
 
       <LocalDataBanner workspaceId={workspaceId} />
 
-      <div className="flex flex-wrap gap-3 text-sm">
-        <Link href={`/workspace/${workspaceId}/share`} className="font-medium text-content underline underline-offset-2">
+      <div className="flex flex-wrap items-center gap-x-4 text-sm">
+        <Link href={`/workspace/${workspaceId}/share`} className="inline-flex min-h-11 items-center font-medium text-content underline underline-offset-2">
           On-site links
         </Link>
-        <Link href={`/workspace/${workspaceId}/migrate`} className="font-medium text-content underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/migrate`} className="inline-flex min-h-11 items-center font-medium text-content underline underline-offset-2">
           Move browser data in
         </Link>
-        <Link href={`/workspace/${workspaceId}/privacy`} className="font-medium text-content underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/privacy`} className="inline-flex min-h-11 items-center font-medium text-content underline underline-offset-2">
           Attendee data requests
         </Link>
-        <Link href={`/workspace/${workspaceId}/retention`} className="font-medium text-content underline underline-offset-2">
+        <Link href={`/workspace/${workspaceId}/retention`} className="inline-flex min-h-11 items-center font-medium text-content underline underline-offset-2">
           Retention
         </Link>
       </div>

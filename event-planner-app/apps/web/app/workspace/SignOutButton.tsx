@@ -6,7 +6,7 @@ import { signOutAction } from "./actions";
 export function SignOutButton() {
   return (
     <form action={signOutAction}>
-      <Button type="submit" size="sm">
+      <Button type="submit">
         Sign out
       </Button>
     </form>

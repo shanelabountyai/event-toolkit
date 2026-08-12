@@ -127,7 +127,7 @@ export function PackOverview({
               </div>
             </CardHeader>
             <CardBody>
-              <Table>
+              <Table stack>
                 <thead>
                   <tr>
                     <Th>Risk</Th>
@@ -143,11 +143,11 @@ export function PackOverview({
                   ) : (
                     brief.riskRegister.map((risk) => (
                       <tr key={risk.id}>
-                        <Td>{risk.risk}</Td>
-                        <Td className="capitalize">{risk.likelihood}</Td>
-                        <Td className="capitalize">{risk.impact}</Td>
-                        <Td>{risk.owner ?? "—"}</Td>
-                        <Td>
+                        <Td label="Risk">{risk.risk}</Td>
+                        <Td label="Likelihood" className="capitalize">{risk.likelihood}</Td>
+                        <Td label="Impact" className="capitalize">{risk.impact}</Td>
+                        <Td label="Owner">{risk.owner ?? "—"}</Td>
+                        <Td label="Status">
                           <Select
                             value={risk.status}
                             aria-label={`Status for ${risk.risk}`}
@@ -179,7 +179,7 @@ export function PackOverview({
               </div>
             </CardHeader>
             <CardBody>
-              <Table>
+              <Table stack>
                 <thead>
                   <tr>
                     <Th>Milestone</Th>
@@ -194,12 +194,12 @@ export function PackOverview({
                   ) : (
                     brief.timeline.milestones.map((milestone) => (
                       <tr key={milestone.id}>
-                        <Td>{milestone.label}</Td>
-                        <Td className="text-xs text-content-muted">
+                        <Td label="Risk">{milestone.label}</Td>
+                        <Td label="Likelihood" className="text-xs text-content-muted">
                           {milestone.phase.replace(/_/g, " ")}
                         </Td>
-                        <Td>{formatIsoDate(milestone.targetDate)}</Td>
-                        <Td>
+                        <Td label="Impact">{formatIsoDate(milestone.targetDate)}</Td>
+                        <Td label="Owner">
                           <Select
                             value={milestone.status}
                             aria-label={`Status for ${milestone.label}`}

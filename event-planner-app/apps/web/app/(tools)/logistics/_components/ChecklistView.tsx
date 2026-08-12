@@ -91,7 +91,7 @@ export function ChecklistView({
               </div>
             </div>
 
-            <Table>
+            <Table stack>
               <thead>
                 <tr>
                   <Th>Item</Th>
@@ -110,7 +110,7 @@ export function ChecklistView({
                     const due = resolveSessionTime(pack, item.dueSessionId);
                     return (
                       <tr key={item.id} className="break-inside-avoid">
-                        <Td>
+                        <Td label="Item">
                           <TextInput
                             value={item.item}
                             aria-label="Checklist item"
@@ -118,7 +118,7 @@ export function ChecklistView({
                             onChange={(e) => patch(item.id, { item: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Status">
                           <Select
                             value={item.status}
                             aria-label="Status"
@@ -136,14 +136,14 @@ export function ChecklistView({
                             </Badge>
                           </span>
                         </Td>
-                        <Td>
+                        <Td label="Owner">
                           <TextInput
                             value={item.owner ?? ""}
                             aria-label="Owner"
                             onChange={(e) => patch(item.id, { owner: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Due">
                           <Select
                             value={item.dueSessionId ?? ""}
                             aria-label="Due by session"
