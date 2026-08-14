@@ -236,6 +236,35 @@ async function main(): Promise<void> {
   check("an unrelated title does not", !matchesPersonaTitle("Plant Operations Lead", ["vp of marketing"]));
   check("no personas means no match", !matchesPersonaTitle("VP of Marketing", []));
 
+  // The failure a full event run surfaced: planners write descriptive personas, real job titles
+  // are short, and measuring overlap against the persona alone meant the rule fired for nobody.
+  check(
+    "⭐ a short real title matches a longer descriptive persona",
+    matchesPersonaTitle("Plant Operations Lead", ["plant operations director", "director of manufacturing operations"]),
+    "this scored the literal ICP at 5/100 and ranked a hospitality manager above them",
+  );
+  check(
+    "…and the reverse direction still works",
+    matchesPersonaTitle("Director of Manufacturing Operations", ["plant operations director"]),
+  );
+  check(
+    "⭐ a single generic word in common is not a match",
+    !matchesPersonaTitle("Office Manager", ["marketing manager"]),
+    "otherwise every badge scan with 'manager' in it matches",
+  );
+  check(
+    "…nor is a shared seniority word alone",
+    !matchesPersonaTitle("Senior Analyst", ["senior marketing lead"]),
+  );
+  check(
+    "a domain word alongside a generic one does match",
+    matchesPersonaTitle("Operations Lead", ["operations director"]),
+  );
+  check(
+    "an unrelated industry still does not match",
+    !matchesPersonaTitle("Head of Events, Hospitality", ["plant operations director"]),
+  );
+
   console.log("\nFR-5 · a rubric edit rescoresyour pool live");
   const scored = rescoreLeads(afterMerge, rubric, personas);
   const before = tierCounts(scored);

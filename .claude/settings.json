@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/Users/shanelabounty/Documents/Claude/Projects/event toolkit/event-planner-app\" && ls && ls fixtures/ 2>/dev/null && ls .venv/bin/python && curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/brief)",
+      "Read(//opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/bin/**)",
+      "Bash(mkdir -p \"/private/tmp/claude-501/-Users-shanelabounty-Documents-Claude-Projects-event-toolkit/71acf663-bf44-4d31-a357-1c87cc1930f5/scratchpad/event-run\")",
+      "Bash(mkdir -p \"/private/tmp/claude-501/-Users-shanelabounty-Documents-Claude-Projects-event-toolkit/71acf663-bf44-4d31-a357-1c87cc1930f5/scratchpad/profile\")",
+      "Bash(sed -i '' 's|page.locator\\(\"button:has-text\\(.Add contact.\\)\"\\).first.click\\(\\)|page.click\\(f\"button:has-text\\(\\\\x27+ {BTN[ot]}\\\\x27\\)\"\\)|' s49.py)",
+      "Bash(sed -i '' 's|^PACK = |BTN = {\"internal\":\"Internal team\",\"vendor\":\"Vendor\",\"venue\":\"Venue\"}\\\\nPACK = |' s49.py)",
+      "Bash(\"/Users/shanelabounty/Documents/Claude/Projects/event toolkit/event-planner-app/.venv/bin/python\" s49.py)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/brief --max-time 5)",
+      "Bash(pkill -f \"chrome-headless-shell\")",
+      "Bash(nohup corepack pnpm dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/brief --max-time 20)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}
