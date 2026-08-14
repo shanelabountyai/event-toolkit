@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.3.0",
   "id": "7ad6b764-fd06-4d30-ab76-2575a9d1c9a9",
   "name": "Q4 Customer Summit 2026",
   "type": "conference",
@@ -18,7 +18,7 @@
     "businessJustification": "Renewals in the enterprise segment slipped 6 points last year, and win/loss interviews point to weak awareness of the platform roadmap among existing accounts. A single flagship in-person moment is the cheapest way to reach the top 200 accounts with both product depth and executive access before the FY27 planning cycle."
   },
   "audience": {
-    "description": "Existing enterprise customers and late-stage prospects across North America — platform practitioners plus the executive sponsors who own their budget. Roughly 70% customer, 30% prospect.",
+    "description": "Existing enterprise customers and late-stage prospects across North America \u2014 platform practitioners plus the executive sponsors who own their budget. Roughly 70% customer, 30% prospect.",
     "targetPersonas": [
       {
         "name": "Practitioner attendee",
@@ -34,7 +34,7 @@
         "title": "VP Engineering / CTO",
         "description": "Attends the keynote and the executive track. Cares about roadmap credibility, benchmarks and peer conversation.",
         "painPoints": [
-          "Limited time on site — will skip anything that feels like a demo",
+          "Limited time on site \u2014 will skip anything that feels like a demo",
           "Wants evidence of business outcomes from comparable companies"
         ]
       }
@@ -44,7 +44,15 @@
       "existing customers",
       "late-stage prospects",
       "partners"
-    ]
+    ],
+    "attendeeValue": {
+      "promise": "See how four teams cut their release cycle in half, with the numbers and the mistakes",
+      "takeaways": [
+        "A benchmark of your deployment frequency against comparable teams",
+        "A teardown of a migration that paid back in two quarters",
+        "The runbook three of the speakers actually use"
+      ]
+    }
   },
   "budget": {
     "totalBudget": 285000,
@@ -99,7 +107,7 @@
         "notes": "14 staff, three nights"
       }
     ],
-    "notes": "High-level only — vendor-level detail and commitments are tracked in the Budget Builder. 8% contingency is held centrally and is not shown here."
+    "notes": "High-level only \u2014 vendor-level detail and commitments are tracked in the Budget Builder. 8% contingency is held centrally and is not shown here."
   },
   "dates": {
     "timezone": "America/Los_Angeles",
@@ -169,7 +177,7 @@
       "target": 70,
       "unit": "%",
       "actual": null,
-      "notes": "Checked-in attendees ÷ registrations"
+      "notes": "Checked-in attendees \u00f7 registrations"
     },
     {
       "id": "ce615654-da6d-44d7-9c69-f11509a909fe",
@@ -302,7 +310,7 @@
       },
       {
         "id": "bfea3713-29cd-47a2-9594-8807b68caa15",
-        "label": "Event day — registration desk opens",
+        "label": "Event day \u2014 registration desk opens",
         "phase": "during_event",
         "targetDate": "2026-11-12",
         "owner": "Dana Rivera",
@@ -337,9 +345,9 @@
   "constraints": {
     "items": [
       "Executive sponsor is only on site for the morning of day one",
-      "No budget for a second evening event — reception is the only social moment",
+      "No budget for a second evening event \u2014 reception is the only social moment",
       "Registration data must stay in the US region for enterprise customer contracts",
-      "Book the AV vendor 90 days out — 60 was too late last year"
+      "Book the AV vendor 90 days out \u2014 60 was too late last year"
     ],
     "notes": "Two competitor conferences fall in the same month; the date is fixed by the executive calendar and cannot move."
   },
@@ -348,14 +356,14 @@
       "id": "fc1c996a-41c1-4cdd-9cd6-19e8bcfef411",
       "sourceEventId": "f975b5bd-a2f0-417d-85a0-4882745af29c",
       "category": "Vendor",
-      "lesson": "Book the AV vendor 90 days out — 60 was too late and cost us the preferred rate.",
+      "lesson": "Book the AV vendor 90 days out \u2014 60 was too late and cost us the preferred rate.",
       "addedAt": "2026-01-19T15:02:44.000Z"
     },
     {
       "id": "9b2808af-fa97-49e2-bc99-0a3841548b5e",
       "sourceEventId": "db109ae5-2061-4349-8c41-d40007af26be",
       "category": "Content",
-      "lesson": "Breakout rooms sized on registration interest, not room availability — two sessions turned people away last year.",
+      "lesson": "Breakout rooms sized on registration interest, not room availability \u2014 two sessions turned people away last year.",
       "addedAt": "2026-01-19T15:06:12.000Z"
     }
   ],

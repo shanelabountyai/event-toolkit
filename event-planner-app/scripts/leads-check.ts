@@ -261,6 +261,15 @@ async function main(): Promise<void> {
     matchesPersonaTitle("Operations Lead", ["operations director"]),
   );
   check(
+    "⭐ a suffix difference no longer misses",
+    matchesPersonaTitle("Controls Engineer", ["controls engineering lead"]),
+    "exact word equality meant engineer != engineering, and the lead scored 0",
+  );
+  check(
+    "…and stemming does not make unrelated words match",
+    !matchesPersonaTitle("Sales Engineer", ["plant operations director"]),
+  );
+  check(
     "an unrelated industry still does not match",
     !matchesPersonaTitle("Head of Events, Hospitality", ["plant operations director"]),
   );
@@ -450,6 +459,43 @@ async function main(): Promise<void> {
   check("stored session status is preserved", stored.status === "importing");
 
   /* ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ A webinar lead can actually be scored");
+  {
+    const personas = ["automation engineering lead", "plant operations director"];
+    const virtualRubric = defaultRubric("s-virtual", personas, "virtual");
+    const boothRule = virtualRubric.rules.find((r) => r.signal === "boothInteractions");
+    check("⭐ booth scanning is switched off for a virtual event", boothRule?.enabled === false,
+      "a rule that can never fire reads as a bug in every score breakdown");
+
+    const personaRule = virtualRubric.rules.find((r) => r.signal === "personaTitleMatch");
+    check("⭐ fit carries the weight when engagement cannot", personaRule?.flatPoints === 40);
+
+    // The exact failure: an on-target title with zero booth activity, on a webinar.
+    const lead = {
+      id: "l1", triageSessionId: "s-virtual", dedupeKey: "k",
+      contact: { fullName: "Rafael Moreno", jobTitle: "Operations Director", email: "r@x.com" },
+      signals: { sessionsAttended: [], sessionsAttendedCount: 0, boothInteractions: 0, demoRequested: false },
+    } as never;
+
+    const [scoredVirtual] = rescoreLeads([lead], virtualRubric, personas);
+    check(
+      "⭐ an exact-ICP title with no booth activity is no longer Cold",
+      scoredVirtual.tier !== "cold",
+      `scored ${scoredVirtual.score}, tier ${scoredVirtual.tier} — this was 15/cold, below a hospitality events manager`,
+    );
+    check("…and reaches Warm on fit alone", scoredVirtual.tier === "warm");
+
+    // In-person weights are unchanged: fit is a tiebreaker there, not the whole score.
+    const inPersonRubric = defaultRubric("s-booth", personas, "in_person");
+    const [scoredBooth] = rescoreLeads([lead], inPersonRubric, personas);
+    check(
+      "…while at a booth the same lead is still cold without engagement",
+      scoredBooth.tier === "cold",
+      "at a trade show, showing up is the signal — the fix must not flatten both",
+    );
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} lead triage check(s) failed.\n`);
     process.exit(1);

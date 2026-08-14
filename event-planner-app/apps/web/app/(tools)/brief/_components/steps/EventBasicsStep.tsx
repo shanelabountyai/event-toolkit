@@ -159,6 +159,28 @@ export function EventBasicsStep({ brief, onChange, highlightMissing }: StepProps
           </Select>
         </Field>
 
+        {/*
+          Optional because a multi-day conference has no single start time and a webinar does.
+          Without it, generated copy stated a date and a timezone and never a time.
+        */}
+        <Field
+          label="Start time"
+          htmlFor="event-start-time"
+          hint="Local to the timezone below. Leave blank for multi-day events."
+        >
+          <TextInput
+            id="event-start-time"
+            type="time"
+            value={brief.dates.eventStartTime ?? ""}
+            onChange={(e) =>
+              onChange((prev) => ({
+                ...prev,
+                dates: { ...prev.dates, eventStartTime: e.target.value || undefined },
+              }))
+            }
+          />
+        </Field>
+
         <Field
           label="Start date"
           htmlFor="start-date"

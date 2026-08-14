@@ -23,10 +23,19 @@ export interface EventWindow {
 /**
  * Classify by created date alone.
  *
- * Anything created between the event's start and the sourced cut-off is sourced. Anything
- * else up to the influenced cut-off is influenced — including opportunities created *before*
- * the event, which is the pre-existing pipeline the event may have moved along. Past the
- * influenced cut-off, the event can't reasonably claim it.
+ * Anything created between the event's start and the sourced cut-off is sourced. Anything else
+ * inside the influenced window is influenced — including opportunities created *before* the event,
+ * which is the pre-existing pipeline the event may have moved along.
+ *
+ * **The influenced window is symmetric, and that is a correction.** It previously had no lower
+ * bound: `createdDate <= influencedWindowEnd` counted an opportunity created at any point in the
+ * past, however old. For a hosted webinar — where the invite list is deliberately your existing
+ * open pipeline — the event then claimed influence on essentially every deal in flight, including
+ * ones opened years earlier. That is the kind of overclaim a CFO finds, and finding it discredits
+ * every other number on the page.
+ *
+ * A deal opened the same number of days *before* the event as the window allows after it could
+ * plausibly have been moved by attending. One opened three years before was not.
  */
 export function computeAttribution(
   createdDate: string,
@@ -37,10 +46,16 @@ export function computeAttribution(
 
   const sourcedWindowEnd = addDaysToIsoDate(window.eventEndDate, settings.sourcedWindowDays);
   const influencedWindowEnd = addDaysToIsoDate(window.eventEndDate, settings.influencedWindowDays);
+  const influencedWindowStart = addDaysToIsoDate(
+    window.eventStartDate,
+    -settings.influencedWindowDays,
+  );
 
   // ISO dates compare correctly as strings, which keeps this free of timezone drift.
   if (createdDate >= window.eventStartDate && createdDate <= sourcedWindowEnd) return "sourced";
-  if (createdDate <= influencedWindowEnd) return "influenced";
+  if (createdDate >= influencedWindowStart && createdDate <= influencedWindowEnd) {
+    return "influenced";
+  }
   return "outside_window";
 }
 

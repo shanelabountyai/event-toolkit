@@ -483,6 +483,26 @@ async function main(): Promise<void> {
   check("…and the brief untouched until finalize", JSON.stringify(await getBrief("roi-brief")) === briefBefore);
 
   /* ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ The influenced window is bounded on both sides");
+  {
+    const w = { eventStartDate: "2026-09-24", eventEndDate: "2026-09-24" };
+    const settings = { sourcedWindowDays: 30, influencedWindowDays: 90 } as never;
+    const at = (d: string) => computeAttribution(d, w, settings);
+
+    check("an opportunity opened during the event is sourced", at("2026-09-24") === "sourced");
+    check("…and 20 days after", at("2026-10-14") === "sourced");
+    check("60 days after is influenced", at("2026-11-23") === "influenced");
+    check("30 days before is influenced — the event may have moved it", at("2026-08-25") === "influenced");
+    check(
+      "⭐ three years before is NOT influenced",
+      at("2023-09-24") === "outside_window",
+      "an unbounded window let a webinar claim influence on every deal already in flight",
+    );
+    check("…nor is 91 days before", at("2026-06-25") === "outside_window");
+    check("…and well after still falls outside", at("2027-06-01") === "outside_window");
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} ROI check(s) failed.\n`);
     process.exit(1);

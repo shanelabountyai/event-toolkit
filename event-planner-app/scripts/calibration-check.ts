@@ -244,6 +244,31 @@ function main(): void {
   check("nothing reports a sample it does not have",
     populated.every((f) => f.sampleSize >= 0 && Number.isFinite(f.sampleSize)));
 
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ A completed retro is never reported as missing");
+  {
+    // A retro completed before its event — a future-dated event, or a dry run. The lag is
+    // negative and rightly excluded from the median, but the retro exists.
+    const brief = {
+      id: "b-future",
+      dates: { eventStartDate: "2026-09-24", eventEndDate: "2026-09-24", timezone: "UTC" },
+    } as never;
+    const retro = { id: "r1", eventBriefId: "b-future", status: "completed",
+      completedAt: "2026-08-14T11:00:00.000Z" } as never;
+
+    const f = calibrateRetroTiming({ briefs: [brief], retros: [retro] } as never);
+    check(
+      "⭐ it does not claim no retros have been completed",
+      !f.evidence.includes("No retros have been completed yet"),
+      "a planner who just finished one reads that and thinks the tool lost their work",
+    );
+    check("…and says why it carries no timing signal", f.evidence.includes("before the event ended"));
+    check("…while still refusing to conclude", f.status === "no_data", f.status);
+
+    const none = calibrateRetroTiming({ briefs: [], retros: [] } as never);
+    check("with genuinely no retros it still says so", none.evidence.includes("No retros have been completed yet"));
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} calibration check(s) failed.\n`);
     process.exit(1);

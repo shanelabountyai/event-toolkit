@@ -484,18 +484,43 @@ export function calibrateNpsSampleRule(inputs: CalibrationInputs): CalibrationFi
 /* PRD 7 — retro prompt timing                                                 */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Says what is actually true about the sample, including the retros that exist but cannot inform
+ * timing. Silence about them is what made the page look like it had lost somebody's work.
+ */
+function describeRetroSample(usable: number, beforeEvent: number): string {
+  const skipped =
+    beforeEvent > 0
+      ? ` ${beforeEvent} completed retro${beforeEvent === 1 ? " was" : "s were"} finished before the event ended, so ${beforeEvent === 1 ? "it carries" : "they carry"} no timing signal.`
+      : "";
+
+  if (usable === 0) {
+    return beforeEvent > 0
+      ? `No retros completed after an event yet.${skipped}`
+      : "No retros have been completed yet.";
+  }
+  return `Only ${usable} completed retro${usable === 1 ? "" : "s"} so far.${skipped}`;
+}
+
 export function calibrateRetroTiming(inputs: CalibrationInputs): CalibrationFinding {
   const completed = inputs.retros.filter((r) => r.status === "completed" && r.completedAt);
   const minSample = 3;
 
-  const lags = completed
+  const allLags = completed
     .map((retro) => {
       const brief = inputs.briefs.find((b) => b.id === retro.eventBriefId);
       const endDate = brief?.dates?.eventEndDate;
       if (!endDate || !retro.completedAt) return null;
       return daysBetweenIsoDates(endDate, retro.completedAt.slice(0, 10));
     })
-    .filter((days): days is number => days !== null && days >= 0);
+    .filter((days): days is number => days !== null);
+
+  // A retro finished before its event ended carries no timing signal — it is a dry run, or the
+  // event is still in the future. Excluding it from the median is right; reporting "no retros have
+  // been completed" because of it is not. A planner who has just completed one reads that and
+  // concludes the tool lost their work.
+  const lags = allLags.filter((days) => days >= 0);
+  const beforeEvent = allLags.length - lags.length;
 
   if (lags.length < minSample) {
     return finding({
@@ -505,10 +530,7 @@ export function calibrateRetroTiming(inputs: CalibrationInputs): CalibrationFind
       assumption: `Prompt ${RETRO_PROMPT_DELAY_DAYS} days after the event, escalate at ${RETRO_PROMPT_ESCALATION_DAYS}.`,
       sampleSize: lags.length,
       minSample,
-      evidence:
-        lags.length === 0
-          ? "No retros have been completed yet."
-          : `Only ${lags.length} completed retro${lags.length === 1 ? "" : "s"} so far.`,
+      evidence: describeRetroSample(lags.length, beforeEvent),
       suggestion: null,
     });
   }

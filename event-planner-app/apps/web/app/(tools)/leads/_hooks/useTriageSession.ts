@@ -110,7 +110,11 @@ export function useTriageSession(sessionId: string): TriageState {
       let loadedRubric = await getRubric(sessionId);
       if (!loadedRubric) {
         loadedRubric = await saveRubric(
-          defaultRubric(sessionId, personaTitlesFromBrief(linkedBrief)),
+          defaultRubric(
+            sessionId,
+            personaTitlesFromBrief(linkedBrief),
+            linkedBrief?.format?.deliveryMode,
+          ),
         );
       }
       let loadedTemplates = await listTemplates(sessionId);

@@ -9,7 +9,7 @@
 // suite depends on it.
 
 /** Semver version of the schema documents produced by this package. */
-export const CURRENT_SCHEMA_VERSION = "1.2.0";
+export const CURRENT_SCHEMA_VERSION = "1.3.0";
 
 /** Event-type preset selected during intake. */
 export type EventType = "conference" | "webinar" | "trade_show" | "custom";
@@ -132,6 +132,17 @@ export interface Dates {
   eventStartDate: string;
   /** ISO 8601 date. Equal to `eventStartDate` for single-day events. */
   eventEndDate: string;
+  /**
+   * Local start time, HH:MM in `timezone`. Optional, because a multi-day conference does not have
+   * one meaningful start time and a webinar does.
+   *
+   * Added because the brief could not record when an event began. For an 11:00 webinar that meant
+   * all eighteen generated promo assets stated a date and a timezone and never a time — the single
+   * most important fact a registrant needs — and the logistics pack invented a 09:00 session.
+   */
+  eventStartTime?: string;
+  /** Local end time, HH:MM in `timezone`. */
+  eventEndTime?: string;
 }
 
 /** Venue (in-person/hybrid) or platform (virtual/hybrid) details. Intentionally shallow in v1. */

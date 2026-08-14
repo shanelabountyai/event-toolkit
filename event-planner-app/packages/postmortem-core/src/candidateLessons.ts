@@ -152,10 +152,25 @@ export function generateCandidateLessons(
         );
       } else if (flag === "red" || flag === "amber") {
         const over = spend.varianceAmount > 0;
+        const amount = money(Math.abs(spend.varianceAmount));
+        const pct = Math.round(spend.variancePct ?? 0);
+
+        // Contingency that goes unspent is contingency working. Telling a planner to budget less
+        // of it next time is advice that makes the next event more fragile, and it was being
+        // generated automatically.
+        const isContingency = /conting/i.test(spend.category) || /conting/i.test(label);
+        if (!over && isContingency) {
+          continue;
+        }
+
         candidates.push(
           lesson(
             eventBriefId,
-            `${label} came in ${money(Math.abs(spend.varianceAmount))} ${over ? "over" : "under"} budget (${Math.round(spend.variancePct ?? 0)}%). Budget ${over ? "more realistically" : "less"} for it next time.`,
+            over
+              ? `${label} came in ${amount} over budget (${pct}%). Budget more realistically for it next time.`
+              : // A prompt, not an instruction. An underspend can be good buying, a cancelled
+                // line, or a number that was never realistic — and only the planner knows which.
+                `${label} came in ${amount} under budget (${pct}%). Worth knowing whether that was good buying or an estimate that was never right.`,
             "fix",
             "budget_variance",
             "Budget",

@@ -6,6 +6,7 @@
  *                  AND (>= 1 entry each in stakeholders, successMetrics, riskRegister,
  *                       timeline.milestones)
  *                  AND (>= 1 entry in audience.targetPersonas)
+ *                  AND a non-empty audience.attendeeValue.promise
  * All checks are weighted evenly for the displayed percentage.
  */
 
@@ -71,6 +72,15 @@ const RECOMMENDED: RecommendedSpec[] = [
     label: "At least one target persona",
     section: "audience",
     count: (b) => b.audience?.targetPersonas?.length ?? 0,
+  },
+  {
+    // A brief reported 100% complete with this empty, while it is the single field every one of
+    // the eighteen generated promo assets depends on. "Complete" has to mean the downstream tools
+    // can do their job, or it is a number that reassures without meaning anything.
+    key: "attendeePromise",
+    label: "A reason for attendees to come",
+    section: "audience",
+    count: (b) => (b.audience?.attendeeValue?.promise?.trim() ? 1 : 0),
   },
 ];
 

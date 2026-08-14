@@ -57,6 +57,40 @@ const MONTHS = [
 ];
 
 /** "12 March 2026" — locale-independent so generated copy is deterministic. */
+/**
+ * "11:00 AM" plus a short timezone, or empty.
+ *
+ * A registrant needs the time more than almost anything else in the copy, and the brief could not
+ * record one until schema 1.3.0. Empty rather than a placeholder when absent: a multi-day
+ * conference genuinely has no single start time, and "[time]" in an email is worse than no time.
+ */
+function formatStartTime(brief: EventBrief): string {
+  const time = brief.dates?.eventStartTime?.trim();
+  if (!time) return "";
+  const [h, m] = time.split(":").map(Number);
+  if (!Number.isFinite(h)) return "";
+  const suffix = h >= 12 ? "PM" : "AM";
+  const hour12 = h % 12 === 0 ? 12 : h % 12;
+  const zone = shortZone(brief.dates?.timezone);
+  return `${hour12}:${String(m ?? 0).padStart(2, "0")} ${suffix}${zone ? ` ${zone}` : ""}`;
+}
+
+/** "America/New_York" → "ET". Falls back to the raw name rather than guessing wrongly. */
+function shortZone(tz: string | undefined): string {
+  if (!tz) return "";
+  const known: Record<string, string> = {
+    "America/New_York": "ET",
+    "America/Chicago": "CT",
+    "America/Denver": "MT",
+    "America/Los_Angeles": "PT",
+    "Europe/London": "UK time",
+    "Europe/Paris": "CET",
+    "Europe/Berlin": "CET",
+    "UTC": "UTC",
+  };
+  return known[tz] ?? tz.split("/").pop()?.replace(/_/g, " ") ?? "";
+}
+
 function formatHumanDate(iso: string | undefined | null): string {
   const d = iso ? parseIsoDate(iso) : null;
   if (!d) return PLACEHOLDER;
@@ -127,6 +161,10 @@ interface BriefFacts {
   /** Compact location for social/subject lines. */
   locationShort: string;
   dateLong: string;
+  /** "11:00 AM ET" — empty when the brief has no start time, so nothing renders a stray comma. */
+  timeLine: string;
+  /** "24 September 2026 at 11:00 AM ET", collapsing to the date alone when there is no time. */
+  dateTimeLong: string;
   dateShort: string;
   dateRange: string;
   /**
@@ -193,6 +231,12 @@ function resolveFacts(brief: EventBrief): BriefFacts {
     locationLine,
     locationShort,
     dateLong: formatHumanDate(start),
+    timeLine: formatStartTime(brief),
+    dateTimeLong: (() => {
+      const d = formatHumanDate(start);
+      const t = formatStartTime(brief);
+      return t ? `${d} at ${t}` : d;
+    })(),
     dateShort: formatShortDate(start),
     dateRange,
     promise: brief.audience?.attendeeValue?.promise?.trim() || PLACEHOLDER_PROMISE,
@@ -221,6 +265,18 @@ function hosting(facts: BriefFacts, host: string, exhibitor: string): string {
 }
 
 /**
+ * Scarcity language, or its absence.
+ *
+ * "Places are limited", "we're close to capacity", "can I put your name down?" describe a room with
+ * a door. A virtual event has neither, and a webinar with a 400-registration target on a 500-seat
+ * platform is not nearly full — a prospect who has attended one knows that, so the line reads as
+ * boilerplate at best and dishonest at worst.
+ */
+function scarce(facts: BriefFacts, limited: string, unlimited: string): string {
+  return facts.mode === "virtual" ? unlimited : limited;
+}
+
+/**
  * "What you'll get" bullets, from the attendee takeaways only.
  *
  * The fallback is a placeholder, not the primary objective. An empty promise is a prompt to write
@@ -235,14 +291,40 @@ function benefitBullets(facts: BriefFacts): string {
 }
 
 /**
- * Who the copy is addressed to.
+ * Who the copy is addressed to — a short, publishable phrase.
  *
- * Deliberately the audience *description*, never persona names. Persona labels are internal
- * shorthand — "Booth visitor — evaluating vendors", "Plant operations director — active buyer" —
- * and they were being printed to the reader as though they described them.
+ * The audience *description* is internal segmentation. In full it reads like this real example:
+ * "Plant / operations engineering leadership at discrete manufacturers, 200-2000 employees, North
+ * America. People who own capex justification for line automation, plus the finance partners who
+ * sign it off." Nobody publishes their own firmographics on a landing page, and it was appearing
+ * verbatim in eight of eighteen assets — the same mistake as rendering the objective, one field
+ * over.
+ *
+ * So: first clause only, headcount bands and geography stripped, capped. If what remains is too
+ * long or too specific to be a form of address, fall back to a neutral phrase rather than shipping
+ * segmentation.
  */
+/** Ends a fragment with exactly one full stop — templates were producing "sign it off..". */
+function sentence(text: string): string {
+  const trimmed = text.trim().replace(/[.\s]+$/, "");
+  return trimmed ? `${trimmed}.` : "";
+}
+
 function addressee(facts: BriefFacts): string {
-  return facts.audience;
+  const raw = (facts.audience ?? "").trim();
+  if (!raw || raw === PLACEHOLDER) return "teams like yours";
+
+  // First sentence or clause — the part that names a role, before the qualifiers.
+  let phrase = raw.split(/[.;]|\s+—\s+/)[0].trim();
+  // Drop trailing firmographic qualifiers: headcount bands, regions, employee counts.
+  phrase = phrase.replace(/,\s*\d[\d,\s\-–]*(employees|staff|people|seats)?.*$/i, "").trim();
+  phrase = phrase.replace(/,\s*(north america|emea|apac|us|uk|europe|global)\b.*$/i, "").trim();
+  phrase = phrase.replace(/[.,;]+$/, "").trim();
+
+  // 80 chars: long enough for a real role phrase ("plant / operations engineering leadership at
+  // discrete manufacturers" is 66), short enough that a full segmentation statement falls back.
+  if (!phrase || phrase.length > 80) return "teams like yours";
+  return phrase.charAt(0).toLowerCase() + phrase.slice(1);
 }
 
 /**
@@ -278,7 +360,7 @@ function landingPageBody(facts: BriefFacts, _toneKey: string): string {
     "",
     `## Who it's for`,
     "",
-    `Built for ${addressee(facts)}.`,
+    sentence(`Built for ${addressee(facts)}`),
     "",
     `## When and where`,
     "",
@@ -290,7 +372,11 @@ function landingPageBody(facts: BriefFacts, _toneKey: string): string {
     "",
     hosting(
       facts,
-      `Places are limited. ${facts.voice.cta} at ${REGISTRATION_LINK_PLACEHOLDER}.`,
+      scarce(
+        facts,
+        `Places are limited. ${facts.voice.cta} at ${REGISTRATION_LINK_PLACEHOLDER}.`,
+        `${facts.voice.cta} at ${REGISTRATION_LINK_PLACEHOLDER} — we'll send the recording too.`,
+      ),
       `${facts.voice.cta} — ${REGISTRATION_LINK_PLACEHOLDER}.`,
     ),
   ].join("\n");
@@ -349,7 +435,11 @@ function emailBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         "",
         hosting(
           facts,
-          `${facts.name} is one week out. If you've been meaning to register, now is the moment — we're close to capacity.`,
+          scarce(
+            facts,
+            `${facts.name} is one week out. If you've been meaning to register, now is the moment — we're close to capacity.`,
+            `${facts.name} is one week out. If you've been meaning to register, now is a good moment — and we'll send the recording if the time doesn't work.`,
+          ),
           `${facts.name} is one week out. If you're going, it's a good moment to put a time in the diary with us.`,
         ),
         "",
@@ -413,7 +503,7 @@ function socialBody(
       subtype === "announcement"
         ? `${facts.voice.joinVerb} ${facts.name} — ${facts.dateShort}, ${where}.\n\n${facts.promise}\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
         : subtype === "mid_campaign"
-          ? `${facts.name} is coming up on ${facts.dateShort} (${where}).\n\nBuilt for ${addressee(facts)}.\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
+          ? `${facts.name} is coming up on ${facts.dateShort} (${where}).\n\n${sentence(`Built for ${addressee(facts)}`)}\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
           : `Last chance to join ${facts.name} — ${facts.dateShort}, ${where}. Registration closes soon.\n\n${REGISTRATION_LINK_PLACEHOLDER}`;
     return clampForX(text);
   }
@@ -424,14 +514,14 @@ function socialBody(
       ? subtype === "announcement"
         ? hosting(
             facts,
-            `We're running ${facts.name} on ${facts.dateLong}.`,
-            `We'll be at ${facts.name} on ${facts.dateLong}.`,
+            `We're running ${facts.name} on ${facts.dateTimeLong}.`,
+            `We'll be at ${facts.name} on ${facts.dateTimeLong}.`,
           )
         : subtype === "mid_campaign"
           ? `${facts.name} is a few weeks out, and the guest list is shaping up.`
           : `Final call: registration for ${facts.name} closes this week.`
       : subtype === "announcement"
-        ? `Save the date — ${facts.name} is happening on ${facts.dateLong}!`
+        ? `Save the date — ${facts.name} is happening on ${facts.dateTimeLong}!`
         : subtype === "mid_campaign"
           ? `Not long now until ${facts.name}.`
           : `Last chance to grab a place at ${facts.name}.`;
@@ -476,7 +566,11 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         "",
         hosting(
           facts,
-          `Want me to hold you a place? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+          scarce(
+            facts,
+            `Want me to hold you a place? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+            `Worth 45 minutes of your time? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+          ),
           `Worth a short conversation while we're both there? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
         ),
       ].join("\n");
@@ -485,8 +579,8 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
       return [
         hosting(
           facts,
-          `Hi {first_name} — we're running ${facts.name} on ${facts.dateShort}. ${facts.locationLine}`,
-          `Hi {first_name} — we'll be at ${facts.name} on ${facts.dateShort}. ${facts.locationLine}`,
+          `Hi {first_name} — we're running ${facts.name} on ${facts.dateTimeLong}. ${facts.locationLine}`,
+          `Hi {first_name} — we'll be at ${facts.name} on ${facts.dateTimeLong}. ${facts.locationLine}`,
         ),
         "",
         `It's built for ${addressee(facts)}, so it felt relevant to you. Happy to save you a spot — here's the detail: ${REGISTRATION_LINK_PLACEHOLDER}`,
@@ -498,8 +592,8 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         `**Opening**`,
         hosting(
           facts,
-          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we're running ${facts.name} on ${facts.dateLong}."`,
-          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we'll be at ${facts.name} on ${facts.dateLong}."`,
+          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we're running ${facts.name} on ${facts.dateTimeLong}."`,
+          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we'll be at ${facts.name} on ${facts.dateTimeLong}."`,
         ),
         "",
         `**The hook**`,
@@ -509,7 +603,11 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         `"${facts.locationLine}"`,
         "",
         `**The ask**`,
-        `"Can I put your name down? I'll send the details straight over."`,
+        scarce(
+          facts,
+          `"Can I put your name down? I'll send the details straight over."`,
+          `"Want me to send you the link? You'll get the recording either way."`,
+        ),
         "",
         `**If they're not the right person**`,
         `"No problem — who on your team owns this? Happy to reach out to them instead."`,

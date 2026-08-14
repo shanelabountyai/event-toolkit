@@ -468,6 +468,137 @@ async function main(): Promise<void> {
     );
   }
 
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ A webinar's start time reaches the copy");
+  {
+    const webinar = {
+      ...createEmptyBrief("webinar"),
+      name: "Retrofit Economics",
+      audience: { description: "plant leaders", attendeeValue: { promise: "see the payback maths" } },
+      dates: {
+        eventStartDate: "2026-09-24",
+        eventEndDate: "2026-09-24",
+        eventStartTime: "11:00",
+        timezone: "America/New_York",
+      },
+    } as unknown as EventBrief;
+
+    const copy = generatePromoAssets(webinar, "assertive").map((a) => a.generatedBody).join("\n");
+    check(
+      "⭐ the start time appears in generated copy",
+      copy.includes("11:00 AM"),
+      "eighteen assets stated a date and a timezone and never a time",
+    );
+    check("…with a readable timezone", copy.includes("ET"));
+
+    // A multi-day conference has no single start time; it must not render a stray "at".
+    const conference = {
+      ...createEmptyBrief("conference"),
+      name: "Summit",
+      audience: { description: "customers", attendeeValue: { promise: "meet the team" } },
+      dates: { eventStartDate: "2026-05-12", eventEndDate: "2026-05-13", timezone: "UTC" },
+    } as unknown as EventBrief;
+    const confCopy = generatePromoAssets(conference, "assertive").map((a) => a.generatedBody).join("\n");
+    check(
+      "a brief with no start time renders no dangling 'at'",
+      !/\bat\s*(\.|,|$|\n)/m.test(confCopy),
+      "empty is better than a placeholder in an email",
+    );
+  }
+
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ Internal segmentation stays internal");
+  {
+    // The real audience description from an event run. It appeared verbatim in 8 of 18 assets.
+    const brief = {
+      ...createEmptyBrief("webinar"),
+      name: "Retrofit Economics",
+      audience: {
+        description:
+          "Plant / operations engineering leadership at discrete manufacturers, 200-2000 employees, North America. People who own capex justification for line automation, plus the finance partners who sign it off.",
+        attendeeValue: { promise: "see the payback maths on a real retrofit" },
+      },
+      dates: { eventStartDate: "2026-09-24", eventEndDate: "2026-09-24", timezone: "UTC" },
+    } as unknown as EventBrief;
+
+    const copy = generatePromoAssets(brief, "assertive").map((a) => a.generatedBody).join("\n");
+
+    check(
+      "⭐ headcount bands never reach customer-facing copy",
+      !copy.includes("200-2000") && !copy.toLowerCase().includes("employees"),
+      "nobody publishes their own firmographics on a landing page",
+    );
+    check("⭐ …nor the internal buying-committee note", !copy.toLowerCase().includes("capex justification"));
+    check("…nor the finance-partner clause", !copy.toLowerCase().includes("sign it off"));
+    check("but a readable form of address survives", copy.toLowerCase().includes("plant / operations engineering leadership"));
+    check(
+      "⭐ no double full stops",
+      !copy.includes(".."),
+      "the template appended a period to a string that already ended in one",
+    );
+
+    // A description too long or too specific to address anyone falls back rather than shipping.
+    const messy = {
+      ...brief,
+      audience: {
+        description: "ICP tier 1 accounts scoring >70 on the fit model with open opportunities in stage 2 or later and no active competitor displacement risk",
+        attendeeValue: { promise: "x" },
+      },
+    } as unknown as EventBrief;
+    const messyCopy = generatePromoAssets(messy, "assertive").map((a) => a.generatedBody).join("\n");
+    check(
+      "an unpublishable description falls back to a neutral phrase",
+      messyCopy.includes("teams like yours") && !messyCopy.includes("fit model"),
+    );
+  }
+
+  console.log("\n⭐ A virtual event has no door to be turned away at");
+  {
+    const virtual = {
+      ...createEmptyBrief("webinar"),
+      name: "Retrofit Economics",
+      audience: { description: "plant leaders", attendeeValue: { promise: "see the payback maths" } },
+      format: { deliveryMode: "virtual", participationRole: "host", venueOrPlatform: { name: "Zoom" } },
+      dates: { eventStartDate: "2026-09-24", eventEndDate: "2026-09-24", eventStartTime: "11:00", timezone: "America/New_York" },
+    } as unknown as EventBrief;
+    const copy = generatePromoAssets(virtual, "assertive").map((a) => a.generatedBody).join("\n").toLowerCase();
+
+    check("⭐ no capacity scarcity on a webinar", !copy.includes("close to capacity"));
+    check("…nor 'places are limited'", !copy.includes("places are limited"));
+    check("…nor holding someone a place", !copy.includes("hold you a place"));
+    check("and it offers the recording instead", copy.includes("recording"));
+
+    const inPerson = {
+      ...virtual,
+      format: { deliveryMode: "in_person", participationRole: "host", venueOrPlatform: { name: "Moscone" } },
+    } as unknown as EventBrief;
+    const roomCopy = generatePromoAssets(inPerson, "assertive").map((a) => a.generatedBody).join("\n").toLowerCase();
+    check(
+      "…while a room with a door still says places are limited",
+      roomCopy.includes("places are limited"),
+      "the fix must not flatten both cases",
+    );
+  }
+
+  console.log("\n⭐ An empty pacing tracker does not cry wolf");
+  {
+    const window = buildPacingWindow("2026-07-30", "2026-09-24");
+    const empty = assessPacing([], window, "backloaded_standard", 400, "2026-09-01");
+    check(
+      "⭐ no data means no verdict, not a crisis",
+      empty.status === "on_pace" && empty.shortfallPct === 0,
+      "it read 'Critical — 100% below target' beside 'No registration data entered yet'",
+    );
+    check("…and recommends nothing", recommendedInterventions(empty).length === 0);
+
+    // Real data still gets a real verdict.
+    const behind = assessPacing(
+      [{ id: "e1", eventBriefId: "b", date: "2026-09-01", cumulativeRegistrations: 20 } as never],
+      window, "backloaded_standard", 400, "2026-09-01",
+    );
+    check("…while a genuine shortfall is still flagged", behind.status !== "on_pace");
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} promo check(s) failed.\n`);
     process.exit(1);

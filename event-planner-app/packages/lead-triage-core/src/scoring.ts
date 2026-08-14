@@ -21,7 +21,26 @@ export const DEFAULT_TIER_THRESHOLDS = { hot: 70, warm: 40 };
  * caps so a single busy attendee can't out-score real buying intent, and a persona title match
  * adds a modest boost when the session is linked to a brief that names its target personas.
  */
-export function defaultRubric(triageSessionId: string, targetPersonas?: string[]): ScoringRubric {
+/**
+ * The default rubric, weighted for how the event actually collects signal.
+ *
+ * The in-person weights assume a booth: 95 of the 110 available points come from badge scans,
+ * sessions attended and demo requests. A virtual event produces none of the first and few of the
+ * second, so under those weights **every webinar lead is structurally Cold** — a real run scored
+ * an exact-ICP plant operations director at 15 against a warm threshold of 40, while a hospitality
+ * events manager from the trade-show fixture sat at the top on booth activity alone.
+ *
+ * So fit carries the weight when engagement cannot. On a virtual event a persona match alone
+ * reaches Warm exactly, which is the honest reading: "this is who we wanted in the room."
+ */
+export function defaultRubric(
+  triageSessionId: string,
+  targetPersonas?: string[],
+  deliveryMode: "in_person" | "virtual" | "hybrid" = "in_person",
+): ScoringRubric {
+  const virtual = deliveryMode === "virtual";
+  const hasPersonas = (targetPersonas?.length ?? 0) > 0;
+
   const rules: ScoringRule[] = [
     {
       id: newId(),
@@ -36,23 +55,28 @@ export function defaultRubric(triageSessionId: string, targetPersonas?: string[]
       label: "Booth interactions",
       pointsPerUnit: 10,
       cap: 30,
-      enabled: true,
+      // A virtual event has no booth. Leaving the rule on but always zero makes every score
+      // breakdown carry a line that can never fire, which reads as a bug to a planner.
+      enabled: !virtual,
     },
     {
       id: newId(),
       signal: "sessionsAttended",
       label: "Sessions attended",
-      pointsPerUnit: 5,
-      cap: 25,
+      pointsPerUnit: virtual ? 10 : 5,
+      // Unchanged for in-person; a virtual event leans on it harder because there is no booth.
+      cap: virtual ? 30 : 25,
       enabled: true,
     },
     {
       id: newId(),
       signal: "personaTitleMatch",
       label: "Persona title match",
-      flatPoints: 15,
+      // 40 on a virtual event: exactly the Warm threshold, so an on-target title alone is Warm and
+      // any engagement on top makes it Hot.
+      flatPoints: virtual ? 40 : 15,
       // Only meaningful when the session is linked to a brief that names personas.
-      enabled: (targetPersonas?.length ?? 0) > 0,
+      enabled: hasPersonas,
     },
   ];
 
@@ -111,11 +135,16 @@ export function matchesPersonaTitle(jobTitle: string | undefined, personaTitles:
       .split(/\s+/)
       .filter((w) => w.length > 2 && !["the", "and", "for", "of"].includes(w));
 
-  const titleWords = words(title);
+  // Light stemming, so "Controls Engineer" matches an "engineering" persona. Without it the
+  // comparison is exact word equality and misses by a suffix — a real lead scored 0 on that alone.
+  const stem = (w: string) => w.replace(/(ing|ers|er|s)$/, "");
+  // Stemmed too, or the guard stops recognising its own list: "manager" stems to "manag".
+  const genericStems = new Set([...GENERIC_ROLE_WORDS].map(stem));
+  const titleWords = words(title).map(stem);
   const titleSet = new Set(titleWords);
 
   return personaTitles.some((persona) => {
-    const personaWords = words(persona);
+    const personaWords = words(persona).map(stem);
     if (personaWords.length === 0 || titleWords.length === 0) return false;
 
     const shared = personaWords.filter((w) => titleSet.has(w));
@@ -126,7 +155,7 @@ export function matchesPersonaTitle(jobTitle: string | undefined, personaTitles:
     if (shared.length < Math.max(1, Math.ceil(shorter / 2))) return false;
 
     // One generic word in common is a coincidence, not a match.
-    return shared.some((w) => !GENERIC_ROLE_WORDS.has(w));
+    return shared.some((w) => !genericStems.has(w));
   });
 }
 

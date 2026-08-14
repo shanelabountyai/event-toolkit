@@ -432,6 +432,26 @@ export function assessPacing(
   const pctOfGoal =
     registrationTarget > 0 ? Math.round((actual / registrationTarget) * 100) : 0;
 
+  /**
+   * With nothing reported, there is no pace to assess.
+   *
+   * Previously an empty tracker rendered "Critical — 100% below where the target curve expects you
+   * to be" beside "No registration data entered yet", and recommended emergency interventions. A
+   * planner opening the tool for the first time was told their campaign was failing before they
+   * had told it anything.
+   */
+  if (sorted.length === 0) {
+    return {
+      status: "on_pace",
+      actual: 0,
+      target,
+      shortfallPct: 0,
+      pctOfGoal: 0,
+      daysRemaining,
+      latestEntryDate: null,
+    };
+  }
+
   // No target expected yet (very start of the window): can't be behind on zero.
   if (target <= 0) {
     return {

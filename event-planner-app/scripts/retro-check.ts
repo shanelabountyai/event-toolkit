@@ -366,6 +366,48 @@ async function main(): Promise<void> {
   check("the stored retro round-trips", (await getRetroByBriefId("retro-brief"))?.status === "completed");
 
   /* ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ The retro does not give advice that makes the next event worse");
+  {
+    const cat = (category: string, budgeted: number, actual: number) => ({
+      category: category as never,
+      budgeted,
+      committed: actual,
+      actual,
+      varianceAmount: actual - budgeted,
+      variancePct: budgeted ? ((actual - budgeted) / budgeted) * 100 : null,
+    });
+
+    const ingest = (rows: ReturnType<typeof cat>[]) => ({
+      ...EMPTY_BUDGET_VARIANCE,
+      available: true,
+      worstCategoryVariances: rows,
+    });
+
+    const text = (rows: ReturnType<typeof cat>[]) =>
+      generateCandidateLessons("brief-1", EMPTY_ISSUE_LOG, ingest(rows) as never, EMPTY_ROI_SCORECARD, 10)
+        .map((l) => l.lesson)
+        .join("\n");
+
+    const contingency = text([cat("contingency", 500, 0)]);
+    check(
+      "⭐ unspent contingency is never a lesson to budget less",
+      !/budget less/i.test(contingency),
+      "contingency going unspent is contingency working",
+    );
+
+    const under = text([cat("catering", 10000, 6000)]);
+    check(
+      "⭐ a real underspend asks rather than instructs",
+      /good buying|never right/i.test(under),
+      "only the planner knows whether an underspend was skill or a bad estimate",
+    );
+    check("…and never tells them to budget less", !/budget less/i.test(under));
+
+    const over = text([cat("av", 5000, 7500)]);
+    check("an overspend still says budget more realistically", /more realistically/i.test(over));
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} retro check(s) failed.\n`);
     process.exit(1);
