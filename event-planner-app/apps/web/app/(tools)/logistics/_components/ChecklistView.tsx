@@ -73,16 +73,16 @@ export function ChecklistView({
       </div>
 
       {groups.length === 0 ? (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-content-muted">
           No checklist items yet — add one from a category above.
         </p>
       ) : (
         groups.map((group) => (
           <section key={group.category} className="break-inside-avoid space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-sm font-semibold text-slate-900">
+              <h3 className="text-sm font-semibold text-content">
                 {group.category}
-                <span className="ml-2 font-normal text-slate-500">
+                <span className="ml-2 font-normal text-content-muted">
                   {group.done}/{group.total} done
                 </span>
               </h3>
@@ -91,7 +91,7 @@ export function ChecklistView({
               </div>
             </div>
 
-            <Table>
+            <Table stack>
               <thead>
                 <tr>
                   <Th>Item</Th>
@@ -110,7 +110,7 @@ export function ChecklistView({
                     const due = resolveSessionTime(pack, item.dueSessionId);
                     return (
                       <tr key={item.id} className="break-inside-avoid">
-                        <Td>
+                        <Td label="Item">
                           <TextInput
                             value={item.item}
                             aria-label="Checklist item"
@@ -118,7 +118,7 @@ export function ChecklistView({
                             onChange={(e) => patch(item.id, { item: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Status">
                           <Select
                             value={item.status}
                             aria-label="Status"
@@ -136,14 +136,14 @@ export function ChecklistView({
                             </Badge>
                           </span>
                         </Td>
-                        <Td>
+                        <Td label="Owner">
                           <TextInput
                             value={item.owner ?? ""}
                             aria-label="Owner"
                             onChange={(e) => patch(item.id, { owner: e.target.value })}
                           />
                         </Td>
-                        <Td>
+                        <Td label="Due">
                           <Select
                             value={item.dueSessionId ?? ""}
                             aria-label="Due by session"
@@ -159,11 +159,11 @@ export function ChecklistView({
                             ))}
                           </Select>
                           {due ? (
-                            <span className="mt-1 block text-xs text-slate-500">
+                            <span className="mt-1 block text-xs text-content-muted">
                               {formatSessionRange(due.startTime, due.endTime)}
                             </span>
                           ) : item.dueNote ? (
-                            <span className="mt-1 block text-xs text-slate-500">{item.dueNote}</span>
+                            <span className="mt-1 block text-xs text-content-muted">{item.dueNote}</span>
                           ) : null}
                         </Td>
                         <Td className="no-print text-right">

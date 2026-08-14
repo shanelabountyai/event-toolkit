@@ -59,15 +59,15 @@ export function OwnerAssignmentPanel({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Sales owners</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Sales owners</h2>
+            <p className="text-xs text-content-muted">
               Owners named in an imported file are matched against this list.
             </p>
           </div>
         </CardHeader>
         <CardBody className="space-y-3">
           <div className="flex flex-wrap items-end gap-2">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs text-content-muted">
               Name
               <TextInput
                 className="mt-1 w-52"
@@ -79,7 +79,7 @@ export function OwnerAssignmentPanel({
                 }}
               />
             </label>
-            <label className="text-xs text-slate-600">
+            <label className="text-xs text-content-muted">
               Email (optional)
               <TextInput
                 className="mt-1 w-64"
@@ -92,17 +92,17 @@ export function OwnerAssignmentPanel({
           </div>
 
           {session.owners.length === 0 ? (
-            <p className="text-sm text-slate-500">No owners yet. Add at least one to route leads.</p>
+            <p className="text-sm text-content-muted">No owners yet. Add at least one to route leads.</p>
           ) : (
             <ul className="flex flex-wrap gap-2">
               {session.owners.map((owner) => (
                 <li key={owner.id}>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 py-1 pl-3 pr-1 text-sm">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-surface-hover py-1 pl-3 pr-1 text-sm">
                     {owner.name}
                     <button
                       type="button"
                       aria-label={`Remove ${owner.name}`}
-                      className="rounded-full px-1.5 text-slate-500 hover:bg-slate-200 hover:text-slate-800"
+                      className="rounded-full px-1.5 text-content-muted hover:bg-surface-hover hover:text-content"
                       onClick={() => {
                         // Removing an owner un-assigns their leads rather than orphaning an id.
                         void onLeadsChange(
@@ -127,7 +127,7 @@ export function OwnerAssignmentPanel({
           )}
 
           {unmatchedNames.length > 0 ? (
-            <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            <p className="rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
               These owner names came in from a file but don&rsquo;t match anyone above:{" "}
               {unmatchedNames.join(", ")}. Add them as owners and run &ldquo;Apply owners from
               file&rdquo; to link them.
@@ -139,8 +139,8 @@ export function OwnerAssignmentPanel({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Assignment</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Assignment</h2>
+            <p className="text-xs text-content-muted">
               {unassigned} of {leads.length} leads are unassigned.
             </p>
           </div>
@@ -176,7 +176,7 @@ export function OwnerAssignmentPanel({
             <tbody>
               {distribution.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-3 py-4 text-center text-sm text-slate-500">
+                  <td colSpan={5} className="px-3 py-4 text-center text-sm text-content-muted">
                     Nothing to distribute yet.
                   </td>
                 </tr>

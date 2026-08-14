@@ -105,14 +105,14 @@ export function WorkspaceSync() {
 
   return (
     <>
-      <span className="text-xs text-slate-500" title={LABELS[status].title}>
+      <span className="text-xs text-content-muted" title={LABELS[status].title}>
         {LABELS[status].text(pending)}
       </span>
 
       {conflicts.length > 0 && !dismissed ? (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-amber-300 bg-amber-50 px-6 py-3">
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-warning-border bg-warning-subtle px-6 py-3">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-amber-900">
+            <p className="text-sm text-warning-text">
               {/*
                 Surfaced, never auto-resolved. The same refusal PRD 2, 5, 7 and the dedupe pass all
                 make: the product does not silently pick a winner when two people disagree.
@@ -129,14 +129,14 @@ export function WorkspaceSync() {
             <div className="flex gap-2">
               <Link
                 href={`/workspace/${active.current}/conflicts`}
-                className="rounded-lg bg-amber-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-800"
+                className="rounded-lg bg-warning px-3 py-1.5 text-sm font-medium text-accent-fg hover:bg-warning"
               >
                 Review
               </Link>
               <button
                 type="button"
                 onClick={() => setDismissed(true)}
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-amber-900 hover:bg-amber-100"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-warning-text hover:bg-warning-subtle"
               >
                 Later
               </button>

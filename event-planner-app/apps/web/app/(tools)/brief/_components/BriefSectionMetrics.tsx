@@ -140,12 +140,12 @@ export function BriefSectionMetrics({ brief, onSave }: BriefSectionProps) {
               <tr key={m.id}>
                 <Td className="font-medium">{m.metric}</Td>
                 <Td className="text-right tabular-nums">{formatMetricValue(m.target, m.unit)}</Td>
-                <Td className="text-right tabular-nums text-slate-400">
+                <Td className="text-right tabular-nums text-content-subtle">
                   {m.actual === null || m.actual === undefined
                     ? "—"
                     : formatMetricValue(m.actual, m.unit)}
                 </Td>
-                <Td className="text-slate-600">{m.notes || "—"}</Td>
+                <Td className="text-content-muted">{m.notes || "—"}</Td>
               </tr>
             ))}
           </tbody>

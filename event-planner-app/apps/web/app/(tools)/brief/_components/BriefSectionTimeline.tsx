@@ -182,14 +182,14 @@ export function BriefSectionTimeline({ brief, onSave }: BriefSectionProps) {
           </Table>
         </div>
       ) : grouped.length === 0 ? (
-        <p className="text-sm italic text-slate-400">
+        <p className="text-sm italic text-content-subtle">
           No milestones yet — add at least one to reach 100% completeness.
         </p>
       ) : (
         <div className="space-y-5">
           {grouped.map((group) => (
             <div key={group.phase}>
-              <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-content-muted">
                 {EVENT_PHASE_LABELS[group.phase]}
               </h3>
               <Table>
@@ -206,7 +206,7 @@ export function BriefSectionTimeline({ brief, onSave }: BriefSectionProps) {
                     <tr key={m.id}>
                       <Td className="font-medium">{m.label}</Td>
                       <Td className="tabular-nums">{formatIsoDate(m.targetDate)}</Td>
-                      <Td className="text-slate-600">{m.owner || "—"}</Td>
+                      <Td className="text-content-muted">{m.owner || "—"}</Td>
                       <Td>
                         <Badge tone={m.status === "at_risk" ? "danger" : m.status === "done" ? "success" : "neutral"}>
                           {MILESTONE_STATUS_LABELS[m.status]}

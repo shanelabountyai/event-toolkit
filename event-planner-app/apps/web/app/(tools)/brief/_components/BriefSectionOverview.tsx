@@ -48,7 +48,7 @@ export function BriefSectionOverview({ brief, onSave }: BriefSectionProps) {
           <ReadField label="Created">{formatIsoDateTime(brief.createdAt)}</ReadField>
           <ReadField label="Last updated">
             {formatIsoDateTime(brief.updatedAt)}
-            <span className="ml-1 text-xs text-slate-400">
+            <span className="ml-1 text-xs text-content-subtle">
               (revision {brief.version} · schema {brief.schemaVersion})
             </span>
           </ReadField>

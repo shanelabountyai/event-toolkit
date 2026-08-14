@@ -281,14 +281,14 @@ export function BudgetView({ briefId }: { briefId: string }) {
     [lineItems, settings, brief],
   );
 
-  if (loading) return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  if (loading) return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   if (notFound || !brief || !settings) {
     return (
-      <div className="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <h1 className="text-lg font-semibold text-slate-900">That brief no longer exists</h1>
+      <div className="mx-auto max-w-lg rounded-xl border border-line bg-surface p-8 text-center shadow-sm">
+        <h1 className="text-lg font-semibold text-content">That brief no longer exists</h1>
         <Link
           href="/budget"
-          className="mt-5 inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          className="mt-5 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
         >
           Back to budgets
         </Link>
@@ -300,11 +300,11 @@ export function BudgetView({ briefId }: { briefId: string }) {
     <div className="space-y-5">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-content-muted">
             Budget Builder &amp; Tracker
           </p>
-          <h1 className="text-xl font-semibold text-slate-900">{brief.name || "Untitled event"}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+          <h1 className="text-xl font-semibold text-content">{brief.name || "Untitled event"}</h1>
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-content-muted">
             <Badge>{settings.currency}</Badge>
             {settings.reconciledAt ? <Badge tone="success">Reconciled</Badge> : null}
             {summary ? (
@@ -316,7 +316,7 @@ export function BudgetView({ briefId }: { briefId: string }) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-content-muted">
             {saveState === "saving" ? "Saving…" : saveState === "saved" ? "All changes saved" : ""}
           </span>
           <Button onClick={() => setShowImport(true)}>Import</Button>
@@ -328,7 +328,7 @@ export function BudgetView({ briefId }: { briefId: string }) {
           </Button>
           <Link
             href={`/brief/${brief.id}`}
-            className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline"
+            className="rounded-md px-2.5 py-1.5 text-sm font-medium text-content-muted underline-offset-4 hover:text-content hover:underline"
           >
             ← Back to brief
           </Link>
@@ -336,7 +336,7 @@ export function BudgetView({ briefId }: { briefId: string }) {
       </header>
 
       {generatedNote ? (
-        <p role="status" className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-2 text-sm text-sky-900">
+        <p role="status" className="rounded-lg border border-accent/20 bg-accent-subtle px-4 py-2 text-sm text-accent-text">
           {generatedNote}{" "}
           <button type="button" className="font-medium underline" onClick={() => setGeneratedNote(null)}>
             Dismiss
@@ -368,7 +368,7 @@ export function BudgetView({ briefId }: { briefId: string }) {
       />
 
       {summary ? (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           {summary.lineItemCount} line items · {summary.reconciledLineItemPct}% have actuals ·
           variance {formatMoney(summary.varianceAmount, settings.currency)}
           {summary.variancePct === null ? "" : ` (${Math.round(summary.variancePct)}%)`}

@@ -101,7 +101,7 @@ export function ExportDialog({
 
   return (
     <div
-      className="no-print fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 pt-20"
+      className="no-print fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-accent/40 p-4 pt-20"
       role="dialog"
       aria-modal="true"
       aria-label="Export brief"
@@ -111,7 +111,7 @@ export function ExportDialog({
     >
       <Card className="w-full max-w-lg">
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Export brief</h2>
+          <h2 className="text-base font-semibold text-content">Export brief</h2>
           <Button size="sm" variant="ghost" onClick={onClose} aria-label="Close">
             Close
           </Button>
@@ -121,7 +121,7 @@ export function ExportDialog({
             <label
               key={c.key}
               className={`flex cursor-pointer gap-3 rounded-lg border p-3 ${
-                choice === c.key ? "border-slate-900 bg-slate-50" : "border-slate-200"
+                choice === c.key ? "border-accent bg-surface-sunken" : "border-line"
               }`}
             >
               <input
@@ -135,12 +135,12 @@ export function ExportDialog({
                 }}
               />
               <span>
-                <span className="block text-sm font-medium text-slate-900">{c.label}</span>
-                <span className="block text-xs text-slate-500">{c.blurb}</span>
+                <span className="block text-sm font-medium text-content">{c.label}</span>
+                <span className="block text-xs text-content-muted">{c.blurb}</span>
               </span>
             </label>
           ))}
-          {done ? <p className="text-sm text-emerald-700">{done}</p> : null}
+          {done ? <p className="text-sm text-success-text">{done}</p> : null}
         </CardBody>
         <CardFooter className="flex flex-wrap justify-end gap-2">
           {choice === "html" ? (

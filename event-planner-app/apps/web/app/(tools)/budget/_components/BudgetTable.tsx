@@ -57,14 +57,14 @@ export function BudgetTable({
   return (
     <div className="space-y-4">
       {/* Sticky grand total, so the number that matters stays on screen while scrolling. */}
-      <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-300 bg-white/95 px-4 py-3 shadow-sm backdrop-blur">
+      <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line-strong bg-surface/95 px-4 py-3 shadow-sm backdrop-blur">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
-          <span className="font-semibold text-slate-900">Total</span>
+          <span className="font-semibold text-content">Total</span>
           <Money label="Budgeted" amount={totals.budgeted} currency={currency} />
           <Money label="Committed" amount={totals.committed} currency={currency} />
           <Money label="Actual" amount={totals.actual} currency={currency} />
-          <span className={grandVariance > 0 ? "text-red-700" : "text-emerald-700"}>
-            <span className="block text-xs text-slate-500">Variance</span>
+          <span className={grandVariance > 0 ? "text-danger-text" : "text-success-text"}>
+            <span className="block text-xs text-content-muted">Variance</span>
             {grandVariance > 0 ? "+" : ""}
             {formatMoney(grandVariance, currency)}
           </span>
@@ -90,8 +90,8 @@ export function BudgetTable({
 
 function Money({ label, amount, currency }: { label: string; amount: number; currency: string }) {
   return (
-    <span className="text-slate-800">
-      <span className="block text-xs text-slate-500">{label}</span>
+    <span className="text-content">
+      <span className="block text-xs text-content-muted">{label}</span>
       {formatMoney(amount, currency)}
     </span>
   );
@@ -125,8 +125,8 @@ function CategorySection({
     <section
       className={
         highlighted
-          ? "rounded-xl border-2 border-sky-400 bg-sky-50/40"
-          : "rounded-xl border border-slate-200 bg-slate-50/60"
+          ? "rounded-xl border-2 border-accent bg-accent-subtle/40"
+          : "rounded-xl border border-line bg-surface-sunken"
       }
     >
       <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
@@ -136,14 +136,14 @@ function CategorySection({
           aria-expanded={open}
           className="flex items-center gap-2 text-left"
         >
-          <span aria-hidden className="text-slate-400">{open ? "▾" : "▸"}</span>
-          <span className="text-sm font-semibold text-slate-900">
+          <span aria-hidden className="text-content-subtle">{open ? "▾" : "▸"}</span>
+          <span className="text-sm font-semibold text-content">
             {BUDGET_CATEGORY_LABELS[category]}
           </span>
           <Badge>{items.length}</Badge>
           {highlighted ? <Badge tone="info">Likely affected</Badge> : null}
         </button>
-        <span className="flex items-center gap-4 text-xs text-slate-600">
+        <span className="flex items-center gap-4 text-xs text-content-muted">
           <span>Budgeted {formatMoney(subtotal.budgeted, settings.currency)}</span>
           <span>Committed {formatMoney(subtotal.committed, settings.currency)}</span>
           <span>Actual {formatMoney(subtotal.actual, settings.currency)}</span>
@@ -153,24 +153,32 @@ function CategorySection({
 
       {open ? (
         <div className="px-4 pb-4">
+          {/*
+            Two layouts, not one that shrinks. At 375px the shared column widths squeezed line-item
+            names to a single character — "V", "C", "B" — inside a nested horizontal scroller. A
+            field showing one character still *looks* like data: a planner can scan the page,
+            believe they have reviewed the budget, and have read nothing. On money that is worse
+            than refusing to render.
+          */}
+          <div className="hidden md:block">
           <Table>
             <thead>
               <tr>
-                <Th className="w-56">Line item</Th>
-                <Th className="w-36">Vendor</Th>
+                <Th className="min-w-[12rem]">Line item</Th>
+                <Th className="min-w-[10rem]">Vendor</Th>
                 <Th className="w-28 text-right">Budgeted</Th>
                 <Th className="w-28 text-right">Committed</Th>
                 <Th className="w-28 text-right">Actual</Th>
-                <Th className="w-32 text-right">Variance</Th>
-                <Th className="w-32">Flag</Th>
+                <Th className="w-28 text-right">Variance</Th>
+                <Th className="w-24">Flag</Th>
                 <Th className="w-32">Status</Th>
-                <Th className="w-10" aria-label="Actions" />
+                <Th className="w-12" aria-label="Actions" />
               </tr>
             </thead>
             <tbody>
               {items.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-3 py-4 text-center text-sm text-slate-500">
+                  <td colSpan={9} className="px-3 py-4 text-center text-sm text-content-muted">
                     Nothing budgeted under {BUDGET_CATEGORY_LABELS[category]} yet.
                   </td>
                 </tr>
@@ -178,10 +186,11 @@ function CategorySection({
                 items.map((lineItem) => {
                   const variance = computeVariance(lineItem, settings);
                   return (
-                    <tr key={lineItem.id} className={variance.flag === "red" ? "bg-red-50/50" : undefined}>
+                    <tr key={lineItem.id} className={variance.flag === "red" ? "bg-danger-subtle/50" : undefined}>
                       <Td>
                         <TextInput
                           value={lineItem.lineItemName}
+                          title={lineItem.lineItemName}
                           aria-label="Line item name"
                           placeholder="What is this spend"
                           onChange={(e) => onPatch(lineItem.id, { lineItemName: e.target.value })}
@@ -190,6 +199,7 @@ function CategorySection({
                       <Td>
                         <TextInput
                           value={lineItem.vendor ?? ""}
+                          title={lineItem.vendor ?? ""}
                           aria-label="Vendor"
                           onChange={(e) => onPatch(lineItem.id, { vendor: e.target.value })}
                         />
@@ -216,7 +226,7 @@ function CategorySection({
                         />
                       </Td>
                       <Td className="text-right tabular-nums">
-                        <span className={variance.actualVarianceAmount > 0 ? "text-red-700" : "text-slate-600"}>
+                        <span className={variance.actualVarianceAmount > 0 ? "text-danger-text" : "text-content-muted"}>
                           {variance.actualVarianceAmount > 0 ? "+" : ""}
                           {formatMoney(variance.actualVarianceAmount, settings.currency)}
                         </span>
@@ -255,6 +265,25 @@ function CategorySection({
               )}
             </tbody>
           </Table>
+          </div>
+
+          <ul className="space-y-3 md:hidden">
+            {items.length === 0 ? (
+              <li className="py-3 text-center text-sm text-content-muted">
+                Nothing budgeted under {BUDGET_CATEGORY_LABELS[category]} yet.
+              </li>
+            ) : (
+              items.map((lineItem) => (
+                <LineItemCard
+                  key={lineItem.id}
+                  lineItem={lineItem}
+                  settings={settings}
+                  onPatch={onPatch}
+                  onDelete={onDelete}
+                />
+              ))
+            )}
+          </ul>
 
           <div className="mt-2">
             <Button size="sm" variant="ghost" onClick={() => onAdd(category)}>
@@ -264,6 +293,96 @@ function CategorySection({
         </div>
       ) : null}
     </section>
+  );
+}
+
+/**
+ * One line item on a phone.
+ *
+ * Full-width name, then the three amounts as a labelled row, then variance and status. Every
+ * value is readable without a sideways swipe, which is the whole point — a nested horizontal
+ * scroller competes with both the page scroll and the browser's back-swipe when you are holding
+ * the phone one-handed.
+ */
+function LineItemCard({
+  lineItem,
+  settings,
+  onPatch,
+  onDelete,
+}: {
+  lineItem: BudgetLineItem;
+  settings: BudgetSettings;
+  onPatch: (id: string, patch: Partial<BudgetLineItem>) => void;
+  onDelete: (id: string) => void;
+}) {
+  const variance = computeVariance(lineItem, settings);
+
+  return (
+    <li
+      className={`space-y-3 rounded-lg border border-line p-3 ${
+        variance.flag === "red" ? "bg-danger-subtle/50" : "bg-surface"
+      }`}
+    >
+      <TextInput
+        value={lineItem.lineItemName}
+        aria-label="Line item name"
+        placeholder="What is this spend"
+        onChange={(e) => onPatch(lineItem.id, { lineItemName: e.target.value })}
+      />
+      <TextInput
+        value={lineItem.vendor ?? ""}
+        aria-label="Vendor"
+        placeholder="Vendor"
+        onChange={(e) => onPatch(lineItem.id, { vendor: e.target.value })}
+      />
+
+      <div className="grid grid-cols-3 gap-2">
+        {([
+          ["Budgeted", lineItem.budgetedAmount, (v: number) => onPatch(lineItem.id, { budgetedAmount: v })],
+          ["Committed", lineItem.committedAmount, (v: number) => onPatch(lineItem.id, { committedAmount: v })],
+          ["Actual", lineItem.actualAmount, (v: number) => onPatch(lineItem.id, { actualAmount: v })],
+        ] as const).map(([label, value, onValue]) => (
+          <label key={label} className="space-y-1">
+            <span className="block text-xs font-medium text-content-muted">{label}</span>
+            <AmountInput label={label} value={value} onChange={onValue} />
+          </label>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <VarianceBadge variance={variance} />
+          <span
+            className={`text-sm tabular-nums ${
+              variance.actualVarianceAmount > 0 ? "text-danger-text" : "text-content-muted"
+            }`}
+          >
+            {variance.actualVarianceAmount > 0 ? "+" : ""}
+            {formatMoney(variance.actualVarianceAmount, settings.currency)}
+          </span>
+        </div>
+        <Button
+          size="sm"
+          variant="ghost"
+          aria-label={`Delete ${lineItem.lineItemName || "line item"}`}
+          onClick={() => onDelete(lineItem.id)}
+        >
+          Delete
+        </Button>
+      </div>
+
+      <Select
+        value={lineItem.status}
+        aria-label="Status"
+        onChange={(e) => onPatch(lineItem.id, { status: e.target.value as LineItemStatus })}
+      >
+        {LINE_ITEM_STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {LINE_ITEM_STATUS_LABELS[s]}
+          </option>
+        ))}
+      </Select>
+    </li>
   );
 }
 

@@ -38,7 +38,7 @@ export function BudgetStep({ brief, onChange, highlightMissing }: StepProps) {
 
   return (
     <div className="space-y-6">
-      <p className="rounded-md border border-sky-100 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+      <p className="rounded-md border border-accent/20 bg-accent-subtle px-4 py-3 text-sm text-accent-text">
         High-level only — detailed vendor budgets, commitments and actuals are managed in the
         Budget Builder &amp; Tracker (coming soon). Leave categories at 0 if you don&apos;t know
         yet.
@@ -87,12 +87,12 @@ export function BudgetStep({ brief, onChange, highlightMissing }: StepProps) {
           </datalist>
         </Field>
         <div className="flex flex-col justify-end pb-1 text-sm">
-          <span className="text-xs uppercase tracking-wide text-slate-400">Allocated</span>
-          <span className="text-slate-800">{formatMoney(allocated, currency)}</span>
+          <span className="text-xs uppercase tracking-wide text-content-subtle">Allocated</span>
+          <span className="text-content">{formatMoney(allocated, currency)}</span>
           {brief.budget.totalBudget !== undefined && brief.budget.totalBudget !== null ? (
             <span
               className={
-                allocated > brief.budget.totalBudget ? "text-xs text-amber-700" : "text-xs text-slate-500"
+                allocated > brief.budget.totalBudget ? "text-xs text-warning-text" : "text-xs text-content-muted"
               }
             >
               {allocated > brief.budget.totalBudget
@@ -105,7 +105,7 @@ export function BudgetStep({ brief, onChange, highlightMissing }: StepProps) {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-800">Budget categories</h3>
+          <h3 className="text-sm font-semibold text-content">Budget categories</h3>
           <Button
             onClick={() =>
               onChange((prev) => ({
@@ -121,7 +121,7 @@ export function BudgetStep({ brief, onChange, highlightMissing }: StepProps) {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-slate-200 bg-white">
+        <div className="rounded-lg border border-line bg-surface">
           <Table>
             <thead>
               <tr>

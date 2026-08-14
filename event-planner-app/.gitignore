@@ -12,3 +12,6 @@ pnpm-debug.log*
 coverage/
 .vercel
 .env*
+
+# Python virtualenv for the Playwright browser tests. Created by `pnpm e2e:setup`.
+.venv/

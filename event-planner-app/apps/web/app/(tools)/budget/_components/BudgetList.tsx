@@ -51,14 +51,14 @@ export function BudgetList() {
   }, []);
 
   if (rows === null) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">Budget Builder &amp; Tracker</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">Budget Builder &amp; Tracker</h1>
+        <p className="mt-1 text-sm text-content-muted">
           Line-item budgets with budgeted, committed and actual tracking, variance flags and a
           finance-ready export. Opening an event for the first time builds its template.
         </p>
@@ -66,10 +66,10 @@ export function BudgetList() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Budgets</h2>
+          <h2 className="text-base font-semibold text-content">Budgets</h2>
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table stack>
             <thead>
               <tr>
                 <Th>Event</Th>
@@ -92,26 +92,26 @@ export function BudgetList() {
               ) : (
                 rows.map((row) => (
                   <tr key={row.brief.id}>
-                    <Td>
+                    <Td label="Event">
                       <Link
                         href={`/budget/${row.brief.id}`}
-                        className="font-medium text-slate-900 underline-offset-4 hover:underline"
+                        className="font-medium text-content underline-offset-4 hover:underline"
                       >
                         {row.brief.name || "Untitled brief"}
                       </Link>
-                      <span className="block text-xs text-slate-500">{formatDateRange(row.brief)}</span>
+                      <span className="block text-xs text-content-muted">{formatDateRange(row.brief)}</span>
                     </Td>
-                    <Td>
+                    <Td label="Type">
                       <Badge>{EVENT_TYPE_LABELS[row.brief.type]}</Badge>
                     </Td>
-                    <Td className="text-right tabular-nums">
+                    <Td label="Budgeted" className="text-right tabular-nums">
                       {row.settings ? formatMoney(row.totalBudgeted, row.settings.currency) : "—"}
                     </Td>
-                    <Td className="text-right tabular-nums">
+                    <Td label="Actual" className="text-right tabular-nums">
                       {row.settings ? formatMoney(row.totalActual, row.settings.currency) : "—"}
                     </Td>
-                    <Td>{row.settings ? <FlagPill flag={row.flag} /> : <Badge tone="neutral">Not started</Badge>}</Td>
-                    <Td>
+                    <Td label="Status">{row.settings ? <FlagPill flag={row.flag} /> : <Badge tone="neutral">Not started</Badge>}</Td>
+                    <Td label="Reconciled">
                       {row.settings?.reconciledAt ? (
                         <Badge tone="success">Yes</Badge>
                       ) : (

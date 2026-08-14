@@ -69,8 +69,8 @@ export function NewSessionForm() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <header>
-        <h1 className="text-xl font-semibold text-slate-900">New triage session</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-xl font-semibold text-content">New triage session</h1>
+        <p className="mt-1 text-sm text-content-muted">
           One session per event. Every file you import lands in its shared lead pool.
         </p>
       </header>
@@ -85,8 +85,8 @@ export function NewSessionForm() {
               disabled={(briefs?.length ?? 0) === 0}
               className={
                 mode === "brief"
-                  ? "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white"
-                  : "rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 disabled:text-slate-400"
+                  ? "rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg"
+                  : "rounded-md bg-surface px-3 py-1.5 text-sm font-medium text-content-muted ring-1 ring-inset ring-line-strong disabled:text-content-subtle"
               }
             >
               From an event brief
@@ -97,8 +97,8 @@ export function NewSessionForm() {
               aria-pressed={mode === "standalone"}
               className={
                 mode === "standalone"
-                  ? "rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white"
-                  : "rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300"
+                  ? "rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg"
+                  : "rounded-md bg-surface px-3 py-1.5 text-sm font-medium text-content-muted ring-1 ring-inset ring-line-strong"
               }
             >
               Standalone
@@ -107,16 +107,16 @@ export function NewSessionForm() {
         </CardHeader>
         <CardBody className="space-y-4">
           {error ? (
-            <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            <p role="alert" className="rounded-lg border border-danger-border bg-danger-subtle px-3 py-2 text-sm text-danger-text">
               {error}
             </p>
           ) : null}
 
           {mode === "brief" ? (
             briefs === null ? (
-              <p className="text-sm text-slate-500">Loading briefs…</p>
+              <p className="text-sm text-content-muted">Loading briefs…</p>
             ) : briefs.length === 0 ? (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 No briefs in this browser — create a standalone session instead.
               </p>
             ) : (
@@ -132,20 +132,20 @@ export function NewSessionForm() {
                 </Field>
 
                 {selected ? (
-                  <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+                  <div className="rounded-lg border border-line bg-surface-sunken px-3 py-2 text-sm">
                     <p className="flex flex-wrap items-center gap-2">
                       <Badge>{EVENT_TYPE_LABELS[selected.type]}</Badge>
                       <span>{formatDateRange(selected)}</span>
                     </p>
-                    <p className="mt-1 text-xs text-slate-600">
+                    <p className="mt-1 text-xs text-content-muted">
                       Objective: {selected.goals?.primaryObjective || "—"}
                     </p>
-                    <p className="mt-1 text-xs text-slate-600">
+                    <p className="mt-1 text-xs text-content-muted">
                       Target personas:{" "}
                       {(selected.audience?.targetPersonas ?? []).map((p) => p.name).join(", ") ||
                         "none recorded"}
                     </p>
-                    <p className="mt-2 text-xs text-slate-500">
+                    <p className="mt-2 text-xs text-content-muted">
                       Read-only. This tool never writes back to a brief.
                     </p>
                   </div>

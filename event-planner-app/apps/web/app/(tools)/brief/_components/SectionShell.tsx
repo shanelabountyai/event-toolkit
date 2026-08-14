@@ -42,8 +42,8 @@ export function SectionShell({
     <Card id={id} className="scroll-mt-24">
       <CardHeader>
         <div className="min-w-0">
-          <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-          {description ? <p className="text-xs text-slate-500">{description}</p> : null}
+          <h2 className="text-base font-semibold text-content">{title}</h2>
+          {description ? <p className="text-xs text-content-muted">{description}</p> : null}
         </div>
         <div className="no-print flex items-center gap-2">
           {headerExtra}
@@ -98,8 +98,8 @@ export function useSectionDraft(brief: EventBrief, onSave: (next: EventBrief) =>
 export function ReadField({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-slate-400">{label}</dt>
-      <dd className="mt-0.5 text-sm text-slate-800">{children}</dd>
+      <dt className="text-xs uppercase tracking-wide text-content-subtle">{label}</dt>
+      <dd className="mt-0.5 text-sm text-content">{children}</dd>
     </div>
   );
 }
@@ -107,10 +107,10 @@ export function ReadField({ label, children }: { label: string; children: ReactN
 /** Read-view helper: paragraphs from a plain-text field, or an em dash when empty. */
 export function ReadText({ value, empty = "Not set" }: { value?: string | null; empty?: string }) {
   if (!value || value.trim() === "") {
-    return <span className="text-sm italic text-slate-400">{empty}</span>;
+    return <span className="text-sm italic text-content-subtle">{empty}</span>;
   }
   return (
-    <div className="space-y-2 text-sm text-slate-800">
+    <div className="space-y-2 text-sm text-content">
       {value.split(/\n{2,}/).map((block, i) => (
         <p key={i} className="whitespace-pre-line">
           {block}

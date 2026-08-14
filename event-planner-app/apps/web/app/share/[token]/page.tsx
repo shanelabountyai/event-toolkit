@@ -33,8 +33,8 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
   return (
     <main className="mx-auto w-full max-w-2xl space-y-5 px-4 py-6">
       <div className="space-y-1">
-        <h1 className="text-lg font-semibold tracking-tight text-slate-900">Run of show</h1>
-        <p className="text-xs text-slate-500">
+        <h1 className="text-lg font-semibold tracking-tight text-content">Run of show</h1>
+        <p className="text-xs text-content-muted">
           Shared, read-only. This link stops working on{" "}
           {expires.toLocaleDateString(undefined, { day: "numeric", month: "long" })}.
         </p>
@@ -44,11 +44,11 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
         {pack.sessions.length === 0 ? (
           <Empty>Nothing scheduled yet.</Empty>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {pack.sessions.map((s) => (
               <li key={s.id} className="flex flex-wrap justify-between gap-2 px-5 py-2.5 text-sm">
-                <span className="font-medium text-slate-900">{s.label}</span>
-                <span className="text-slate-600">
+                <span className="font-medium text-content">{s.label}</span>
+                <span className="text-content-muted">
                   {[formatTime(s.startTime), s.location].filter(Boolean).join(" · ")}
                 </span>
               </li>
@@ -61,11 +61,11 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
         {pack.staffAssignments.length === 0 ? (
           <Empty>No staffing recorded.</Empty>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {pack.staffAssignments.map((s) => (
               <li key={s.id} className="flex flex-wrap justify-between gap-2 px-5 py-2.5 text-sm">
-                <span className="font-medium text-slate-900">{s.personName || "Unassigned"}</span>
-                <span className="text-slate-600">
+                <span className="font-medium text-content">{s.personName || "Unassigned"}</span>
+                <span className="text-content-muted">
                   {[s.assignmentRole, formatTime(resolveSessionTime(pack, s.sessionId)?.startTime ?? s.customStartTime)]
                     .filter(Boolean)
                     .join(" · ")}
@@ -80,15 +80,15 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
         {pack.contacts.length === 0 ? (
           <Empty>No contacts listed.</Empty>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {pack.contacts.map((c) => (
               <li key={c.id} className="space-y-0.5 px-5 py-2.5 text-sm">
-                <p className="font-medium text-slate-900">
-                  {c.name} <span className="font-normal text-slate-500">· {c.role}</span>
+                <p className="font-medium text-content">
+                  {c.name} <span className="font-normal text-content-muted">· {c.role}</span>
                 </p>
                 {/* Tap-to-call, because the person reading this is standing in a venue. */}
                 {c.phone ? (
-                  <a href={`tel:${c.phone}`} className="text-slate-700 underline underline-offset-2">
+                  <a href={`tel:${c.phone}`} className="text-content-muted underline underline-offset-2">
                     {c.phone}
                   </a>
                 ) : null}
@@ -102,17 +102,17 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
         {pack.venueChecklist.length === 0 ? (
           <Empty>Nothing on the checklist.</Empty>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {pack.venueChecklist.map((c) => (
               <li key={c.id} className="flex items-center gap-2 px-5 py-2.5 text-sm">
-                <span className={c.status === "done" ? "text-emerald-600" : "text-slate-300"}>
+                <span className={c.status === "done" ? "text-success" : "text-content-subtle"}>
                   {c.status === "done" ? "✓" : "○"}
                 </span>
-                <span className={c.status === "done" ? "text-slate-500 line-through" : "text-slate-800"}>
+                <span className={c.status === "done" ? "text-content-muted line-through" : "text-content"}>
                   {c.item}
                 </span>
                 {c.status === "blocked" ? (
-                  <span className="text-xs font-medium text-red-700">blocked</span>
+                  <span className="text-xs font-medium text-danger-text">blocked</span>
                 ) : null}
               </li>
             ))}
@@ -122,16 +122,16 @@ export default async function SharePage({ params }: { params: Promise<{ token: s
 
       <Card>
         <CardHeader>
-          <h2 className="text-sm font-semibold text-slate-900">Report a problem</h2>
+          <h2 className="text-sm font-semibold text-content">Report a problem</h2>
         </CardHeader>
         <CardBody className="space-y-3">
           <LogIssueForm token={token} />
           {pack.issueLog.length > 0 ? (
-            <div className="space-y-1 border-t border-slate-200 pt-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Already reported</p>
-              <ul className="space-y-1 text-sm text-slate-700">
+            <div className="space-y-1 border-t border-line pt-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-content-muted">Already reported</p>
+              <ul className="space-y-1 text-sm text-content-muted">
                 {pack.issueLog.map((i) => (
-                  <li key={i.id} className={i.status === "resolved" ? "text-slate-400 line-through" : undefined}>
+                  <li key={i.id} className={i.status === "resolved" ? "text-content-subtle line-through" : undefined}>
                     {i.description}
                   </li>
                 ))}
@@ -157,7 +157,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+        <h2 className="text-sm font-semibold text-content">{title}</h2>
       </CardHeader>
       {children}
     </Card>
@@ -165,7 +165,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Empty({ children }: { children: React.ReactNode }) {
-  return <CardBody><p className="text-sm text-slate-500">{children}</p></CardBody>;
+  return <CardBody><p className="text-sm text-content-muted">{children}</p></CardBody>;
 }
 
 function Dead() {
@@ -173,8 +173,8 @@ function Dead() {
     <main className="mx-auto w-full max-w-md px-4 py-16">
       <Card>
         <CardBody className="space-y-2">
-          <h1 className="text-lg font-semibold tracking-tight text-slate-900">This link isn&rsquo;t working</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-lg font-semibold tracking-tight text-content">This link isn&rsquo;t working</h1>
+          <p className="text-sm text-content-muted">
             It may have expired or been turned off. Ask the event organiser for a new one.
           </p>
         </CardBody>

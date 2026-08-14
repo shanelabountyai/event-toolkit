@@ -1,3 +1,5 @@
+@import "./tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,8 +15,88 @@ body {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  background-color: var(--color-canvas);
+  color: var(--color-text);
   font-family: var(--font-sans);
+  @apply antialiased;
+}
+
+/*
+ * One focus style everywhere, and it is never removed.
+ *
+ * Half this product is forms, and a planner filling in a run of show by keyboard needs to know
+ * where they are. `:focus-visible` means a mouse click does not draw a ring, so there is no
+ * temptation to turn it off.
+ */
+*:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * Respect a stated preference for less motion. Nothing here is decorative enough to be worth
+ * overriding somebody's accessibility setting.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Stacked tables below `md` — see the `stack` prop on the Table primitive.
+ *
+ * Kept in CSS rather than rendered as a second markup tree, so there is one source of truth for
+ * the data and screen readers still get a real table on a wide screen. The heading for each cell
+ * comes from `data-label`, so a stacked row reads "Vendor: Moscone West Catering" rather than a
+ * column of unlabelled values.
+ */
+@media (max-width: 767px) {
+  .stack-table,
+  .stack-table tbody,
+  .stack-table tr,
+  .stack-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .stack-table thead {
+    display: none;
+  }
+
+  .stack-table tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .stack-table td {
+    border-bottom: 0;
+    padding: 0.375rem 0.25rem;
+  }
+
+  .stack-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.125rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  /* A right-aligned number is right-aligned because of its column. Stacked, there is no column. */
+  .stack-table td.text-right {
+    text-align: left;
+  }
 }
 
 /* Printable brief view (FR-8: the on-screen brief should print cleanly too). */

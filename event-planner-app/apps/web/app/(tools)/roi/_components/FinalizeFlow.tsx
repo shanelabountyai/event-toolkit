@@ -84,8 +84,8 @@ export function FinalizeFlow({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Finalise this report</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Finalise this report</h2>
+          <p className="text-xs text-content-muted">
             Finalising makes this report available as a year-over-year comparator, and writes the
             values you accept below back onto the event brief.
           </p>
@@ -110,7 +110,7 @@ export function FinalizeFlow({
             {matches.map((match) => {
               const canWrite = match.matchedField !== null && match.proposedValue !== null;
               return (
-                <tr key={match.metric.id} className={canWrite ? undefined : "text-slate-500"}>
+                <tr key={match.metric.id} className={canWrite ? undefined : "text-content-muted"}>
                   <Td>
                     {canWrite ? (
                       <input
@@ -125,7 +125,7 @@ export function FinalizeFlow({
                             return next;
                           })
                         }
-                        className="h-4 w-4 rounded border-slate-300"
+                        className="h-4 w-4 rounded border-line-strong"
                       />
                     ) : (
                       <span aria-hidden>—</span>
@@ -141,7 +141,7 @@ export function FinalizeFlow({
                   <Td className="text-xs">
                     {match.matchedField ?? <Badge tone="neutral">No match — left untouched</Badge>}
                     {match.unavailableReason ? (
-                      <span className="block text-amber-700">{match.unavailableReason}</span>
+                      <span className="block text-warning-text">{match.unavailableReason}</span>
                     ) : null}
                   </Td>
                   <Td className="text-right tabular-nums">
@@ -153,7 +153,7 @@ export function FinalizeFlow({
           </tbody>
         </Table>
 
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           {accepted.size} of {writable.length} matched metric{writable.length === 1 ? "" : "s"} will
           be written. Metrics with no match are never modified.
         </p>

@@ -40,8 +40,8 @@ export function PacingEntryForm({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Add registration numbers</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Add registration numbers</h2>
+          <p className="text-xs text-content-muted">
             Cumulative totals, not daily deltas — re-entering a date corrects it.
           </p>
         </div>
@@ -70,10 +70,10 @@ export function PacingEntryForm({
           </Button>
         </div>
 
-        <div className="border-t border-slate-200 pt-4">
-          <p className="text-sm font-medium text-slate-800">Or import a CSV</p>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Two columns with a header row: <code className="rounded bg-slate-100 px-1">date,count</code>, dates
+        <div className="border-t border-line pt-4">
+          <p className="text-sm font-medium text-content">Or import a CSV</p>
+          <p className="mt-0.5 text-xs text-content-muted">
+            Two columns with a header row: <code className="rounded bg-surface-hover px-1">date,count</code>, dates
             as YYYY-MM-DD. Valid rows import even if others fail.
           </p>
           <input
@@ -84,7 +84,7 @@ export function PacingEntryForm({
               const file = e.target.files?.[0];
               if (file) void onFile(file);
             }}
-            className="mt-2 block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700"
+            className="mt-2 block w-full text-sm text-content-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover"
           />
 
           {importSummary ? (
@@ -92,16 +92,16 @@ export function PacingEntryForm({
               role="status"
               className={
                 importSummary.errors.length > 0
-                  ? "mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2"
-                  : "mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2"
+                  ? "mt-3 rounded-lg border border-warning-border bg-warning-subtle px-3 py-2"
+                  : "mt-3 rounded-lg border border-success-border bg-success-subtle px-3 py-2"
               }
             >
-              <p className="text-sm font-medium text-slate-900">
+              <p className="text-sm font-medium text-content">
                 Imported {importSummary.importedCount} row{importSummary.importedCount === 1 ? "" : "s"}
                 {importSummary.errors.length > 0 ? `, skipped ${importSummary.errors.length}` : ""}.
               </p>
               {importSummary.errors.length > 0 ? (
-                <ul className="mt-1 list-inside list-disc text-xs text-amber-900">
+                <ul className="mt-1 list-inside list-disc text-xs text-warning-text">
                   {importSummary.errors.map((err) => (
                     <li key={`${err.row}-${err.reason}`}>
                       Line {err.row}: {err.reason}

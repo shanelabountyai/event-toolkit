@@ -216,15 +216,15 @@ export function IntakeWizard({ briefId }: { briefId: string }) {
   }, [brief, briefId, dismissedLessonIds, flush, replaceBrief, router]);
 
   if (loading || !progressLoaded) {
-    return <p className="text-sm text-slate-500">Loading brief…</p>;
+    return <p className="text-sm text-content-muted">Loading brief…</p>;
   }
 
   if (notFound || !brief) {
     return (
       <Card>
         <CardBody className="space-y-3 py-10 text-center">
-          <h1 className="text-lg font-semibold text-slate-900">Brief not found</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-lg font-semibold text-content">Brief not found</h1>
+          <p className="text-sm text-content-muted">
             This brief isn&apos;t in this browser&apos;s local storage. It may have been deleted,
             or created in a different browser or profile.
           </p>
@@ -252,27 +252,27 @@ export function IntakeWizard({ briefId }: { briefId: string }) {
     <div className="space-y-6" ref={topRef}>
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <Link href="/brief" className="text-sm text-slate-500 hover:underline">
+          <Link href="/brief" className="text-sm text-content-muted hover:underline">
             ← All briefs
           </Link>
-          <span className="text-sm text-slate-400">/</span>
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm text-content-subtle">/</span>
+          <span className="text-sm font-medium text-content-muted">
             {brief.name || "Untitled brief"}
           </span>
           {generated ? (
-            <Link href={`/brief/${briefId}`} className="text-sm text-slate-500 hover:underline">
+            <Link href={`/brief/${briefId}`} className="text-sm text-content-muted hover:underline">
               View generated brief →
             </Link>
           ) : null}
           <SaveIndicator state={saveState} className="ml-auto" />
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-content">
           {step.title}
-          <span className="ml-2 align-middle text-sm font-normal text-slate-500">
+          <span className="ml-2 align-middle text-sm font-normal text-content-muted">
             Step {stepIndex + 1} of {STEPS.length}
           </span>
         </h1>
-        <p className="text-sm text-slate-600">{step.blurb}</p>
+        <p className="text-sm text-content-muted">{step.blurb}</p>
       </header>
 
       <ol className="no-print flex flex-wrap gap-2">
@@ -288,13 +288,13 @@ export function IntakeWizard({ briefId }: { briefId: string }) {
                 aria-current={active ? "step" : undefined}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   active
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-300 bg-white text-slate-600 hover:bg-slate-100"
+                    ? "border-accent bg-accent text-accent-fg"
+                    : "border-line-strong bg-surface text-content-muted hover:bg-surface-hover"
                 }`}
               >
                 <span className="tabular-nums">{index + 1}.</span> {s.title}
                 {sectionMissing && !active ? (
-                  <span className="ml-1 text-amber-600" aria-label="required fields missing">
+                  <span className="ml-1 text-warning" aria-label="required fields missing">
                     •
                   </span>
                 ) : null}
@@ -306,7 +306,7 @@ export function IntakeWizard({ briefId }: { briefId: string }) {
 
       <Card>
         <CardHeader>
-          <h2 className="text-sm font-semibold text-slate-900">{step.title}</h2>
+          <h2 className="text-sm font-semibold text-content">{step.title}</h2>
           {stepIndex < REVIEW_INDEX ? (
             <Badge tone="neutral">Autosaved as you type</Badge>
           ) : null}
@@ -335,7 +335,7 @@ export function IntakeWizard({ briefId }: { briefId: string }) {
         <Button onClick={() => void goToStep(stepIndex - 1)} disabled={stepIndex === 0}>
           ← Back
         </Button>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           Everything is saved locally as you go — you can close this tab and resume later.
         </p>
         {stepIndex < REVIEW_INDEX ? (

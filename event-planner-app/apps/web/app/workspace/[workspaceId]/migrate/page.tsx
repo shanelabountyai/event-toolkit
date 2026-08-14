@@ -29,13 +29,13 @@ export default async function MigratePage({
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href={`/workspace/${workspaceId}/members`} className="text-sm text-slate-600 hover:text-slate-900">
+        <Link href={`/workspace/${workspaceId}/members`} className="inline-flex min-h-11 items-center text-sm text-content-muted hover:text-content">
           ← {workspace.name}
         </Link>
-        <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+        <h1 className="text-xl font-semibold tracking-tight text-content">
           Move this browser&rsquo;s events into {workspace.name}
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-content-muted">
           Everything you&rsquo;ve built here so far is stored in this browser. Moving it makes it
           available on your other devices and to the people you invite.
         </p>

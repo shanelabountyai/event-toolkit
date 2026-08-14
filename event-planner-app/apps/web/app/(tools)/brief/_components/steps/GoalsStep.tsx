@@ -86,8 +86,8 @@ export function GoalsStep({
           onAccept={onAcceptLesson}
           onDismiss={onDismissLesson}
         />
-        <div className="rounded-lg border border-slate-200 bg-white p-4 text-xs text-slate-600">
-          <p className="font-medium text-slate-800">What happens next</p>
+        <div className="rounded-lg border border-line bg-surface p-4 text-xs text-content-muted">
+          <p className="font-medium text-content">What happens next</p>
           <p className="mt-1">
             Your {getPreset(brief.type).label.toLowerCase()} preset already added{" "}
             {brief.successMetrics.length} success metric

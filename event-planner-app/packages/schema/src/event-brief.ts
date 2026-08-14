@@ -9,7 +9,7 @@
 // suite depends on it.
 
 /** Semver version of the schema documents produced by this package. */
-export const CURRENT_SCHEMA_VERSION = "1.1.0";
+export const CURRENT_SCHEMA_VERSION = "1.2.0";
 
 /** Event-type preset selected during intake. */
 export type EventType = "conference" | "webinar" | "trade_show" | "custom";
@@ -60,6 +60,31 @@ export interface Goals {
   businessJustification?: string;
 }
 
+/**
+ * Whether this company is running the event or turning up to somebody else's.
+ *
+ * The distinction is invisible in the rest of the brief and decisive for anything customer-facing:
+ * an exhibitor cannot write "registration closes this week" or "we're running this", because they
+ * control neither. Promo copy generated without it addressed a trade-show booth brief in the voice
+ * of the conference organiser.
+ */
+export type ParticipationRole = "host" | "exhibitor" | "sponsor" | "speaker";
+
+/**
+ * What the *attendee* gets — the only fields in this brief written in their language.
+ *
+ * Everything under `Goals` is internal: revenue targets, lead counts, pipeline. Those must never
+ * reach customer-facing copy, and before this existed the promo templates had nothing else to draw
+ * on, so they rendered "capture 60 qualified leads and influence $900K of pipeline" as the reason
+ * a prospect should come to the booth.
+ */
+export interface AttendeeValue {
+  /** One sentence, in the attendee's language, on why this is worth their time. */
+  promise?: string;
+  /** What they leave with. Rendered as the "what you'll get" bullets in promo copy. */
+  takeaways?: string[];
+}
+
 /** Who the event is for. */
 export interface Audience {
   /** Free-text summary of the target audience. Required. */
@@ -70,6 +95,11 @@ export interface Audience {
   estimatedSize?: number;
   /** Named audience segments, e.g. "existing customers", "prospects". */
   segments?: string[];
+  /**
+   * The attendee-facing promise. Optional, and when absent the promo generator emits a visible
+   * placeholder rather than substituting an internal objective.
+   */
+  attendeeValue?: AttendeeValue;
 }
 
 /** A high-level planned budget category. PRD 4 owns detailed vendor-level budgets. */
@@ -118,6 +148,11 @@ export interface VenueOrPlatform {
 export interface Format {
   deliveryMode: FormatMode;
   venueOrPlatform?: VenueOrPlatform;
+  /**
+   * Host by default. `trade_show` defaults to `exhibitor`, because a booth brief is almost always
+   * somebody else's conference — see `createEmptyBrief`.
+   */
+  participationRole?: ParticipationRole;
 }
 
 /** A person with a stake in the event, plus their overall RACI designation. */

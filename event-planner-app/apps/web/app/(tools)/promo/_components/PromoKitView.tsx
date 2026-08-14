@@ -142,7 +142,7 @@ export function PromoKitView() {
   const sections = useMemo(() => (set ? groupAssets(set.assets) : []), [set]);
 
   if (loading || loadingSet) {
-    return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
   if (!briefId || notFound || !brief) {
     return <PromoBriefMissing notFound={notFound} />;
@@ -167,8 +167,8 @@ export function PromoKitView() {
             />
           ) : null}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
-            <p className="flex flex-wrap items-center gap-2 text-sm text-slate-700">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 shadow-sm">
+            <p className="flex flex-wrap items-center gap-2 text-sm text-content-muted">
               <Badge>{set.assets.length} assets</Badge>
               {editedCount > 0 ? (
                 <Badge tone="info">

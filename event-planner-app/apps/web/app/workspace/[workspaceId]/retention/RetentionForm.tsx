@@ -28,21 +28,26 @@ export function RetentionForm({
         </Select>
       </Field>
 
-      <label className="flex items-start gap-2 text-sm text-slate-700">
-        <input type="checkbox" name="enabled" defaultChecked={enabled} className="mt-0.5" />
+      <label className="flex items-start gap-2 text-sm text-content-muted">
+        <input
+          type="checkbox"
+          name="enabled"
+          defaultChecked={enabled}
+          className="mt-0.5 h-5 w-5 accent-[var(--color-accent)]"
+        />
         <span>
           Delete automatically.
           {/* Turning it off is allowed and its consequence is stated, rather than the checkbox
               quietly meaning "keep third-party personal data indefinitely". */}
-          <span className="block text-xs text-slate-500">
+          <span className="block text-xs text-content-muted">
             Turn this off and attendee data is kept until somebody deletes it by hand. That is a
             decision worth making on purpose.
           </span>
         </span>
       </label>
 
-      {state.error ? <p role="alert" className="text-sm text-red-700">{state.error}</p> : null}
-      {state.ok ? <p className="text-sm text-emerald-700">{state.ok}</p> : null}
+      {state.error ? <p role="alert" className="text-sm text-danger-text">{state.error}</p> : null}
+      {state.ok ? <p className="text-sm text-success-text">{state.ok}</p> : null}
 
       <Button type="submit" variant="primary" disabled={pending}>
         {pending ? "Saving…" : "Save policy"}

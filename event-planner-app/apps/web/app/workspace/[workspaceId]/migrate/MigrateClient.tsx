@@ -132,8 +132,8 @@ export function MigrateClient({
     return (
       <Card>
         <CardBody className="space-y-4">
-          <h2 className="text-sm font-semibold text-slate-900">Moved into {workspaceName}</h2>
-          <p className="text-sm text-slate-700">
+          <h2 className="text-sm font-semibold text-content">Moved into {workspaceName}</h2>
+          <p className="text-sm text-content-muted">
             {totals.inserted} added
             {totals.updated > 0 ? `, ${totals.updated} already there and updated` : ""}.
           </p>
@@ -141,7 +141,7 @@ export function MigrateClient({
           {skippedKinds.length > 0 ? (
             // Reported, never silent. A migration that quietly drops a third of somebody's data is
             // worse than one that refuses.
-            <p className="rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900 ring-1 ring-inset ring-amber-200">
+            <p className="rounded-lg bg-warning-subtle px-3 py-2.5 text-sm text-warning-text ring-1 ring-inset ring-warning-border">
               {totals.skipped.length} records weren&rsquo;t moved because your role in this
               workspace doesn&rsquo;t cover them:{" "}
               {skippedKinds.map((k) => KIND_LABELS[k] ?? k).join(", ")}. They&rsquo;re still in this
@@ -154,14 +154,14 @@ export function MigrateClient({
             there is deliberately no button here to delete it. Somebody who has just moved two
             years of events should get to confirm it all arrived before anything is thrown away.
           */}
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             Your original copy is still in this browser, untouched. Check everything looks right in
             the workspace before clearing it.
           </p>
 
           <Link
             href="/brief"
-            className="inline-flex rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            className="inline-flex rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
           >
             Open the events
           </Link>
@@ -173,14 +173,14 @@ export function MigrateClient({
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-sm font-semibold text-slate-900">What will move</h2>
-        <span className="text-xs text-slate-500">{preview?.total ?? 0} items</span>
+        <h2 className="text-sm font-semibold text-content">What will move</h2>
+        <span className="text-xs text-content-muted">{preview?.total ?? 0} items</span>
       </CardHeader>
       <CardBody className="space-y-4">
         {preview && preview.events.length > 0 ? (
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Events</p>
-            <ul className="text-sm text-slate-800">
+            <p className="text-xs font-medium uppercase tracking-wide text-content-muted">Events</p>
+            <ul className="text-sm text-content">
               {preview.events.map((e) => (
                 <li key={e.id}>{e.name || "Untitled event"}</li>
               ))}
@@ -189,26 +189,26 @@ export function MigrateClient({
         ) : null}
 
         <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Everything included</p>
-          <ul className="divide-y divide-slate-100 text-sm">
+          <p className="text-xs font-medium uppercase tracking-wide text-content-muted">Everything included</p>
+          <ul className="divide-y divide-line text-sm">
             {preview?.counts.map((c) => (
               <li key={c.kind} className="flex justify-between py-1">
-                <span className="text-slate-800">{KIND_LABELS[c.kind] ?? c.kind}</span>
-                <span className="tabular-nums text-slate-500">{c.count}</span>
+                <span className="text-content">{KIND_LABELS[c.kind] ?? c.kind}</span>
+                <span className="tabular-nums text-content-muted">{c.count}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {alreadyMigrated ? (
-          <p className="rounded-lg bg-slate-50 px-3 py-2.5 text-sm text-slate-700 ring-1 ring-inset ring-slate-200">
+          <p className="rounded-lg bg-surface-sunken px-3 py-2.5 text-sm text-content-muted ring-1 ring-inset ring-line">
             Data has been moved into this workspace before. Running it again updates what&rsquo;s
             already there rather than making a second copy.
           </p>
         ) : null}
 
         {error ? (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-sm text-danger-text">
             {error}
           </p>
         ) : null}
@@ -219,7 +219,7 @@ export function MigrateClient({
               ? `Moving… ${progress} of ${records.length}`
               : `Move ${records.length} items into ${workspaceName}`}
           </Button>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-content-muted">
             Nothing is deleted from this browser.
           </span>
         </div>
@@ -232,7 +232,7 @@ function Note({ children }: { children: React.ReactNode }) {
   return (
     <Card>
       <CardBody>
-        <p className="text-sm text-slate-600">{children}</p>
+        <p className="text-sm text-content-muted">{children}</p>
       </CardBody>
     </Card>
   );

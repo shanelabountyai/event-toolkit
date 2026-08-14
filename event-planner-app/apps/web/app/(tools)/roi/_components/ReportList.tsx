@@ -87,14 +87,14 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
     }
   };
 
-  if (reports === null) return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  if (reports === null) return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
 
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Event ROI &amp; Attribution</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-xl font-semibold text-content">Event ROI &amp; Attribution</h1>
+          <p className="mt-1 text-sm text-content-muted">
             Budget, pipeline, leads and sentiment in one report, with a transparent repeat /
             change / kill call you can defend in a budget conversation.
           </p>
@@ -108,8 +108,8 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
         <Card>
           <CardHeader>
             <div>
-              <h2 className="text-base font-semibold text-slate-900">Which event?</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-base font-semibold text-content">Which event?</h2>
+              <p className="text-xs text-content-muted">
                 A report is always built on an existing brief — that is what connects it to the
                 budget and lead data.
               </p>
@@ -117,7 +117,7 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
           </CardHeader>
           <CardBody className="space-y-3">
             {briefs.length === 0 ? (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 No briefs in this browser yet.{" "}
                 <Link href="/brief/new" className="font-medium underline underline-offset-4">
                   Create one first
@@ -145,7 +145,7 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Reports</h2>
+          <h2 className="text-base font-semibold text-content">Reports</h2>
         </CardHeader>
         <CardBody>
           <Table>
@@ -166,11 +166,11 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
                   return (
                     <tr key={report.id}>
                       <Td>
-                        <Link href={`/roi/${report.id}`} className="font-medium text-slate-900 underline-offset-4 hover:underline">
+                        <Link href={`/roi/${report.id}`} className="font-medium text-content underline-offset-4 hover:underline">
                           {report.eventName}
                         </Link>
                         {brief ? (
-                          <span className="block text-xs text-slate-500">{formatDateRange(brief)}</span>
+                          <span className="block text-xs text-content-muted">{formatDateRange(brief)}</span>
                         ) : null}
                       </Td>
                       <Td>
@@ -184,10 +184,10 @@ export function ReportList({ startOnPicker = false }: { startOnPicker?: boolean 
                             {RECOMMENDATION_LABELS[report.scorecard.recommendation]}
                           </Badge>
                         ) : (
-                          <span className="text-xs text-slate-400">Not scored</span>
+                          <span className="text-xs text-content-subtle">Not scored</span>
                         )}
                       </Td>
-                      <Td className="text-xs text-slate-600">{formatIsoDateTime(report.updatedAt)}</Td>
+                      <Td className="text-xs text-content-muted">{formatIsoDateTime(report.updatedAt)}</Td>
                     </tr>
                   );
                 })

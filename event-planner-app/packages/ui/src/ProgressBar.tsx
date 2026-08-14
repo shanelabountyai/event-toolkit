@@ -13,10 +13,10 @@ export function ProgressBar({
 }) {
   const clamped = Math.max(0, Math.min(100, Math.round(value)));
   const tone =
-    clamped >= 100 ? "bg-emerald-500" : clamped >= 60 ? "bg-sky-500" : "bg-amber-500";
+    clamped >= 100 ? "bg-success" : clamped >= 60 ? "bg-accent" : "bg-warning";
   return (
     <div
-      className={cx("h-2 w-full overflow-hidden rounded-full bg-slate-200", className)}
+      className={cx("h-2 w-full overflow-hidden rounded-full bg-surface-hover", className)}
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}

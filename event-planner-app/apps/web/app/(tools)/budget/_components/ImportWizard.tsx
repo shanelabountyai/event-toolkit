@@ -97,11 +97,11 @@ export function ImportWizard({
       role="dialog"
       aria-modal="true"
       aria-labelledby="import-title"
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 sm:p-8"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-accent/40 p-4 sm:p-8"
     >
-      <div className="w-full max-w-4xl rounded-xl bg-white shadow-xl">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 id="import-title" className="text-base font-semibold text-slate-900">
+      <div className="w-full max-w-4xl rounded-xl bg-surface shadow-xl">
+        <div className="border-b border-line px-5 py-4">
+          <h2 id="import-title" className="text-base font-semibold text-content">
             Import budget data
           </h2>
           <ol className="mt-2 flex flex-wrap gap-2 text-xs">
@@ -111,10 +111,10 @@ export function ImportWizard({
                 aria-current={step === s ? "step" : undefined}
                 className={
                   step === s
-                    ? "rounded-full bg-slate-900 px-2.5 py-1 font-medium text-white"
+                    ? "rounded-full bg-accent px-2.5 py-1 font-medium text-accent-fg"
                     : STEP_ORDER.indexOf(step) > i
-                      ? "rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700 ring-1 ring-inset ring-emerald-200"
-                      : "rounded-full bg-slate-100 px-2.5 py-1 text-slate-500"
+                      ? "rounded-full bg-success-subtle px-2.5 py-1 text-success-text ring-1 ring-inset ring-success-border"
+                      : "rounded-full bg-surface-hover px-2.5 py-1 text-content-muted"
                 }
               >
                 {i + 1}. {STEP_LABELS[s]}
@@ -125,14 +125,14 @@ export function ImportWizard({
 
         <div className="max-h-[55vh] overflow-y-auto px-5 py-4">
           {error ? (
-            <p role="alert" className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            <p role="alert" className="mb-3 rounded-lg border border-danger-border bg-danger-subtle px-3 py-2 text-sm text-danger-text">
               {error}
             </p>
           ) : null}
 
           {step === "upload" ? (
             <div className="space-y-3">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 Choose a CSV or XLSX file. Columns are matched to fields automatically and you can
                 correct them on the next step. Nothing is saved until you confirm.
               </p>
@@ -143,14 +143,14 @@ export function ImportWizard({
                   const file = e.target.files?.[0];
                   if (file) void onFile(file);
                 }}
-                className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700"
+                className="block w-full text-sm text-content-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover"
               />
             </div>
           ) : null}
 
           {step === "mapping" ? (
             <div className="space-y-3">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 {filename} · {rows.length} row{rows.length === 1 ? "" : "s"}. Map each column, or
                 leave it ignored.
               </p>
@@ -181,7 +181,7 @@ export function ImportWizard({
                           ))}
                         </Select>
                       </Td>
-                      <Td className="text-xs text-slate-500">{String(rows[0]?.[header] ?? "")}</Td>
+                      <Td className="text-xs text-content-muted">{String(rows[0]?.[header] ?? "")}</Td>
                     </tr>
                   ))}
                 </tbody>
@@ -196,7 +196,7 @@ export function ImportWizard({
                 {plan.errors.length > 0 ? <Badge tone="warning">{plan.errors.length} unusable</Badge> : null}
               </p>
               {plan.errors.length > 0 ? (
-                <ul className="max-h-28 overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                <ul className="max-h-28 overflow-y-auto rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                   {plan.errors.map((e) => (
                     <li key={`${e.row}-${e.reason}`}>Row {e.row}: {e.reason}</li>
                   ))}
@@ -220,7 +220,7 @@ export function ImportWizard({
                       <Td>
                         {c.lineItemName}
                         {c.warnings.map((w) => (
-                          <span key={w} className="block text-xs text-amber-700">{w}</span>
+                          <span key={w} className="block text-xs text-warning-text">{w}</span>
                         ))}
                       </Td>
                       <Td>{BUDGET_CATEGORY_LABELS[c.category]}</Td>
@@ -233,7 +233,7 @@ export function ImportWizard({
                 </tbody>
               </Table>
               {plan.candidates.length > 5 ? (
-                <p className="text-xs text-slate-500">Showing the first 5 of {plan.candidates.length} rows.</p>
+                <p className="text-xs text-content-muted">Showing the first 5 of {plan.candidates.length} rows.</p>
               ) : null}
             </div>
           ) : null}
@@ -251,23 +251,23 @@ export function ImportWizard({
                       : `Skipped ${group.length} ambiguous row${group.length === 1 ? "" : "s"}`;
                 return (
                   <section key={outcome}>
-                    <h3 className="text-sm font-semibold text-slate-900">{heading}</h3>
+                    <h3 className="text-sm font-semibold text-content">{heading}</h3>
                     <ul className="mt-1 space-y-1">
                       {group.map((c) => (
-                        <li key={c.row} className="flex items-center justify-between gap-3 rounded-md border border-slate-200 px-3 py-1.5 text-sm">
+                        <li key={c.row} className="flex items-center justify-between gap-3 rounded-md border border-line px-3 py-1.5 text-sm">
                           <span>
                             {c.lineItemName}
-                            <span className="ml-2 text-xs text-slate-500">
+                            <span className="ml-2 text-xs text-content-muted">
                               {BUDGET_CATEGORY_LABELS[c.category]}
                             </span>
                             {c.warnings.map((w) => (
-                              <span key={w} className="block text-xs text-amber-700">{w}</span>
+                              <span key={w} className="block text-xs text-warning-text">{w}</span>
                             ))}
                           </span>
                           {outcome === "skipped" ? (
                             <Badge tone="neutral">Not imported</Badge>
                           ) : (
-                            <label className="flex items-center gap-1.5 text-xs text-slate-600">
+                            <label className="flex items-center gap-1.5 text-xs text-content-muted">
                               <input
                                 type="checkbox"
                                 checked={!excluded.has(c.row)}
@@ -279,7 +279,7 @@ export function ImportWizard({
                                     return next;
                                   })
                                 }
-                                className="h-3.5 w-3.5 rounded border-slate-300"
+                                className="h-3.5 w-3.5 rounded border-line-strong"
                               />
                               Include
                             </label>
@@ -294,14 +294,14 @@ export function ImportWizard({
           ) : null}
 
           {step === "summary" ? (
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-content-muted">
               Imported {committedCount} line item{committedCount === 1 ? "" : "s"} from {filename}.
             </p>
           ) : null}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50/60 px-5 py-3">
-          <p className="text-xs text-slate-500">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface-sunken px-5 py-3">
+          <p className="text-xs text-content-muted">
             {step === "matching"
               ? `${included.length} row${included.length === 1 ? "" : "s"} will be written.`
               : "Nothing is saved until the final step."}

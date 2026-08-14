@@ -17,7 +17,7 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <h2 className="text-sm font-semibold text-slate-900">Find someone</h2>
+          <h2 className="text-sm font-semibold text-content">Find someone</h2>
         </CardHeader>
         <CardBody>
           <form action={formAction} className="flex flex-wrap items-end gap-3">
@@ -29,9 +29,9 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
               {pending ? "Searching…" : "Search"}
             </Button>
           </form>
-          {state.error ? <p role="alert" className="mt-2 text-sm text-red-700">{state.error}</p> : null}
+          {state.error ? <p role="alert" className="mt-2 text-sm text-danger-text">{state.error}</p> : null}
           {/* Stated once here: searching is itself a read of personal data and is recorded. */}
-          <p className="mt-2 text-xs text-slate-500">
+          <p className="mt-2 text-xs text-content-muted">
             Every search is recorded in the workspace&rsquo;s access log, including who ran it.
           </p>
         </CardBody>
@@ -40,28 +40,28 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
       {state.email ? (
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-900">
+            <h2 className="text-sm font-semibold text-content">
               {hits.length === 0 ? "Nothing found" : `${hits.length} record${hits.length === 1 ? "" : "s"}`}
             </h2>
-            <span className="text-xs text-slate-500">{email}</span>
+            <span className="text-xs text-content-muted">{email}</span>
           </CardHeader>
 
           {hits.length === 0 ? (
             <CardBody>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-content-muted">
                 This workspace holds nothing about that address. If they were told otherwise, it may
                 be in a different workspace, or already deleted.
               </p>
             </CardBody>
           ) : (
             <>
-              <ul className="divide-y divide-slate-200">
+              <ul className="divide-y divide-line">
                 {hits.map((hit) => (
                   <li key={`${hit.kind}:${hit.documentId}`} className="space-y-1.5 px-5 py-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-sm font-medium text-slate-900">{hit.label}</p>
+                      <p className="text-sm font-medium text-content">{hit.label}</p>
                       {hit.sensitivity === "third_party_personal" ? (
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-900">
+                        <span className="rounded-full bg-warning-subtle px-2 py-0.5 text-[11px] font-medium text-warning-text">
                           Third-party personal data
                         </span>
                       ) : null}
@@ -69,8 +69,8 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
                     <dl className="grid gap-x-3 text-xs sm:grid-cols-[minmax(0,10rem)_1fr]">
                       {Object.entries(hit.fields).map(([path, values]) => (
                         <div key={path} className="contents">
-                          <dt className="text-slate-500">{path}</dt>
-                          <dd className="break-words text-slate-800">
+                          <dt className="text-content-muted">{path}</dt>
+                          <dd className="break-words text-content">
                             {values.map((v) => (typeof v === "object" ? JSON.stringify(v) : String(v))).join(", ")}
                           </dd>
                         </div>
@@ -80,7 +80,7 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
                 ))}
               </ul>
 
-              <CardBody className="flex flex-wrap gap-2 border-t border-slate-200">
+              <CardBody className="flex flex-wrap gap-2 border-t border-line">
                 <form action={exportFormAction}>
                   <input type="hidden" name="workspaceId" value={workspaceId} />
                   <input type="hidden" name="email" value={email} />
@@ -103,17 +103,17 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
       {exportState.exported ? (
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-900">Export</h2>
+            <h2 className="text-sm font-semibold text-content">Export</h2>
             <a
               href={`data:application/json;charset=utf-8,${encodeURIComponent(exportState.exported)}`}
               download={`subject-access-${exportState.email}.json`}
-              className="text-sm font-medium text-slate-900 underline underline-offset-2"
+              className="text-sm font-medium text-content underline underline-offset-2"
             >
               Download
             </a>
           </CardHeader>
           <CardBody>
-            <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-slate-50 p-3 text-[11px] text-slate-700">
+            <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-surface-sunken p-3 text-[11px] text-content-muted">
               {exportState.exported}
             </pre>
           </CardBody>
@@ -123,10 +123,10 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
       {confirming && canDelete ? (
         <Card>
           <CardBody>
-            <form action={deleteFormAction} className="space-y-3 rounded-lg bg-red-50 p-3 ring-1 ring-inset ring-red-200">
+            <form action={deleteFormAction} className="space-y-3 rounded-lg bg-danger-subtle p-3 ring-1 ring-inset ring-danger-border">
               <input type="hidden" name="workspaceId" value={workspaceId} />
               <input type="hidden" name="email" value={email} />
-              <p className="text-sm text-red-900">
+              <p className="text-sm text-danger-text">
                 This removes every record above, permanently, across every tool. Records that are
                 about something else and merely name them — a pipeline deal, an event brief — keep
                 the record and lose the person.
@@ -135,7 +135,7 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
               <Field label={`Type ${email} to confirm`} htmlFor="confirm-email">
                 <TextInput id="confirm-email" name="confirmEmail" required autoComplete="off" />
               </Field>
-              {deleteState.error ? <p role="alert" className="text-sm text-red-700">{deleteState.error}</p> : null}
+              {deleteState.error ? <p role="alert" className="text-sm text-danger-text">{deleteState.error}</p> : null}
               <Button type="submit" variant="danger" disabled={deleting}>
                 {deleting ? "Deleting…" : "Delete permanently"}
               </Button>
@@ -147,15 +147,15 @@ export function SubjectTool({ workspaceId, canDelete }: { workspaceId: string; c
       {deleteState.deleted ? (
         <Card>
           <CardBody className="space-y-2">
-            <p className="text-sm font-medium text-slate-900">
+            <p className="text-sm font-medium text-content">
               Deleted {deleteState.deleted.deletedRecords} record
               {deleteState.deleted.deletedRecords === 1 ? "" : "s"}
               {deleteState.deleted.erasedFields > 0
                 ? `, and removed their details from ${deleteState.deleted.erasedFields} more.`
                 : "."}
             </p>
-            <p className="text-sm text-slate-600">{deleteState.deleted.note}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm text-content-muted">{deleteState.deleted.note}</p>
+            <p className="text-xs text-content-muted">
               Devices that already synced will drop their copies on their next sync.
             </p>
           </CardBody>

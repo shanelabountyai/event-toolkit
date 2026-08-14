@@ -100,8 +100,13 @@ function retroDoc(lessons: RetroLesson[]): RetroDocument {
 
 async function main(): Promise<void> {
   /* ---------------------------------------------------------------- */
-  console.log("\nSchema · the 1.1.0 addition is additive");
-  check("schema version bumped to 1.1.0", CURRENT_SCHEMA_VERSION === "1.1.0");
+  console.log("\nSchema · additions stay additive");
+  // Pinned to the constant, not a literal. This assertion existed to prove PRD 7's fields landed
+  // with a MINOR bump; hard-coding the number made the next legitimate bump look like a failure.
+  check(
+    `schema version is a MINOR series above 1.0 (${CURRENT_SCHEMA_VERSION})`,
+    /^1\.[1-9]\d*\.\d+$/.test(CURRENT_SCHEMA_VERSION),
+  );
   check("a 1.0.0 lesson with no disposition still type-checks and round-trips", (() => {
     const legacy = { id: "l1", lesson: "Old lesson", addedAt: nowIso() };
     return legacy.id === "l1";

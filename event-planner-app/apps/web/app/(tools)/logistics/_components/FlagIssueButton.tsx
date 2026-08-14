@@ -68,14 +68,14 @@ export function FlagIssueButton({
           role="dialog"
           aria-modal="true"
           aria-labelledby="flag-issue-title"
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 sm:p-8"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-accent/40 p-4 sm:p-8"
         >
-          <div className="w-full max-w-md rounded-xl bg-white shadow-xl">
-            <div className="border-b border-slate-200 px-5 py-4">
-              <h2 id="flag-issue-title" className="text-base font-semibold text-slate-900">
+          <div className="w-full max-w-md rounded-xl bg-surface shadow-xl">
+            <div className="border-b border-line px-5 py-4">
+              <h2 id="flag-issue-title" className="text-base font-semibold text-content">
                 Flag an issue
               </h2>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-content-muted">
                 Only a description and severity are needed — fill in the rest later.
               </p>
             </div>
@@ -113,7 +113,7 @@ export function FlagIssueButton({
               </Field>
             </div>
 
-            <div className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50/60 px-5 py-3">
+            <div className="flex justify-end gap-2 border-t border-line bg-surface-sunken px-5 py-3">
               <Button onClick={() => setOpen(false)}>Cancel</Button>
               <Button variant="primary" onClick={submit}>
                 Log issue

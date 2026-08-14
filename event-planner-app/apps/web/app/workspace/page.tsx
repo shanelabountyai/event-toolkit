@@ -24,8 +24,8 @@ export default async function WorkspacePage() {
     <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-xl font-semibold tracking-tight text-slate-900">Your workspaces</h1>
-          <p className="text-sm text-slate-600">Signed in as {user.email}</p>
+          <h1 className="text-xl font-semibold tracking-tight text-content">Your workspaces</h1>
+          <p className="text-sm text-content-muted">Signed in as {user.email}</p>
         </div>
         <SignOutButton />
       </div>
@@ -33,20 +33,20 @@ export default async function WorkspacePage() {
       {memberships.length > 0 ? (
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-900">
+            <h2 className="text-sm font-semibold text-content">
               {memberships.length === 1 ? "1 workspace" : `${memberships.length} workspaces`}
             </h2>
           </CardHeader>
-          <ul className="divide-y divide-slate-200">
+          <ul className="divide-y divide-line">
             {memberships.map((m) => (
               <li key={m.workspaceId}>
                 <Link
                   href={`/workspace/${m.workspaceId}/members`}
-                  className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 hover:bg-slate-50"
+                  className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 hover:bg-surface-sunken"
                 >
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium text-slate-900">{m.name}</p>
-                    <p className="text-xs text-slate-500">{ROLE_DESCRIPTIONS[m.role as Role]}</p>
+                    <p className="text-sm font-medium text-content">{m.name}</p>
+                    <p className="text-xs text-content-muted">{ROLE_DESCRIPTIONS[m.role as Role]}</p>
                   </div>
                   <Badge>{ROLE_LABELS[m.role as Role]}</Badge>
                 </Link>
@@ -58,8 +58,8 @@ export default async function WorkspacePage() {
         <Card>
           <CardBody className="space-y-4">
             <div className="space-y-1.5">
-              <h2 className="text-sm font-semibold text-slate-900">Create a workspace</h2>
-              <p className="text-sm text-slate-600">
+              <h2 className="text-sm font-semibold text-content">Create a workspace</h2>
+              <p className="text-sm text-content-muted">
                 A workspace is where your team&rsquo;s events live. You&rsquo;ll be its owner, and
                 you can invite colleagues afterwards.
               </p>

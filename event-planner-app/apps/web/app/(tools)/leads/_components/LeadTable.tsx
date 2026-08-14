@@ -76,7 +76,7 @@ export function LeadTable({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="text-xs text-slate-600">
+        <label className="text-xs text-content-muted">
           Tier
           <Select className="mt-1 w-32" value={tierFilter} onChange={(e) => setTierFilter(e.target.value as typeof tierFilter)}>
             <option value="all">All</option>
@@ -87,7 +87,7 @@ export function LeadTable({
             ))}
           </Select>
         </label>
-        <label className="text-xs text-slate-600">
+        <label className="text-xs text-content-muted">
           Owner
           <Select className="mt-1 w-44" value={ownerFilter} onChange={(e) => setOwnerFilter(e.target.value)}>
             <option value="all">All</option>
@@ -99,7 +99,7 @@ export function LeadTable({
             ))}
           </Select>
         </label>
-        <label className="text-xs text-slate-600">
+        <label className="text-xs text-content-muted">
           Status
           <Select className="mt-1 w-40" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}>
             <option value="all">All</option>
@@ -110,7 +110,7 @@ export function LeadTable({
             ))}
           </Select>
         </label>
-        <label className="flex-1 text-xs text-slate-600">
+        <label className="flex-1 text-xs text-content-muted">
           Search
           <TextInput
             className="mt-1"
@@ -122,8 +122,8 @@ export function LeadTable({
       </div>
 
       {selected.size > 0 ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-sky-200 bg-sky-50 px-4 py-2">
-          <span className="text-sm text-sky-900">{selected.size} selected</span>
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-accent/20 bg-accent-subtle px-4 py-2">
+          <span className="text-sm text-accent-text">{selected.size} selected</span>
           <Select
             className="w-48"
             aria-label="Bulk assign owner"
@@ -156,7 +156,7 @@ export function LeadTable({
                 onChange={(e) =>
                   setSelected(e.target.checked ? new Set(filtered.map((l) => l.id)) : new Set())
                 }
-                className="h-4 w-4 rounded border-slate-300"
+                className="h-4 w-4 rounded border-line-strong"
               />
             </Th>
             <Th className="w-20">Tier</Th>
@@ -177,7 +177,7 @@ export function LeadTable({
             filtered.map((lead) => (
               <tr
                 key={lead.id}
-                className="cursor-pointer hover:bg-slate-50"
+                className="cursor-pointer hover:bg-surface-sunken"
                 onClick={() => setOpenLeadId(lead.id)}
               >
                 <Td onClick={(e) => e.stopPropagation()}>
@@ -193,7 +193,7 @@ export function LeadTable({
                         return next;
                       })
                     }
-                    className="h-4 w-4 rounded border-slate-300"
+                    className="h-4 w-4 rounded border-line-strong"
                   />
                 </Td>
                 <Td>
@@ -201,14 +201,14 @@ export function LeadTable({
                 </Td>
                 <Td className="text-right tabular-nums font-medium">{lead.score}</Td>
                 <Td>
-                  <span className="font-medium text-slate-900">{contactName(lead.contact) || "—"}</span>
-                  <span className="block text-xs text-slate-500">{lead.contact.email ?? "no email"}</span>
+                  <span className="font-medium text-content">{contactName(lead.contact) || "—"}</span>
+                  <span className="block text-xs text-content-muted">{lead.contact.email ?? "no email"}</span>
                 </Td>
                 <Td>
                   {lead.contact.company ?? "—"}
-                  <span className="block text-xs text-slate-500">{lead.contact.jobTitle ?? ""}</span>
+                  <span className="block text-xs text-content-muted">{lead.contact.jobTitle ?? ""}</span>
                 </Td>
-                <Td className="text-sm">{lead.ownerName ?? <span className="text-slate-400">Unassigned</span>}</Td>
+                <Td className="text-sm">{lead.ownerName ?? <span className="text-content-subtle">Unassigned</span>}</Td>
                 <Td className="text-xs">{LEAD_STATUS_LABELS[lead.status]}</Td>
                 <Td>
                   {lead.followUpDraft ? (
@@ -216,7 +216,7 @@ export function LeadTable({
                       {lead.followUpDraft.edited ? "Edited" : "Ready"}
                     </Badge>
                   ) : (
-                    <span className="text-xs text-slate-400">—</span>
+                    <span className="text-xs text-content-subtle">—</span>
                   )}
                 </Td>
               </tr>
@@ -256,19 +256,19 @@ function LeadDetailDrawer({
       role="dialog"
       aria-modal="true"
       aria-label={`Lead detail for ${contactName(lead.contact)}`}
-      className="fixed inset-0 z-50 flex justify-end bg-slate-900/40"
+      className="fixed inset-0 z-50 flex justify-end bg-accent/40"
       onClick={onClose}
     >
       <div
-        className="h-full w-full max-w-xl overflow-y-auto bg-white shadow-xl"
+        className="h-full w-full max-w-xl overflow-y-auto bg-surface shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4">
+        <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
           <div>
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-content">
               {contactName(lead.contact) || "Unnamed lead"}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-content-muted">
               {[lead.contact.jobTitle, lead.contact.company].filter(Boolean).join(" · ") || "—"}
             </p>
           </div>
@@ -279,7 +279,7 @@ function LeadDetailDrawer({
 
         <div className="space-y-5 px-5 py-4">
           <section>
-            <h3 className="text-sm font-semibold text-slate-900">Contact</h3>
+            <h3 className="text-sm font-semibold text-content">Contact</h3>
             <dl className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
               <Detail label="Email" value={lead.contact.email} />
               <Detail label="Phone" value={lead.contact.phone} />
@@ -287,7 +287,7 @@ function LeadDetailDrawer({
               <Detail label="Job title" value={lead.contact.jobTitle} />
             </dl>
             {lead.conflicts && lead.conflicts.length > 0 ? (
-              <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              <div className="mt-2 rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                 <p className="font-medium">Conflicting values found when merging:</p>
                 <ul className="list-inside list-disc">
                   {lead.conflicts.map((conflict) => (
@@ -301,22 +301,22 @@ function LeadDetailDrawer({
           </section>
 
           <section>
-            <h3 className="text-sm font-semibold text-slate-900">
+            <h3 className="text-sm font-semibold text-content">
               Score {lead.score} · {LEAD_TIER_LABELS[lead.tier]}
             </h3>
             {lead.scoreBreakdown.length === 0 ? (
-              <p className="mt-1 text-sm text-slate-500">No scoring signals matched this lead.</p>
+              <p className="mt-1 text-sm text-content-muted">No scoring signals matched this lead.</p>
             ) : (
               <ul className="mt-1 space-y-0.5 text-sm">
                 {lead.scoreBreakdown.map((entry) => (
                   <li key={entry.ruleId} className="flex justify-between">
-                    <span className="text-slate-700">{entry.label}</span>
-                    <span className="tabular-nums text-slate-900">+{entry.points}</span>
+                    <span className="text-content-muted">{entry.label}</span>
+                    <span className="tabular-nums text-content">+{entry.points}</span>
                   </li>
                 ))}
               </ul>
             )}
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-content-muted">
               {lead.signals.boothInteractions} booth interactions ·{" "}
               {lead.signals.sessionsAttended.length > 0
                 ? lead.signals.sessionsAttended.join(", ")
@@ -327,7 +327,7 @@ function LeadDetailDrawer({
           </section>
 
           <section className="flex flex-wrap items-end gap-3">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs text-content-muted">
               Owner
               <Select
                 className="mt-1 w-48"
@@ -345,7 +345,7 @@ function LeadDetailDrawer({
                 ))}
               </Select>
             </label>
-            <label className="text-xs text-slate-600">
+            <label className="text-xs text-content-muted">
               Status
               <Select
                 className="mt-1 w-44"
@@ -362,7 +362,7 @@ function LeadDetailDrawer({
           </section>
 
           <section>
-            <h3 className="text-sm font-semibold text-slate-900">Follow-up draft</h3>
+            <h3 className="text-sm font-semibold text-content">Follow-up draft</h3>
             {lead.followUpDraft ? (
               <div className="mt-1 space-y-2">
                 <TextInput
@@ -386,14 +386,14 @@ function LeadDetailDrawer({
                     Save edit
                   </Button>
                   {lead.followUpDraft.edited ? (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-content-muted">
                       Edited — bulk regeneration will leave this alone.
                     </span>
                   ) : null}
                 </div>
               </div>
             ) : (
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-content-muted">
                 No draft yet — generate drafts from the Templates tab.
               </p>
             )}
@@ -407,8 +407,8 @@ function LeadDetailDrawer({
 function Detail({ label, value }: { label: string; value?: string }) {
   return (
     <>
-      <dt className="text-xs text-slate-500">{label}</dt>
-      <dd className="text-slate-800">{value || "—"}</dd>
+      <dt className="text-xs text-content-muted">{label}</dt>
+      <dd className="text-content">{value || "—"}</dd>
     </>
   );
 }

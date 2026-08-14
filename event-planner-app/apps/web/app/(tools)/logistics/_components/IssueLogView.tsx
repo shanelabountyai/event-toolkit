@@ -63,7 +63,7 @@ export function IssueLogView({
     <div className="space-y-3">
       {!readOnly ? (
         <div className="no-print flex flex-wrap items-end gap-3">
-          <label className="text-xs text-slate-600">
+          <label className="text-xs text-content-muted">
             Status
             <Select
               className="mt-1"
@@ -75,7 +75,7 @@ export function IssueLogView({
               <option value="resolved">Resolved</option>
             </Select>
           </label>
-          <label className="text-xs text-slate-600">
+          <label className="text-xs text-content-muted">
             Severity
             <Select
               className="mt-1"
@@ -90,7 +90,7 @@ export function IssueLogView({
               ))}
             </Select>
           </label>
-          <label className="text-xs text-slate-600">
+          <label className="text-xs text-content-muted">
             Sort by
             <Select
               className="mt-1"
@@ -104,7 +104,7 @@ export function IssueLogView({
         </div>
       ) : null}
 
-      <Table>
+      <Table stack>
         <thead>
           <tr>
             <Th className="w-40">Logged</Th>
@@ -127,21 +127,21 @@ export function IssueLogView({
               const session = resolveSessionTime(pack, issue.relatedSessionId);
               return (
                 <tr key={issue.id} className="break-inside-avoid">
-                  <Td className="text-xs text-slate-500">
+                  <Td label="Logged" className="text-xs text-content-muted">
                     {formatIsoDateTime(issue.timestamp)}
                     {issue.loggedBy ? <span className="block">by {issue.loggedBy}</span> : null}
                   </Td>
-                  <Td>{issue.description}</Td>
-                  <Td>
+                  <Td label="What happened">{issue.description}</Td>
+                  <Td label="Severity">
                     <Badge tone={SEVERITY_TONES[issue.severity]}>
                       {ISSUE_SEVERITY_LABELS[issue.severity]}
                     </Badge>
                   </Td>
-                  <Td className="text-xs text-slate-600">
+                  <Td label="Where" className="text-xs text-content-muted">
                     {issue.relatedArtifact ? ARTIFACT_LABELS[issue.relatedArtifact] : "—"}
                     {session ? <span className="block">{session.label}</span> : null}
                   </Td>
-                  <Td>
+                  <Td label="Status">
                     {readOnly ? (
                       <Badge tone={issue.status === "open" ? "danger" : "success"}>
                         {issue.status === "open" ? "Open" : "Resolved"}
@@ -162,7 +162,7 @@ export function IssueLogView({
                     )}
                   </Td>
                   {!readOnly ? (
-                    <Td>
+                    <Td label="Resolution">
                       <TextInput
                         value={issue.resolutionNotes ?? ""}
                         aria-label="Resolution notes"

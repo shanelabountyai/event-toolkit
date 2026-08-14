@@ -40,7 +40,7 @@ export function BriefSectionGoals({ brief, onSave }: BriefSectionProps) {
           </ReadField>
           <ReadField label="Secondary objectives">
             {objectives.length === 0 ? (
-              <span className="text-sm italic text-slate-400">None</span>
+              <span className="text-sm italic text-content-subtle">None</span>
             ) : (
               <ul className="list-disc space-y-1 pl-5">
                 {objectives.map((o, i) => (

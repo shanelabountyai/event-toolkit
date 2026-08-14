@@ -44,7 +44,7 @@ export function MergeReviewQueue({
     return (
       <Card>
         <CardBody>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-muted">
             Nothing to review. Exact-email matches merge automatically; only uncertain
             name-and-company matches land here, and there are none right now.
           </p>
@@ -55,7 +55,7 @@ export function MergeReviewQueue({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-content-muted">
         {pending.length} possible duplicate{pending.length === 1 ? "" : "s"}. These were never
         merged automatically — one of each pair is missing an email, so the match is a guess.
       </p>
@@ -115,10 +115,10 @@ function CandidateCard({
     <Card>
       <CardHeader>
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">
+          <h3 className="text-sm font-semibold text-content">
             {contactName(a.contact)} &nbsp;·&nbsp; {contactName(b.contact)}
           </h3>
-          <p className="text-xs text-slate-500">{candidate.reason}</p>
+          <p className="text-xs text-content-muted">{candidate.reason}</p>
         </div>
         <Badge tone={candidate.similarity >= 0.95 ? "warning" : "neutral"}>
           {Math.round(candidate.similarity * 100)}% match
@@ -129,13 +129,13 @@ function CandidateCard({
           <table className="w-full text-left text-sm">
             <thead>
               <tr>
-                <th className="w-32 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th className="w-32 pb-1 text-xs font-semibold uppercase tracking-wide text-content-muted">
                   Field
                 </th>
-                <th className="pb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th className="pb-1 text-xs font-semibold uppercase tracking-wide text-content-muted">
                   Record A
                 </th>
-                <th className="pb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th className="pb-1 text-xs font-semibold uppercase tracking-wide text-content-muted">
                   Record B
                 </th>
               </tr>
@@ -148,8 +148,8 @@ function CandidateCard({
                 const conflicting = Boolean(valueA && valueB && valueA !== valueB);
                 const chosen = picks[field.key] ?? "a";
                 return (
-                  <tr key={field.key} className={conflicting ? "bg-amber-50/60" : undefined}>
-                    <td className="py-1 text-xs text-slate-500">{field.label}</td>
+                  <tr key={field.key} className={conflicting ? "bg-warning-subtle/60" : undefined}>
+                    <td className="py-1 text-xs text-content-muted">{field.label}</td>
                     <td className="py-1">
                       <label className="flex items-center gap-2">
                         {conflicting ? (
@@ -160,7 +160,7 @@ function CandidateCard({
                             onChange={() => setPicks((p) => ({ ...p, [field.key]: "a" }))}
                           />
                         ) : null}
-                        <span>{valueA || <span className="text-slate-400">—</span>}</span>
+                        <span>{valueA || <span className="text-content-subtle">—</span>}</span>
                       </label>
                     </td>
                     <td className="py-1">
@@ -173,19 +173,19 @@ function CandidateCard({
                             onChange={() => setPicks((p) => ({ ...p, [field.key]: "b" }))}
                           />
                         ) : null}
-                        <span>{valueB || <span className="text-slate-400">—</span>}</span>
+                        <span>{valueB || <span className="text-content-subtle">—</span>}</span>
                       </label>
                     </td>
                   </tr>
                 );
               })}
               <tr>
-                <td className="py-1 text-xs text-slate-500">Signals</td>
-                <td className="py-1 text-xs text-slate-600">
+                <td className="py-1 text-xs text-content-muted">Signals</td>
+                <td className="py-1 text-xs text-content-muted">
                   {a.signals.boothInteractions} booth · {a.signals.sessionsAttended.length} sessions
                   {a.signals.demoRequested ? " · demo" : ""}
                 </td>
-                <td className="py-1 text-xs text-slate-600">
+                <td className="py-1 text-xs text-content-muted">
                   {b.signals.boothInteractions} booth · {b.signals.sessionsAttended.length} sessions
                   {b.signals.demoRequested ? " · demo" : ""}
                 </td>
@@ -194,7 +194,7 @@ function CandidateCard({
           </table>
         </div>
 
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           Merging combines signals from both records — booth scans add up, sessions combine, and a
           demo request on either side carries over.
         </p>

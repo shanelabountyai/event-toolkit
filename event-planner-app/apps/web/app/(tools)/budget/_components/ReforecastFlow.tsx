@@ -37,13 +37,13 @@ export function ReforecastBanner({
   return (
     <div
       role="status"
-      className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+      className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-warning-border bg-warning-subtle px-4 py-3"
     >
       <div>
-        <p className="text-sm font-medium text-amber-900">
+        <p className="text-sm font-medium text-warning-text">
           The event&rsquo;s scope has changed since this budget was last reviewed.
         </p>
-        <ul className="mt-1 list-inside list-disc text-xs text-amber-900">
+        <ul className="mt-1 list-inside list-disc text-xs text-warning-text">
           {triggers.map((trigger) => (
             <li key={trigger.field}>
               {trigger.label}: {trigger.before} → {trigger.after}
@@ -99,14 +99,14 @@ export function ReforecastFlow({
       role="dialog"
       aria-modal="true"
       aria-labelledby="reforecast-title"
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 sm:p-8"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-accent/40 p-4 sm:p-8"
     >
-      <div className="w-full max-w-3xl rounded-xl bg-white shadow-xl">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 id="reforecast-title" className="text-base font-semibold text-slate-900">
+      <div className="w-full max-w-3xl rounded-xl bg-surface shadow-xl">
+        <div className="border-b border-line px-5 py-4">
+          <h2 id="reforecast-title" className="text-base font-semibold text-content">
             Reforecast the budget
           </h2>
-          <p className="mt-1 text-xs text-slate-600">
+          <p className="mt-1 text-xs text-content-muted">
             {triggers.map((t) => `${t.label}: ${t.before} → ${t.after}`).join(" · ")}
           </p>
         </div>
@@ -122,10 +122,10 @@ export function ReforecastFlow({
             </thead>
             <tbody>
               {ordered.map((item) => (
-                <tr key={item.id} className={focus.includes(item.category) ? "bg-sky-50/50" : undefined}>
+                <tr key={item.id} className={focus.includes(item.category) ? "bg-accent-subtle/50" : undefined}>
                   <Td>{item.lineItemName || "Untitled"}</Td>
                   <Td>
-                    <span className="flex items-center gap-1.5 text-xs text-slate-600">
+                    <span className="flex items-center gap-1.5 text-xs text-content-muted">
                       {BUDGET_CATEGORY_LABELS[item.category]}
                       {focus.includes(item.category) ? <Badge tone="info">Check</Badge> : null}
                     </span>
@@ -151,8 +151,8 @@ export function ReforecastFlow({
           </Table>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50/60 px-5 py-3">
-          <p className="text-xs text-slate-600">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface-sunken px-5 py-3">
+          <p className="text-xs text-content-muted">
             Total budgeted {formatMoney(before, currency)} → {formatMoney(after, currency)}
             {changed.length > 0 ? ` · ${changed.length} line item${changed.length === 1 ? "" : "s"} changed` : ""}
           </p>

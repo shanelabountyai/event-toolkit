@@ -75,8 +75,31 @@ export function personaTitlesFromBrief(brief: EventBrief | null): string[] {
 }
 
 /**
- * A lead's title matches a persona when either contains the other's significant words —
- * "VP of Marketing" should match a "Marketing VP" persona without a synonym dictionary.
+ * Words that describe seniority rather than domain.
+ *
+ * On their own they carry no fit signal: every company has a manager, and matching "Manager"
+ * against "Marketing manager" would fire for the entire badge scan. They still count when they
+ * appear alongside a domain word — "operations director" vs "operations lead" is a real match.
+ */
+const GENERIC_ROLE_WORDS = new Set([
+  "manager", "director", "lead", "head", "chief", "officer", "president", "vice",
+  "senior", "junior", "principal", "executive", "specialist", "associate",
+  "coordinator", "analyst", "owner", "founder", "staff", "global", "regional",
+]);
+
+/**
+ * A lead's title matches a persona when **either contains the other's** significant words —
+ * "VP of Marketing" matches a "Marketing VP" persona without a synonym dictionary.
+ *
+ * The comparison is against the *shorter* of the two word sets, which is the fix for a real
+ * scoring failure: planners write descriptive personas ("Plant operations director — active
+ * buyer") while real job titles are two or three words ("Plant Operations Lead"). Measuring
+ * overlap against the persona alone meant a longer persona could never be matched by a shorter
+ * title, so the rule fired for none of an eight-lead import and the tool ranked a hospitality
+ * events manager above the literal ICP at a manufacturing conference.
+ *
+ * A single shared *generic* word is not a match, which is what stops the symmetric version from
+ * over-firing.
  */
 export function matchesPersonaTitle(jobTitle: string | undefined, personaTitles: string[]): boolean {
   const title = (jobTitle ?? "").toLowerCase().trim();
@@ -88,14 +111,22 @@ export function matchesPersonaTitle(jobTitle: string | undefined, personaTitles:
       .split(/\s+/)
       .filter((w) => w.length > 2 && !["the", "and", "for", "of"].includes(w));
 
-  const titleWords = new Set(words(title));
+  const titleWords = words(title);
+  const titleSet = new Set(titleWords);
+
   return personaTitles.some((persona) => {
     const personaWords = words(persona);
-    if (personaWords.length === 0) return false;
-    const overlap = personaWords.filter((w) => titleWords.has(w)).length;
-    // Half the persona's significant words present is a match — enough to catch reorderings
-    // without firing on a single generic word like "manager".
-    return overlap >= Math.max(1, Math.ceil(personaWords.length / 2));
+    if (personaWords.length === 0 || titleWords.length === 0) return false;
+
+    const shared = personaWords.filter((w) => titleSet.has(w));
+    if (shared.length === 0) return false;
+
+    // Half of the shorter side, so a short title can still match a long persona.
+    const shorter = Math.min(personaWords.length, titleWords.length);
+    if (shared.length < Math.max(1, Math.ceil(shorter / 2))) return false;
+
+    // One generic word in common is a coincidence, not a match.
+    return shared.some((w) => !GENERIC_ROLE_WORDS.has(w));
   });
 }
 

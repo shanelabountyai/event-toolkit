@@ -13,11 +13,11 @@ export default async function VerifyPage({
   return (
     <Card>
       <CardBody className="space-y-4">
-        <h1 className="text-lg font-semibold tracking-tight text-slate-900">Check your email</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-lg font-semibold tracking-tight text-content">Check your email</h1>
+        <p className="text-sm text-content-muted">
           {email ? (
             <>
-              We sent a sign-in link to <span className="font-medium text-slate-900">{email}</span>.
+              We sent a sign-in link to <span className="font-medium text-content">{email}</span>.
             </>
           ) : (
             <>We sent you a sign-in link.</>
@@ -25,9 +25,9 @@ export default async function VerifyPage({
           {/* Stating the expiry here saves the support conversation that starts "the link didn't work". */}
           It works once and expires in 15 minutes.
         </p>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-content-muted">
           Nothing arrived? Check spam, then{" "}
-          <Link href="/sign-in" className="font-medium text-slate-900 underline underline-offset-2">
+          <Link href="/sign-in" className="font-medium text-content underline underline-offset-2">
             request another
           </Link>
           .

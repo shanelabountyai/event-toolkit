@@ -34,8 +34,8 @@ export function RubricEditor({
       <Card>
         <CardHeader>
           <div>
-            <h2 className="text-base font-semibold text-slate-900">Scoring rubric</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-base font-semibold text-content">Scoring rubric</h2>
+            <p className="text-xs text-content-muted">
               Every change re-scores the whole pool immediately — no re-import needed.
             </p>
           </div>
@@ -69,7 +69,7 @@ export function RubricEditor({
                         disabled={unavailable}
                         aria-label={`Enable ${rule.label}`}
                         onChange={(e) => patchRule(rule.id, { enabled: e.target.checked })}
-                        className="h-4 w-4 rounded border-slate-300"
+                        className="h-4 w-4 rounded border-line-strong"
                       />
                     </Td>
                     <Td>
@@ -79,7 +79,7 @@ export function RubricEditor({
                         onChange={(e) => patchRule(rule.id, { label: e.target.value })}
                       />
                       {unavailable ? (
-                        <span className="mt-1 block text-xs text-slate-500">
+                        <span className="mt-1 block text-xs text-content-muted">
                           Needs a linked brief with target personas.
                         </span>
                       ) : null}
@@ -93,7 +93,7 @@ export function RubricEditor({
                           onChange={(e) => patchRule(rule.id, { pointsPerUnit: Number(e.target.value) || 0 })}
                         />
                       ) : (
-                        <span className="block text-right text-xs text-slate-400">—</span>
+                        <span className="block text-right text-xs text-content-subtle">—</span>
                       )}
                     </Td>
                     <Td>
@@ -105,7 +105,7 @@ export function RubricEditor({
                           onChange={(e) => patchRule(rule.id, { flatPoints: Number(e.target.value) || 0 })}
                         />
                       ) : (
-                        <span className="block text-right text-xs text-slate-400">—</span>
+                        <span className="block text-right text-xs text-content-subtle">—</span>
                       )}
                     </Td>
                     <Td>
@@ -117,7 +117,7 @@ export function RubricEditor({
                           onChange={(e) => patchRule(rule.id, { cap: Number(e.target.value) || 0 })}
                         />
                       ) : (
-                        <span className="block text-right text-xs text-slate-400">—</span>
+                        <span className="block text-right text-xs text-content-subtle">—</span>
                       )}
                     </Td>
                   </tr>
@@ -130,12 +130,12 @@ export function RubricEditor({
 
       <Card>
         <CardHeader>
-          <h2 className="text-base font-semibold text-slate-900">Tier thresholds</h2>
+          <h2 className="text-base font-semibold text-content">Tier thresholds</h2>
         </CardHeader>
         <CardBody>
           <div className="flex flex-wrap items-end gap-4">
-            <label className="text-sm text-slate-700">
-              <span className="block text-xs text-slate-500">Hot at or above</span>
+            <label className="text-sm text-content-muted">
+              <span className="block text-xs text-content-muted">Hot at or above</span>
               <NumberInput
                 className="mt-1 w-28 text-right"
                 value={rubric.tierThresholds.hot}
@@ -148,8 +148,8 @@ export function RubricEditor({
                 }
               />
             </label>
-            <label className="text-sm text-slate-700">
-              <span className="block text-xs text-slate-500">Warm at or above</span>
+            <label className="text-sm text-content-muted">
+              <span className="block text-xs text-content-muted">Warm at or above</span>
               <NumberInput
                 className="mt-1 w-28 text-right"
                 value={rubric.tierThresholds.warm}
@@ -162,7 +162,7 @@ export function RubricEditor({
                 }
               />
             </label>
-            <p className="mb-2 text-xs text-slate-500">
+            <p className="mb-2 text-xs text-content-muted">
               Anything below the warm threshold is cold. Defaults of 70 / 40 are a documented
               starting point, not a validated model.
             </p>

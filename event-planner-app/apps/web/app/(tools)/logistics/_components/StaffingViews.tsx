@@ -68,12 +68,12 @@ export function StaffingViews({
   return (
     <div className="space-y-4">
       <div className="no-print flex flex-wrap items-center gap-2">
-        <div className="inline-flex rounded-md ring-1 ring-inset ring-slate-300" role="group" aria-label="Staffing view">
+        <div className="inline-flex rounded-md ring-1 ring-inset ring-line-strong" role="group" aria-label="Staffing view">
           <button
             type="button"
             onClick={() => setMode("session")}
             aria-pressed={mode === "session"}
-            className={`rounded-l-md px-3 py-1.5 text-sm font-medium ${mode === "session" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+            className={`rounded-l-md px-3 py-1.5 text-sm font-medium ${mode === "session" ? "bg-accent text-accent-fg" : "bg-surface text-content-muted hover:bg-surface-sunken"}`}
           >
             By session
           </button>
@@ -81,7 +81,7 @@ export function StaffingViews({
             type="button"
             onClick={() => setMode("person")}
             aria-pressed={mode === "person"}
-            className={`rounded-r-md px-3 py-1.5 text-sm font-medium ${mode === "person" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
+            className={`rounded-r-md px-3 py-1.5 text-sm font-medium ${mode === "person" ? "bg-accent text-accent-fg" : "bg-surface text-content-muted hover:bg-surface-sunken"}`}
           >
             By person
           </button>
@@ -102,9 +102,9 @@ export function StaffingViews({
         <div className="space-y-5">
           {assignmentsBySession(pack).map((group) => (
             <section key={group.session?.id ?? "unscheduled"} className="break-inside-avoid">
-              <h3 className="text-sm font-semibold text-slate-900">
+              <h3 className="text-sm font-semibold text-content">
                 {group.session ? group.session.label || "Untitled session" : "Not tied to a session"}
-                <span className="ml-2 font-normal text-slate-500">
+                <span className="ml-2 font-normal text-content-muted">
                   {group.session
                     ? formatSessionRange(group.session.startTime, group.session.endTime)
                     : "custom time blocks"}
@@ -128,7 +128,7 @@ export function StaffingViews({
             </section>
           ))}
           {pack.sessions.length === 0 && pack.staffAssignments.length === 0 ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-content-muted">
               Add sessions in the run of show first, then staff them here.
             </p>
           ) : null}
@@ -136,13 +136,13 @@ export function StaffingViews({
       ) : (
         <div className="space-y-5">
           {assignmentsByPerson(pack).length === 0 ? (
-            <p className="text-sm text-slate-500">Nobody is staffed yet.</p>
+            <p className="text-sm text-content-muted">Nobody is staffed yet.</p>
           ) : (
             assignmentsByPerson(pack).map((group) => (
               <section key={group.personName} className="break-inside-avoid">
-                <h3 className="text-sm font-semibold text-slate-900">
+                <h3 className="text-sm font-semibold text-content">
                   {group.personName}
-                  <span className="ml-2 font-normal text-slate-500">
+                  <span className="ml-2 font-normal text-content-muted">
                     {group.assignments.length} assignment{group.assignments.length === 1 ? "" : "s"}
                   </span>
                 </h3>
@@ -181,7 +181,7 @@ function AssignmentTable({
   const sessions = sessionsByStart(pack);
 
   return (
-    <Table className="mt-1">
+    <Table stack className="mt-1">
       <thead>
         <tr>
           <Th className="w-48">Person</Th>
@@ -201,8 +201,8 @@ function AssignmentTable({
             const resolved = resolveSessionTime(pack, assignment.sessionId);
             const clash = doubles.has(assignment.id);
             return (
-              <tr key={assignment.id} className={clash ? "bg-amber-50/60" : undefined}>
-                <Td>
+              <tr key={assignment.id} className={clash ? "bg-warning-subtle/60" : undefined}>
+                <Td label="Person">
                   <TextInput
                     list="staff-name-suggestions"
                     value={assignment.personName}
@@ -215,7 +215,7 @@ function AssignmentTable({
                     </p>
                   ) : null}
                 </Td>
-                <Td>
+                <Td label="Role">
                   <TextInput
                     value={assignment.assignmentRole}
                     aria-label="Role"
@@ -224,7 +224,7 @@ function AssignmentTable({
                   />
                 </Td>
                 {showSessionColumn ? (
-                  <Td>
+                  <Td label="Session or custom time">
                     <Select
                       value={assignment.sessionId ?? ""}
                       aria-label="Session"
@@ -245,11 +245,11 @@ function AssignmentTable({
                     </Select>
                   </Td>
                 ) : null}
-                <Td>
+                <Td label="When">
                   {resolved ? (
-                    <span className="text-sm text-slate-700">
+                    <span className="text-sm text-content-muted">
                       {formatSessionRange(resolved.startTime, resolved.endTime)}
-                      <span className="block text-xs text-slate-400">from session</span>
+                      <span className="block text-xs text-content-subtle">from session</span>
                     </span>
                   ) : (
                     <span className="flex flex-col gap-1">
@@ -266,7 +266,7 @@ function AssignmentTable({
                     </span>
                   )}
                 </Td>
-                <Td>
+                <Td label="Notes">
                   <TextInput
                     value={assignment.notes ?? ""}
                     aria-label="Notes"

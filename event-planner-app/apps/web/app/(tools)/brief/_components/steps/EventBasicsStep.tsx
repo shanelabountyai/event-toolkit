@@ -3,6 +3,9 @@
 /** Intake screen 1 — event basics: name, type, dates, timezone, delivery mode, venue/platform. */
 
 import {
+  PARTICIPATION_ROLES,
+  PARTICIPATION_ROLE_LABELS,
+  type ParticipationRole,
   DELIVERY_MODES,
   DELIVERY_MODE_LABELS,
   EVENT_TYPES,
@@ -128,6 +131,34 @@ export function EventBasicsStep({ brief, onChange, highlightMissing }: StepProps
           </Select>
         </Field>
 
+        {/*
+          Decides host vs exhibitor voice in every generated promo asset. A booth brief written in
+          the organiser's voice — "registration closes this week" — is wrong in a way a prospect
+          notices, and the planner controls neither registration nor capacity.
+        */}
+        <Field
+          label="Our role"
+          htmlFor="participation-role"
+          hint="Whether we run this event or turn up to somebody else's. Changes the voice of generated promo copy."
+        >
+          <Select
+            id="participation-role"
+            value={brief.format.participationRole ?? (brief.type === "trade_show" ? "exhibitor" : "host")}
+            onChange={(e) =>
+              onChange((prev) => ({
+                ...prev,
+                format: { ...prev.format, participationRole: e.target.value as ParticipationRole },
+              }))
+            }
+          >
+            {PARTICIPATION_ROLES.map((r) => (
+              <option key={r} value={r}>
+                {PARTICIPATION_ROLE_LABELS[r]}
+              </option>
+            ))}
+          </Select>
+        </Field>
+
         <Field
           label="Start date"
           htmlFor="start-date"
@@ -220,8 +251,8 @@ export function EventBasicsStep({ brief, onChange, highlightMissing }: StepProps
         </Field>
       </div>
 
-      <fieldset className="space-y-4 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
-        <legend className="px-1 text-sm font-medium text-slate-700">
+      <fieldset className="space-y-4 rounded-lg border border-line bg-surface-sunken p-4">
+        <legend className="px-1 text-sm font-medium text-content-muted">
           {showVenue && showPlatform
             ? "Venue and platform"
             : showVenue

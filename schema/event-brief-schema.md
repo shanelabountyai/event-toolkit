@@ -190,8 +190,8 @@ The Event Brief is the **data spine** of the entire suite. One structured brief,
 | `category` | `string` | No | e.g. "Budget," "Vendor," "Logistics," "Content." |
 | `lesson` | `string` | Yes | The lesson itself, written as an actionable statement, e.g. "Book AV vendor 90 days out — 60 was too late." |
 | `addedAt` | `string` (ISO 8601 datetime) | Yes | When the lesson was recorded. |
-| `disposition` | `"repeat" \| "fix" \| "drop"` | No | *Added in 1.1.0.* What to do with this lesson next time. **repeat** — this worked, keep doing it exactly as-is. **fix** — worth keeping, but something specific about execution needs to change (vendor, timing, budget line). **drop** — don't repeat this in its current form; a structural problem, not a tuning problem. |
-| `sourceType` | `"issue_log" \| "budget_variance" \| "roi_scorecard" \| "manual"` | No | *Added in 1.1.0.* Which retro input produced this lesson, kept for traceability back to the evidence behind it. |
+| `disposition` | `"repeat" \| "fix" \| "drop"` | No | *Added in 1.2.0.* What to do with this lesson next time. **repeat** — this worked, keep doing it exactly as-is. **fix** — worth keeping, but something specific about execution needs to change (vendor, timing, budget line). **drop** — don't repeat this in its current form; a structural problem, not a tuning problem. |
+| `sourceType` | `"issue_log" \| "budget_variance" \| "roi_scorecard" \| "manual"` | No | *Added in 1.2.0.* Which retro input produced this lesson, kept for traceability back to the evidence behind it. |
 
 > **Suite mechanic:** During PRD 1's guided intake, the tool queries the local store for `LessonLearned` entries across *all* prior briefs (not just this one) and surfaces relevant ones as suggested constraints/risks for the new brief. This is how PRD 7's retro output "feeds the next brief's intake" without any backend or integration — everything stays in the same local-first store.
 
@@ -213,7 +213,7 @@ The schema is versioned independently from any individual brief document and ind
 **Rules:**
 
 1. **PATCH** (`1.0.0` → `1.0.1`): Documentation/description fixes, typo corrections, tightening a JSDoc comment. No change to field names, types, required-ness, or enum values. Safe to ignore for compatibility purposes.
-2. **MINOR** (`1.0.0` → `1.1.0`): Backward-compatible additive changes only:
+2. **MINOR** (`1.0.0` → `1.2.0`): Backward-compatible additive changes only:
    - Adding a new **optional** top-level or nested field.
    - Adding a new enum value to the **end** of an existing enum (never removing or renumbering existing values).
    - Adding a new optional array-of-objects field.
@@ -227,3 +227,21 @@ The schema is versioned independently from any individual brief document and ind
 4. **Every tool in the suite depends on `packages/schema` as a workspace package**, never redefines these types locally. `packages/schema` exports both the TypeScript types and the JSON Schema (`event-brief.schema.json`), plus a `CURRENT_SCHEMA_VERSION` constant and a `migrateBrief(brief: unknown): EventBrief` function.
 5. **Change process for adding a field:** open the change against `packages/schema`, add the field as optional with a sensible default and full documentation in this file + the JSON Schema, bump MINOR, update this markdown table, update the JSON Schema file, add a changelog entry to `packages/schema/CHANGELOG.md`. Do not bump MAJOR for additive changes — this is the discipline that keeps the suite decoupled.
 6. **Unknown fields on read:** all readers must be built to ignore fields present in a brief document that are not in their own copy of the schema (i.e., don't assume a `Object.keys()` strict match). This makes the local-first JSON storage forward-compatible: a brief edited by a newer app version, then opened by an older one, doesn't crash — it just doesn't display the newer fields.
+
+### `audience.attendeeValue` (1.2.0)
+
+| Field | Type | Notes |
+|---|---|---|
+| `promise` | string | One sentence, in the attendee's language, on why the event is worth their time. |
+| `takeaways` | string[] | What they leave with. Rendered as the "what you'll get" bullets in promo copy. |
+
+**These are the only attendee-facing fields in the brief.** Everything under `goals` is internal.
+Promo generation reads `attendeeValue` and never `goals`, and shows a placeholder when it is empty
+rather than substituting an objective.
+
+### `format.participationRole` (1.2.0)
+
+`host` | `exhibitor` | `sponsor` | `speaker`. Whether this company runs the event or attends
+somebody else's. Decides host vs exhibitor voice in generated copy — an exhibitor cannot say
+"registration closes this week" because they do not control registration. Defaults to `exhibitor`
+for `trade_show`.

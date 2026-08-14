@@ -66,47 +66,47 @@ export function PacingCurveChart({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="overflow-x-auto rounded-lg border border-line bg-surface p-3 shadow-sm">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          className="h-auto w-full min-w-[520px]"
+          className="h-auto w-full"
           role="img"
           aria-label={`Registration pacing: actual versus ${style === "linear" ? "linear" : "backloaded"} target curve toward a goal of ${registrationTarget}.`}
         >
           {yTicks.map((value) => (
             <g key={value}>
-              <line x1={PAD.left} x2={W - PAD.right} y1={y(value)} y2={y(value)} stroke="#e2e8f0" strokeWidth={1} />
-              <text x={PAD.left - 8} y={y(value) + 4} textAnchor="end" className="fill-slate-400 text-[10px]">
+              <line x1={PAD.left} x2={W - PAD.right} y1={y(value)} y2={y(value)} stroke="var(--color-border)" strokeWidth={1} />
+              <text x={PAD.left - 8} y={y(value) + 4} textAnchor="end" className="fill-content-subtle text-[11px]">
                 {value.toLocaleString()}
               </text>
             </g>
           ))}
 
-          <line x1={PAD.left} x2={W - PAD.right} y1={y(0)} y2={y(0)} stroke="#cbd5e1" strokeWidth={1} />
-          <text x={PAD.left} y={H - 8} className="fill-slate-400 text-[10px]">
+          <line x1={PAD.left} x2={W - PAD.right} y1={y(0)} y2={y(0)} stroke="var(--color-border-strong)" strokeWidth={1} />
+          <text x={PAD.left} y={H - 8} className="fill-content-subtle text-[11px]">
             {formatIsoDate(pacingWindow.campaignStartDate)}
           </text>
-          <text x={W - PAD.right} y={H - 8} textAnchor="end" className="fill-slate-400 text-[10px]">
+          <text x={W - PAD.right} y={H - 8} textAnchor="end" className="fill-content-subtle text-[11px]">
             {formatIsoDate(pacingWindow.eventStartDate)}
           </text>
 
-          <polyline points={targetLine} fill="none" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 4" />
+          <polyline points={targetLine} fill="none" stroke="var(--color-text-subtle)" strokeWidth={2} strokeDasharray="5 4" />
           {actualPoints.length > 0 ? (
             <>
-              <polyline points={actualLine} fill="none" stroke="#0f172a" strokeWidth={2.5} />
+              <polyline points={actualLine} fill="none" stroke="var(--color-accent)" strokeWidth={2.5} />
               {actualPoints.map((p) => (
-                <circle key={p.date} cx={x(p.date)} cy={y(p.actual!)} r={3.5} fill="#0f172a" />
+                <circle key={p.date} cx={x(p.date)} cy={y(p.actual!)} r={3.5} fill="var(--color-accent)" />
               ))}
             </>
           ) : null}
         </svg>
 
-        <p className="mt-2 flex flex-wrap gap-4 text-xs text-slate-500">
+        <p className="mt-2 flex flex-wrap gap-4 text-xs text-content-muted">
           <span className="flex items-center gap-1.5">
-            <span aria-hidden className="inline-block h-0.5 w-5 bg-slate-900" /> Actual
+            <span aria-hidden className="inline-block h-0.5 w-5 bg-accent" /> Actual
           </span>
           <span className="flex items-center gap-1.5">
-            <span aria-hidden className="inline-block h-0.5 w-5 border-t-2 border-dashed border-slate-400" /> Target
+            <span aria-hidden className="inline-block h-0.5 w-5 border-t-2 border-dashed border-line-strong" /> Target
           </span>
         </p>
       </div>
@@ -132,8 +132,8 @@ export function PacingCurveChart({
                 <tr key={entry.id}>
                   <Td>{formatIsoDate(entry.date)}</Td>
                   <Td className="text-right tabular-nums">{entry.cumulativeRegistrations.toLocaleString()}</Td>
-                  <Td className="text-right tabular-nums text-slate-500">{target.toLocaleString()}</Td>
-                  <Td className={`text-right tabular-nums ${diff < 0 ? "text-red-700" : "text-emerald-700"}`}>
+                  <Td className="text-right tabular-nums text-content-muted">{target.toLocaleString()}</Td>
+                  <Td className={`text-right tabular-nums ${diff < 0 ? "text-danger-text" : "text-success-text"}`}>
                     {diff > 0 ? "+" : ""}
                     {diff.toLocaleString()}
                   </Td>

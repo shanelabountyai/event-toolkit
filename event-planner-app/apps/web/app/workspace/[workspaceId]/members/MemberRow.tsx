@@ -43,11 +43,11 @@ export function MemberRow({
     <li className="space-y-2 px-5 py-3.5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium text-slate-900">
+          <p className="text-sm font-medium text-content">
             {member.name ?? member.email}
-            {isSelf ? <span className="ml-2 text-xs font-normal text-slate-500">you</span> : null}
+            {isSelf ? <span className="ml-2 text-xs font-normal text-content-muted">you</span> : null}
           </p>
-          {member.name ? <p className="text-xs text-slate-500">{member.email}</p> : null}
+          {member.name ? <p className="text-xs text-content-muted">{member.email}</p> : null}
         </div>
 
         <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export function MemberRow({
           )}
 
           {mayRemove ? (
-            <Button size="sm" variant="danger" onClick={() => setConfirming((v) => !v)}>
+            <Button variant="danger" onClick={() => setConfirming((v) => !v)}>
               Remove
             </Button>
           ) : null}
@@ -82,7 +82,7 @@ export function MemberRow({
       </div>
 
       {isLastOwner ? (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-content-muted">
           The last owner can&rsquo;t be removed or demoted. Make somebody else an owner first.
         </p>
       ) : null}
@@ -90,18 +90,18 @@ export function MemberRow({
       {confirming ? (
         <form
           action={removeFormAction}
-          className="space-y-2 rounded-lg bg-red-50 px-3 py-3 ring-1 ring-inset ring-red-200"
+          className="space-y-2 rounded-lg bg-danger-subtle px-3 py-3 ring-1 ring-inset ring-danger-border"
         >
           <input type="hidden" name="workspaceId" value={workspaceId} />
           <input type="hidden" name="userId" value={member.userId} />
-          <p className="text-sm text-red-900">
+          <p className="text-sm text-danger-text">
             Remove <span className="font-medium">{member.email}</span>? They lose access to every
             event in this workspace immediately, and any sign-in they have open will stop working.
           </p>
           {/* FR-7 requires this said plainly rather than implied. The product cannot wipe someone
               else's laptop, and pretending otherwise is the kind of reassurance that gets repeated
               to a legal team as fact. */}
-          <p className="text-xs text-red-800">
+          <p className="text-xs text-danger-text">
             Anything already downloaded to their own devices is cleared the next time they open the
             app there. It can&rsquo;t be erased remotely before that.
           </p>
@@ -116,10 +116,10 @@ export function MemberRow({
         </form>
       ) : null}
 
-      {roleState.error ? <p className="text-sm text-red-700">{roleState.error}</p> : null}
-      {removeState.error ? <p className="text-sm text-red-700">{removeState.error}</p> : null}
-      {roleState.ok ? <p className="text-xs text-emerald-700">{roleState.ok}</p> : null}
-      {removeState.ok ? <p className="text-xs text-emerald-700">{removeState.ok}</p> : null}
+      {roleState.error ? <p className="text-sm text-danger-text">{roleState.error}</p> : null}
+      {removeState.error ? <p className="text-sm text-danger-text">{removeState.error}</p> : null}
+      {roleState.ok ? <p className="text-xs text-success-text">{roleState.ok}</p> : null}
+      {removeState.ok ? <p className="text-xs text-success-text">{removeState.ok}</p> : null}
     </li>
   );
 }

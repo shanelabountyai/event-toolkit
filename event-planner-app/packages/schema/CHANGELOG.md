@@ -1,3 +1,21 @@
+## 1.2.0
+
+Additive. No migration required — both fields are optional and absent briefs behave as before,
+with `trade_show` treated as `exhibitor` by default.
+
+### Added
+
+- `audience.attendeeValue` — `promise` and `takeaways`. **The only attendee-facing fields in the
+  brief.** Everything under `goals` is internal (revenue targets, lead counts, pipeline), and the
+  promo generator previously had nothing else to draw on, so it rendered `goals.primaryObjective`
+  as the reason a prospect should attend. A generated sales email opened: *"I thought of you
+  because capture 60 qualified leads and influence $900K of pipeline."* The generator now emits a
+  visible placeholder when these are empty rather than substituting an internal objective.
+- `format.participationRole` — `host` | `exhibitor` | `sponsor` | `speaker`. An exhibitor controls
+  neither registration nor capacity, and promo copy for a booth brief was written in the voice of
+  the conference organiser: *"We're running Northgate Summit"*, *"we're close to capacity"*.
+  Defaults to `exhibitor` for `trade_show`, `host` otherwise.
+
 # @event-toolkit/schema — Changelog
 
 All notable changes to the canonical Event Brief schema. The schema is versioned with

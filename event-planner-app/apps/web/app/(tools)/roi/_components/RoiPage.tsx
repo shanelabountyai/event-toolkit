@@ -65,12 +65,12 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.report?.id, state.brief?.id]);
 
-  if (state.loading) return <p className="py-16 text-center text-sm text-slate-500">Loading…</p>;
+  if (state.loading) return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   if (state.notFound || !state.report || !state.brief || !state.settings) {
     return (
-      <div className="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <h1 className="text-lg font-semibold text-slate-900">That report no longer exists</h1>
-        <Link href="/roi" className="mt-5 inline-flex items-center rounded-md bg-slate-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-slate-700">
+      <div className="mx-auto max-w-lg rounded-xl border border-line bg-surface p-8 text-center shadow-sm">
+        <h1 className="text-lg font-semibold text-content">That report no longer exists</h1>
+        <Link href="/roi" className="mt-5 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover">
           Back to reports
         </Link>
       </div>
@@ -147,11 +147,11 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
       <header className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-content-muted">
               Event ROI &amp; Attribution
             </p>
-            <h1 className="text-xl font-semibold text-slate-900">{report.eventName}</h1>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+            <h1 className="text-xl font-semibold text-content">{report.eventName}</h1>
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-content-muted">
               <Badge tone={report.status === "final" ? "success" : "neutral"}>
                 {report.status === "final" ? "Final" : "Draft"}
               </Badge>
@@ -176,13 +176,13 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
                 Reopen as draft
               </Button>
             )}
-            <Link href={`/brief/${brief.id}`} className="rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline">
+            <Link href={`/brief/${brief.id}`} className="rounded-md px-2.5 py-1.5 text-sm font-medium text-content-muted underline-offset-4 hover:text-content hover:underline">
               ← Back to brief
             </Link>
           </div>
         </div>
 
-        <nav className="flex flex-wrap gap-1 border-b border-slate-200" aria-label="Report sections">
+        <nav className="flex flex-wrap gap-1 border-b border-line" aria-label="Report sections">
           {TABS.map((t) => {
             const href = t.slug ? `${base}/${t.slug}` : base;
             const isActive = (tab === "overview" ? "" : tab) === t.slug;
@@ -193,8 +193,8 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
                 aria-current={isActive ? "page" : undefined}
                 className={
                   isActive
-                    ? "-mb-px border-b-2 border-slate-900 px-3 py-2 text-sm font-semibold text-slate-900"
-                    : "-mb-px border-b-2 border-transparent px-3 py-2 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-800"
+                    ? "-mb-px border-b-2 border-accent px-3 py-2 text-sm font-semibold text-content"
+                    : "-mb-px border-b-2 border-transparent px-3 py-2 text-sm font-medium text-content-muted hover:border-line-strong hover:text-content"
                 }
               >
                 {t.label}
@@ -205,7 +205,7 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
       </header>
 
       {notice ? (
-        <p role="status" className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-2 text-sm text-sky-900">
+        <p role="status" className="rounded-lg border border-accent/20 bg-accent-subtle px-4 py-2 text-sm text-accent-text">
           {notice}{" "}
           <button type="button" className="font-medium underline" onClick={() => setNotice(null)}>
             Dismiss
@@ -260,13 +260,13 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
           <CostSummaryPanel costs={report.costSummary} currency={report.budgetSummary?.currency ?? "USD"} />
           <Card>
             <CardHeader>
-              <h2 className="text-base font-semibold text-slate-900">Executive summary</h2>
+              <h2 className="text-base font-semibold text-content">Executive summary</h2>
               <Link href={`${base}/export`}>
                 <Button size="sm">Export</Button>
               </Link>
             </CardHeader>
             <CardBody>
-              <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-3 font-mono text-xs text-slate-800">
+              <pre className="whitespace-pre-wrap rounded-lg bg-surface-sunken p-3 font-mono text-xs text-content">
                 {report.executiveSummaryText}
               </pre>
             </CardBody>
@@ -302,15 +302,15 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
         <Card>
           <CardHeader>
             <div>
-              <h2 className="text-base font-semibold text-slate-900">Attribution windows</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-base font-semibold text-content">Attribution windows</h2>
+              <p className="text-xs text-content-muted">
                 Changing these reclassifies every imported record immediately — no re-import.
               </p>
             </div>
           </CardHeader>
           <CardBody className="space-y-4">
-            <label className="block text-sm text-slate-700">
-              <span className="block text-xs text-slate-500">Sourced window (days after the event ends)</span>
+            <label className="block text-sm text-content-muted">
+              <span className="block text-xs text-content-muted">Sourced window (days after the event ends)</span>
               <NumberInput
                 className="mt-1 w-32 text-right"
                 min={0}
@@ -319,14 +319,14 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
                   void state.updateSettings({ ...settings, sourcedWindowDays: Math.max(0, Number(e.target.value) || 0) })
                 }
               />
-              <span className="mt-1 block text-xs text-slate-500">
+              <span className="mt-1 block text-xs text-content-muted">
                 Opportunities created between the event start and this cut-off count as sourced by
                 the event.
               </span>
             </label>
 
-            <label className="block text-sm text-slate-700">
-              <span className="block text-xs text-slate-500">Influenced window (days after the event ends)</span>
+            <label className="block text-sm text-content-muted">
+              <span className="block text-xs text-content-muted">Influenced window (days after the event ends)</span>
               <NumberInput
                 className="mt-1 w-32 text-right"
                 min={0}
@@ -335,16 +335,16 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
                   void state.updateSettings({ ...settings, influencedWindowDays: Math.max(0, Number(e.target.value) || 0) })
                 }
               />
-              <span className="mt-1 block text-xs text-slate-500">
+              <span className="mt-1 block text-xs text-content-muted">
                 Everything else up to this cut-off — including pipeline that already existed
                 before the event — counts as influenced. Beyond it, the event can&rsquo;t claim it.
               </span>
             </label>
 
-            <label className="flex items-start gap-2 text-sm text-slate-700">
+            <label className="flex items-start gap-2 text-sm text-content-muted">
               <input
                 type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-slate-300"
+                className="mt-1 h-4 w-4 rounded border-line-strong"
                 checked={settings.useExplicitAttributionTypeColumn}
                 onChange={(e) =>
                   void state.updateSettings({ ...settings, useExplicitAttributionTypeColumn: e.target.checked })
@@ -352,7 +352,7 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
               />
               <span>
                 Trust an attribution column from the CRM when the import has one
-                <span className="mt-0.5 block text-xs text-slate-500">
+                <span className="mt-0.5 block text-xs text-content-muted">
                   It still can&rsquo;t pull a record back inside the window — a CRM claiming an
                   opportunity created a year later was &ldquo;sourced&rdquo; is a data-quality
                   problem, not a number to count.
@@ -392,8 +392,8 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
         <Card>
           <CardHeader>
             <div>
-              <h2 className="text-base font-semibold text-slate-900">Export</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-base font-semibold text-content">Export</h2>
+              <p className="text-xs text-content-muted">
                 The executive summary stands alone — it carries every headline number without
                 needing the full report alongside it.
               </p>
@@ -410,7 +410,7 @@ export function RoiPage({ reportId, tab }: { reportId: string; tab: RoiTab }) {
                 Executive summary (HTML)
               </Button>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-content-muted">
               HTML is printable from the browser — no PDF library, same as the brief export.
             </p>
           </CardBody>

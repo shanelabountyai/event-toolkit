@@ -35,8 +35,8 @@ export function LogIssueForm({ token }: { token: string }) {
       <Button type="submit" variant="primary" disabled={pending}>
         {pending ? "Sending…" : "Report it"}
       </Button>
-      {state.error ? <p role="alert" className="text-sm text-red-700">{state.error}</p> : null}
-      {state.ok ? <p className="text-sm text-emerald-700">Reported. The organiser can see it.</p> : null}
+      {state.error ? <p role="alert" className="text-sm text-danger-text">{state.error}</p> : null}
+      {state.ok ? <p className="text-sm text-success-text">Reported. The organiser can see it.</p> : null}
     </form>
   );
 }

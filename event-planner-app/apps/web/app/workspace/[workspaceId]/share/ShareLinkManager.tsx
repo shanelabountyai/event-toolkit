@@ -23,7 +23,7 @@ export function ShareLinkManager({
       {packs.map((pack) => (
         <Card key={pack.id}>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-slate-900">Event {pack.id.slice(0, 8)}</h2>
+            <h2 className="text-sm font-semibold text-content">Event {pack.id.slice(0, 8)}</h2>
           </CardHeader>
           <CardBody className="space-y-3">
             {pack.links.length > 0 ? (
@@ -33,7 +33,7 @@ export function ShareLinkManager({
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-slate-500">No links yet.</p>
+              <p className="text-sm text-content-muted">No links yet.</p>
             )}
             {canManage ? <CreateForm workspaceId={workspaceId} packId={pack.id} /> : null}
           </CardBody>
@@ -47,7 +47,7 @@ function CreateForm({ workspaceId, packId }: { workspaceId: string; packId: stri
   const [state, formAction, pending] = useActionState<ShareState, FormData>(createShareLinkAction, {});
 
   return (
-    <form action={formAction} className="flex flex-wrap items-end gap-3 border-t border-slate-200 pt-3">
+    <form action={formAction} className="flex flex-wrap items-end gap-3 border-t border-line pt-3">
       <input type="hidden" name="workspaceId" value={workspaceId} />
       <input type="hidden" name="packId" value={packId} />
       <Field label="Works for" htmlFor={`days-${packId}`}>
@@ -63,7 +63,7 @@ function CreateForm({ workspaceId, packId }: { workspaceId: string; packId: stri
       <Button type="submit" disabled={pending}>
         {pending ? "Creating…" : "Create link"}
       </Button>
-      {state.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
+      {state.error ? <p className="text-sm text-danger-text">{state.error}</p> : null}
     </form>
   );
 }
@@ -84,9 +84,9 @@ function LinkRow({
   const url = typeof window !== "undefined" ? `${window.location.origin}/share/${link.token}` : "";
 
   return (
-    <li className="space-y-1.5 rounded-lg bg-slate-50 px-3 py-2.5 ring-1 ring-inset ring-slate-200">
+    <li className="space-y-1.5 rounded-lg bg-surface-sunken px-3 py-2.5 ring-1 ring-inset ring-line">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className={`text-xs ${dead ? "text-slate-500" : "text-slate-700"}`}>
+        <span className={`text-xs ${dead ? "text-content-muted" : "text-content-muted"}`}>
           {link.revoked
             ? "Turned off"
             : expires <= new Date()
@@ -119,8 +119,8 @@ function LinkRow({
       </div>
       {/* The URL is shown, not hidden behind a copy button alone: somebody sending this by text
           message needs to be able to see what they are about to send. */}
-      {!dead ? <p className="break-all font-mono text-[11px] text-slate-500">{url}</p> : null}
-      {state.error ? <p className="text-sm text-red-700">{state.error}</p> : null}
+      {!dead ? <p className="break-all font-mono text-[11px] text-content-muted">{url}</p> : null}
+      {state.error ? <p className="text-sm text-danger-text">{state.error}</p> : null}
     </li>
   );
 }

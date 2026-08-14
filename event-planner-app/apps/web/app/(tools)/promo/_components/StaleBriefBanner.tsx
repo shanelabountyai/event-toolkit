@@ -18,13 +18,13 @@ export function StaleBriefBanner({
   return (
     <div
       role="status"
-      className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3"
+      className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-warning-border bg-warning-subtle px-4 py-3"
     >
       <div>
-        <p className="text-sm font-medium text-amber-900">
+        <p className="text-sm font-medium text-warning-text">
           The brief has changed since this kit was generated.
         </p>
-        <p className="text-xs text-amber-800">
+        <p className="text-xs text-warning-text">
           Generated from version {set.sourceBriefVersion}
           {set.regeneratedAt ? ` (last regenerated ${formatIsoDateTime(set.regeneratedAt)})` : ""} —
           the brief is now on version {briefVersion}. Your edited copy will be kept unless you say

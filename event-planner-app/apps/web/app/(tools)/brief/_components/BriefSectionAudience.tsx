@@ -39,22 +39,22 @@ export function BriefSectionAudience({ brief, onSave }: BriefSectionProps) {
           </div>
           <ReadField label="Target personas">
             {personas.length === 0 ? (
-              <span className="text-sm italic text-slate-400">None yet</span>
+              <span className="text-sm italic text-content-subtle">None yet</span>
             ) : (
               <div className="mt-1 grid gap-3 sm:grid-cols-2">
                 {personas.map((p, i) => (
-                  <div key={i} className="rounded-lg border border-slate-200 p-3">
-                    <p className="text-sm font-medium text-slate-900">
+                  <div key={i} className="rounded-lg border border-line p-3">
+                    <p className="text-sm font-medium text-content">
                       {p.name}
-                      {p.title ? <span className="font-normal text-slate-500"> — {p.title}</span> : null}
+                      {p.title ? <span className="font-normal text-content-muted"> — {p.title}</span> : null}
                     </p>
                     {p.description ? (
-                      <p className="mt-1 whitespace-pre-line text-sm text-slate-700">
+                      <p className="mt-1 whitespace-pre-line text-sm text-content-muted">
                         {p.description}
                       </p>
                     ) : null}
                     {(p.painPoints ?? []).filter((x) => x.trim() !== "").length > 0 ? (
-                      <ul className="mt-2 list-disc space-y-0.5 pl-5 text-xs text-slate-600">
+                      <ul className="mt-2 list-disc space-y-0.5 pl-5 text-xs text-content-muted">
                         {(p.painPoints ?? [])
                           .filter((x) => x.trim() !== "")
                           .map((pp, j) => (

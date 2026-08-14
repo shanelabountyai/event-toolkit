@@ -13,11 +13,11 @@ export default async function ConflictsPage({
   return (
     <main className="mx-auto w-full max-w-2xl space-y-6 px-6 py-10">
       <div className="space-y-1">
-        <Link href={`/workspace/${workspaceId}/members`} className="text-sm text-slate-600 hover:text-slate-900">
+        <Link href={`/workspace/${workspaceId}/members`} className="inline-flex min-h-11 items-center text-sm text-content-muted hover:text-content">
           ← Workspace
         </Link>
-        <h1 className="text-xl font-semibold tracking-tight text-slate-900">Changes that didn&rsquo;t save</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-xl font-semibold tracking-tight text-content">Changes that didn&rsquo;t save</h1>
+        <p className="text-sm text-content-muted">
           Somebody else edited the same thing first. Nothing has been thrown away — your version is
           still on this device, and you choose which one to keep.
         </p>

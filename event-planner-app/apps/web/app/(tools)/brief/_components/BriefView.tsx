@@ -111,14 +111,14 @@ export function BriefView({ briefId }: { briefId: string }) {
     setNotice("Lesson added. Start a new brief of this event type to see it suggested at intake.");
   }, [brief, flush, updateBrief]);
 
-  if (loading) return <p className="text-sm text-slate-500">Loading brief…</p>;
+  if (loading) return <p className="text-sm text-content-muted">Loading brief…</p>;
 
   if (notFound || !brief) {
     return (
       <Card>
         <CardBody className="space-y-3 py-10 text-center">
-          <h1 className="text-lg font-semibold text-slate-900">Brief not found</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-lg font-semibold text-content">Brief not found</h1>
+          <p className="text-sm text-content-muted">
             This brief isn&apos;t stored in this browser. Briefs live in IndexedDB on the device
             that created them — import a JSON export to bring one over.
           </p>
@@ -138,10 +138,10 @@ export function BriefView({ briefId }: { briefId: string }) {
   return (
     <div className="space-y-5">
       <div className="no-print flex flex-wrap items-center gap-3">
-        <Link href="/brief" className="text-sm text-slate-500 hover:underline">
+        <Link href="/brief" className="text-sm text-content-muted hover:underline">
           ← All briefs
         </Link>
-        <Link href={`/brief/${brief.id}/intake`} className="text-sm text-slate-500 hover:underline">
+        <Link href={`/brief/${brief.id}/intake`} className="text-sm text-content-muted hover:underline">
           Re-run guided intake
         </Link>
         <SaveIndicator state={saveState} className="ml-auto" />
@@ -150,14 +150,14 @@ export function BriefView({ briefId }: { briefId: string }) {
       <Card>
         <CardHeader>
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-xl font-semibold tracking-tight text-content">
               {brief.name || "Untitled brief"}
             </h1>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-content-muted">
               <TypeBadge type={brief.type} />
               <StatusBadge status={brief.status} />
               <span>{formatDateRange(brief)}</span>
-              <span className="text-slate-300">·</span>
+              <span className="text-content-subtle">·</span>
               <span>updated {formatIsoDateTime(brief.updatedAt)}</span>
             </p>
           </div>
@@ -173,7 +173,7 @@ export function BriefView({ briefId }: { briefId: string }) {
         <CardBody className="space-y-4">
           <CompletenessMeter brief={brief} showChecklist />
           {missing.length > 0 ? (
-            <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            <p className="rounded-md border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
               Required fields still missing: {missing.map((m) => m.label).join(", ")}. Edit the
               relevant section below, or{" "}
               <Link href={`/brief/${brief.id}/intake`} className="underline">
@@ -182,7 +182,7 @@ export function BriefView({ briefId }: { briefId: string }) {
               .
             </p>
           ) : null}
-          {notice ? <p className="text-xs text-emerald-700">{notice}</p> : null}
+          {notice ? <p className="text-xs text-success-text">{notice}</p> : null}
         </CardBody>
       </Card>
 
@@ -201,8 +201,8 @@ export function BriefView({ briefId }: { briefId: string }) {
       <Card className="no-print">
         <CardHeader>
           <div>
-            <h2 className="text-sm font-semibold text-slate-900">Export history & test utilities</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-sm font-semibold text-content">Export history & test utilities</h2>
+            <p className="text-xs text-content-muted">
               {(brief.exportHistory ?? []).length} export
               {(brief.exportHistory ?? []).length === 1 ? "" : "s"} recorded on this brief.
             </p>
@@ -210,7 +210,7 @@ export function BriefView({ briefId }: { briefId: string }) {
         </CardHeader>
         <CardBody className="space-y-3">
           {(brief.exportHistory ?? []).length > 0 ? (
-            <ul className="space-y-1 text-xs text-slate-600">
+            <ul className="space-y-1 text-xs text-content-muted">
               {(brief.exportHistory ?? [])
                 .slice()
                 .reverse()
@@ -219,13 +219,13 @@ export function BriefView({ briefId }: { briefId: string }) {
                   <li key={rec.id}>
                     <Badge tone="neutral">{rec.format}</Badge>{" "}
                     <span className="ml-1">{rec.filename ?? "(no filename)"}</span>{" "}
-                    <span className="text-slate-400">{formatIsoDateTime(rec.generatedAt)}</span>
+                    <span className="text-content-subtle">{formatIsoDateTime(rec.generatedAt)}</span>
                   </li>
                 ))}
             </ul>
           ) : null}
-          <div className="flex flex-wrap items-center gap-2 rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2.5">
-            <p className="flex-1 text-xs text-slate-600">
+          <div className="flex flex-wrap items-center gap-2 rounded-md border border-dashed border-line-strong bg-surface-sunken px-3 py-2.5">
+            <p className="flex-1 text-xs text-content-muted">
               <strong>Test utility.</strong> Lessons learned are normally written by the
               Post-Mortem Generator (PRD 7, not built yet). Add one here to exercise the
               carry-forward suggestion flow on your next {EVENT_TYPE_LABELS[brief.type]} brief.

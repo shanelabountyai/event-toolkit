@@ -25,7 +25,7 @@ export function StakeholdersStep({ brief, onChange }: StepProps) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-content-muted">
         One RACI value per person for the event as a whole:{" "}
         {RACI_ROLES.map((r) => `${r} = ${RACI_LABELS[r]}`).join(", ")}. The preset&apos;s suggested
         roles are just prompts — any row still without a name is dropped when the brief is
@@ -55,7 +55,7 @@ export function StakeholdersStep({ brief, onChange }: StepProps) {
         </Button>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white">
+      <div className="rounded-lg border border-line bg-surface">
         <Table>
           <thead>
             <tr>

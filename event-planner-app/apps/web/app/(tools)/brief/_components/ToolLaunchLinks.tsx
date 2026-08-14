@@ -33,8 +33,8 @@ export function ToolLaunchLinks({ brief }: { brief: EventBrief }) {
     <Card className="no-print">
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Launch a tool from this brief</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-base font-semibold text-content">Launch a tool from this brief</h2>
+          <p className="text-xs text-content-muted">
             The rest of the suite reads this brief instead of starting cold. Tools still in build
             record interest in the local usage log when clicked.
           </p>
@@ -48,11 +48,11 @@ export function ToolLaunchLinks({ brief }: { brief: EventBrief }) {
                 <Link
                   href={`${tool.href}?briefId=${brief.id}`}
                   onClick={() => void log(tool.key, tool.name, tool.href)}
-                  className="flex w-full items-start justify-between gap-3 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-left hover:border-slate-400 hover:bg-slate-50"
+                  className="flex w-full items-start justify-between gap-3 rounded-lg border border-line-strong bg-surface px-3 py-2.5 text-left hover:border-line-strong hover:bg-surface-sunken"
                 >
                   <span>
-                    <span className="block text-sm font-medium text-slate-900">{tool.name}</span>
-                    <span className="block text-xs text-slate-500">{tool.description}</span>
+                    <span className="block text-sm font-medium text-content">{tool.name}</span>
+                    <span className="block text-xs text-content-muted">{tool.description}</span>
                   </span>
                   <Badge tone="success">Open</Badge>
                 </Link>
@@ -64,11 +64,11 @@ export function ToolLaunchLinks({ brief }: { brief: EventBrief }) {
                   onClick={() => void log(tool.key, tool.name, tool.href)}
                   aria-disabled="true"
                   title={`${tool.name} — coming soon (PRD ${tool.prd})`}
-                  className="flex w-full cursor-not-allowed items-start justify-between gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-3 py-2.5 text-left hover:border-slate-400"
+                  className="flex w-full cursor-not-allowed items-start justify-between gap-3 rounded-lg border border-dashed border-line-strong bg-surface-sunken px-3 py-2.5 text-left hover:border-line-strong"
                 >
                   <span>
-                    <span className="block text-sm font-medium text-slate-600">{tool.name}</span>
-                    <span className="block text-xs text-slate-500">{tool.description}</span>
+                    <span className="block text-sm font-medium text-content-muted">{tool.name}</span>
+                    <span className="block text-xs text-content-muted">{tool.description}</span>
                   </span>
                   <Badge tone={clicked === tool.key ? "info" : "neutral"}>
                     {clicked === tool.key ? "Logged" : "Coming soon"}

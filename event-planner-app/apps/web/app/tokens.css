@@ -1,0 +1,206 @@
+/**
+ * Design tokens.
+ *
+ * Two layers, deliberately:
+ *
+ *   **Palette** — raw colour values. Nothing outside this file should use these directly.
+ *   **Semantic** — what a colour is *for*: a surface, a border, muted text, a destructive action.
+ *
+ * The split is what makes dark mode a change of ten values rather than a change of every
+ * component, and it is what stops "slate-500" from meaning four unrelated things in four files.
+ *
+ * A component asking for `bg-surface` keeps working when the palette changes. A component asking
+ * for `bg-slate-100` has quietly hard-coded a decision it does not own.
+ */
+
+:root {
+  /* ---- Palette: neutrals ------------------------------------------------ */
+  --grey-0: #ffffff;
+  --grey-25: #fbfcfd;
+  --grey-50: #f6f8fa;
+  --grey-100: #eceff3;
+  --grey-200: #dde2e9;
+  --grey-300: #c3cbd6;
+  --grey-400: #97a2b2;
+  --grey-500: #6b7688;
+  /*
+   * A step between grey-500 and grey-600, added because grey-500 measured 4.31:1 on the sunken
+   * surface — a near-miss that still fails. Subtle text needs to be quieter than muted without
+   * being unreadable, and there was no value in the ramp that did both.
+   */
+  --grey-550: #5d6879;
+  --grey-600: #505b6b;
+  --grey-700: #3b4553;
+  --grey-800: #262e3a;
+  --grey-900: #161c25;
+  --grey-950: #0d1219;
+
+  /* ---- Palette: accents -------------------------------------------------- */
+  /* Indigo, because this product is used beside spreadsheets and calendars all day and a
+     saturated brand colour becomes tiring. It carries meaning: interactive, and nothing else. */
+  --indigo-50: #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  /*
+   * Dark-mode button fill. A filled button has to satisfy two thresholds at once — its white
+   * label against the fill (4.5) and the fill against what it sits on (3.0) — and indigo-500
+   * measured 4.47 on the first. Chosen by scanning for a value that clears both rather than by
+   * nudging until it looked right.
+   */
+  --indigo-fill-dark: #655ef4;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-400: #f87171;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-400: #fbbf24;
+  --amber-600: #d97706;
+  --amber-800: #92400e;
+
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-400: #4ade80;
+  --green-600: #16a34a;
+  --green-800: #166534;
+
+  /* ---- Semantic: surfaces ------------------------------------------------ */
+  --color-canvas: var(--grey-50);
+  --color-surface: var(--grey-0);
+  --color-surface-sunken: var(--grey-50);
+  --color-surface-hover: var(--grey-100);
+
+  /* ---- Semantic: text ---------------------------------------------------- */
+  --color-text: var(--grey-900);
+  --color-text-muted: var(--grey-600);
+  /* 5.3:1 on the sunken surface. grey-500 sat at 4.31 and failed. */
+  --color-text-subtle: var(--grey-550);
+  --color-text-inverse: var(--grey-0);
+
+  /* ---- Semantic: lines --------------------------------------------------- */
+  --color-border: var(--grey-200);
+  --color-border-strong: var(--grey-300);
+
+  /* ---- Semantic: interaction --------------------------------------------- */
+  --color-accent: var(--indigo-600);
+  --color-accent-hover: var(--indigo-700);
+  --color-accent-fg: var(--grey-0);
+  --color-accent-subtle: var(--indigo-50);
+  --color-accent-text: var(--indigo-700);
+  /* Focus is deliberately its own token. It must stay visible against every surface, and it is
+     the one thing that must never be removed for looks. */
+  --color-focus: var(--indigo-500);
+
+  /* ---- Semantic: status --------------------------------------------------- */
+  --color-danger: var(--red-600);
+  --color-danger-text: var(--red-700);
+  --color-danger-subtle: var(--red-50);
+  --color-danger-border: var(--red-100);
+
+  --color-warning: var(--amber-600);
+  --color-warning-text: var(--amber-800);
+  --color-warning-subtle: var(--amber-50);
+  --color-warning-border: var(--amber-100);
+
+  --color-success: var(--green-600);
+  --color-success-text: var(--green-800);
+  --color-success-subtle: var(--green-50);
+  --color-success-border: var(--green-100);
+
+  /* ---- Elevation ---------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px 0 rgb(13 18 25 / 0.05);
+  --shadow-md: 0 1px 3px 0 rgb(13 18 25 / 0.08), 0 1px 2px -1px rgb(13 18 25 / 0.06);
+  --shadow-lg: 0 8px 24px -6px rgb(13 18 25 / 0.12), 0 2px 6px -2px rgb(13 18 25 / 0.06);
+}
+
+/**
+ * Dark theme.
+ *
+ * Only the semantic layer is redefined — the palette above is untouched. That is the whole point
+ * of the split.
+ *
+ * Surfaces get *lighter* as they come forward rather than darker, which is how depth reads on a
+ * dark background. Borders are lifted rather than dropped, because a dark border on a dark
+ * surface is invisible. And the accent moves lighter, because indigo-600 on near-black fails
+ * contrast for text.
+ */
+.dark {
+  --color-canvas: var(--grey-950);
+  --color-surface: var(--grey-900);
+  --color-surface-sunken: #11161e;
+  --color-surface-hover: var(--grey-800);
+
+  --color-text: #e8ecf1;
+  --color-text-muted: var(--grey-300);
+  /* 5.6:1 on the dark surface. grey-500 measured 3.73 here — dark themes need the quiet tones
+     brought *up*, not down, which is the mistake mirroring a light ramp always produces. */
+  --color-text-subtle: #8a94a5;
+  --color-text-inverse: var(--grey-950);
+
+  --color-border: #232c38;
+  --color-border-strong: var(--grey-700);
+
+  /*
+   * Fill and text are different jobs and take different values here.
+   *
+   * The fill needs a white label to be legible on it. Accent *text* on a dark surface needs the
+   * opposite — indigo-600 measures 2.7:1 there and is unreadable, so accent-text goes lighter
+   * while the fill goes slightly darker. Treating them as one value is what produced the
+   * near-miss.
+   */
+  --color-accent: var(--indigo-fill-dark);
+  --color-accent-hover: var(--indigo-500);
+  --color-accent-fg: var(--grey-0);
+  --color-accent-subtle: #1e2340;
+  --color-accent-text: var(--indigo-400);
+  --color-focus: var(--indigo-400);
+
+  --color-danger: var(--red-400);
+  --color-danger-text: #fca5a5;
+  --color-danger-subtle: #2a1618;
+  --color-danger-border: #4a2225;
+
+  --color-warning: var(--amber-400);
+  --color-warning-text: #fcd34d;
+  --color-warning-subtle: #2a2010;
+  --color-warning-border: #4a3a17;
+
+  --color-success: var(--green-400);
+  --color-success-text: #86efac;
+  --color-success-subtle: #10251a;
+  --color-success-border: #1c4030;
+
+  /* Shadows barely register on a dark canvas; depth comes from the surface steps above. */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 8px 24px -6px rgb(0 0 0 / 0.5);
+}
+
+/**
+ * Print is always light.
+ *
+ * The logistics pack is printed and carried around a venue. A planner who happens to have dark
+ * mode on must not get a black page — it is unreadable on paper and empties a toner cartridge.
+ */
+@media print {
+  :root,
+  .dark {
+    --color-canvas: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-sunken: #ffffff;
+    --color-text: #000000;
+    --color-text-muted: #333333;
+    --color-text-subtle: #444444;
+    --color-border: #cbd5e1;
+    --color-border-strong: #94a3b8;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+}

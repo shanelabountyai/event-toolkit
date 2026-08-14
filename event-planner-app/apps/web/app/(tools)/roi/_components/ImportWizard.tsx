@@ -161,10 +161,10 @@ export function ImportWizard({
     <Card>
       <CardHeader>
         <div>
-          <h2 className="text-base font-semibold text-slate-900">
+          <h2 className="text-base font-semibold text-content">
             {kind === "pipeline" ? "Import pipeline outcomes" : "Import survey results"}
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-content-muted">
             {kind === "pipeline"
               ? "A CRM opportunity export. Re-importing updates matching records rather than duplicating them."
               : "A survey export. NPS is computed from the 0-10 recommend question."}
@@ -173,7 +173,7 @@ export function ImportWizard({
       </CardHeader>
       <CardBody className="space-y-4">
         {error ? (
-          <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p role="alert" className="rounded-lg border border-danger-border bg-danger-subtle px-3 py-2 text-sm text-danger-text">
             {error}
           </p>
         ) : null}
@@ -186,17 +186,17 @@ export function ImportWizard({
               const file = e.target.files?.[0];
               if (file) void onFile(file);
             }}
-            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700"
+            className="block w-full text-sm text-content-muted file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent-fg hover:file:bg-accent-hover"
           />
         ) : null}
 
         {step === "mapping" ? (
           <>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-content-muted">
               {filename} · {rawRows.length} rows
             </p>
             {kind === "pipeline" && parsedPipeline?.amountUnmapped ? (
-              <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+              <p className="rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-sm text-warning-text">
                 No column is mapped to <strong>Amount</strong>. Every pipeline figure and the ROI
                 ratio will be zero — map it unless your export genuinely has no values.
               </p>
@@ -232,14 +232,14 @@ export function ImportWizard({
                         ))}
                       </Select>
                     </Td>
-                    <Td className="text-xs text-slate-500">
+                    <Td className="text-xs text-content-muted">
                       {String(rawRows[0]?.[column.sourceColumn] ?? "")}
                     </Td>
                   </tr>
                 ))}
               </tbody>
             </Table>
-            {headers.length === 0 ? <p className="text-sm text-slate-500">No columns detected.</p> : null}
+            {headers.length === 0 ? <p className="text-sm text-content-muted">No columns detected.</p> : null}
           </>
         ) : null}
 
@@ -253,7 +253,7 @@ export function ImportWizard({
                 ) : null}
               </p>
               {parsedPipeline.errors.length > 0 ? (
-                <ul className="max-h-24 overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                <ul className="max-h-24 overflow-y-auto rounded-lg border border-warning-border bg-warning-subtle px-3 py-2 text-xs text-warning-text">
                   {parsedPipeline.errors.map((e) => (
                     <li key={`${e.row}-${e.reason}`}>Row {e.row}: {e.reason}</li>
                   ))}
@@ -273,7 +273,7 @@ export function ImportWizard({
                     <tr key={row.recordId}>
                       <Td>
                         {row.opportunityName ?? row.recordId}
-                        <span className="block text-xs text-slate-500">{row.recordType}</span>
+                        <span className="block text-xs text-content-muted">{row.recordType}</span>
                       </Td>
                       <Td className="text-xs">{row.createdDate}</Td>
                       <Td className="text-right tabular-nums">{row.amount.toLocaleString()}</Td>
@@ -282,7 +282,7 @@ export function ImportWizard({
                           {ATTRIBUTION_LABELS[row.effectiveAttributionType]}
                         </Badge>
                         {row.importedAttributionType && row.importedAttributionType !== row.computedAttributionType ? (
-                          <span className="block text-xs text-amber-700">
+                          <span className="block text-xs text-warning-text">
                             CRM says {row.importedAttributionType}, timing says {row.computedAttributionType}
                           </span>
                         ) : null}
@@ -316,7 +316,7 @@ export function ImportWizard({
           ) : null
         ) : null}
 
-        {step === "done" && summary ? <p className="text-sm text-slate-700">{summary}</p> : null}
+        {step === "done" && summary ? <p className="text-sm text-content-muted">{summary}</p> : null}
 
         <div className="flex flex-wrap gap-2">
           {step === "mapping" ? (
