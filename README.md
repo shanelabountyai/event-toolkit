@@ -46,7 +46,7 @@ blind spots:
 
 ### An agent found what the test suite could not
 
-15 headless check scripts and a full browser suite all passed. Then an agent ran a complete event
+16 headless check scripts and a full browser suite all passed. Then an agent ran a complete event
 through the product **as a practitioner rather than a tester** — inventing a real conference,
 importing real CSVs, working the dedupe queue, reading the output as a planner would.
 
@@ -119,7 +119,7 @@ every deletion request.
 cd event-planner-app
 pnpm install
 pnpm dev            # localhost:3000
-pnpm verify         # typecheck, lint, fixtures, 15 check scripts, build
+pnpm verify         # typecheck, lint, fixtures, 16 check scripts, build
 ```
 
 Browser suites need a one-time setup, because they are deliberately outside `verify` (CI has no
@@ -143,9 +143,11 @@ migration to PGlite in process.
   depending on the finding. Every threshold is still a considered guess.
 - **Content generation is template interpolation, not AI.** Deliberate — the product makes no
   network calls to any model. If generated copy is weak, the fix is better templates.
-- **Known gaps from the event runs**, unfixed: budget import cannot map to existing line items,
-  the run-of-show table re-sorts while you type, lead scoring has no negative signals or ICP
-  weighting.
+- **Known gaps from the event runs**, unfixed: budget import cannot map to existing line items, so
+  actuals arrive as duplicate rows rather than filling in the ones you budgeted; lead scoring has
+  no negative signals (no way to score down a competitor or a job-seeker); and a webinar produces
+  none of the engagement signals the rubric can read — no attended-vs-registered, watch duration or
+  poll participation.
 - **The hosted tier is built but young.** Auth, workspaces, roles, invitations, share links,
   offline-first sync and the data-subject tooling all work and are tested; none has carried a real
   team's event yet.
