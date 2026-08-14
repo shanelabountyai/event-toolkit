@@ -29,7 +29,10 @@ export const SUITE_TOOLS: SuiteTool[] = [
     key: "promo",
     prd: 2,
     name: "Promo Campaign Kit",
-    href: "/promo/kit",
+    // /promo, not /promo/kit. Every other tool's nav entry is its list page; this one pointed at
+    // a detail page, so clicking it with no brief chosen was a dead end that bounced you to the
+    // brief list with no way back into promo. /promo picks an event and forwards to the kit.
+    href: "/promo",
     description: "Landing page, email sequence, social and sales snippets generated from the brief.",
     available: true,
   },

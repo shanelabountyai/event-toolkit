@@ -73,11 +73,13 @@ export function PromoBriefMissing({ notFound }: { notFound: boolean }) {
           ? "The brief this kit was linked to has been deleted from this browser."
           : "The Promo Campaign Kit generates copy from an existing event brief, so it needs to know which event you mean."}
       </p>
+      {/* /promo lists the briefs and forwards straight back here with one chosen. /brief would
+          drop the planner into the brief editor with no route back into promo. */}
       <Link
-        href="/brief"
+        href="/promo"
         className="mt-5 inline-flex items-center rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover"
       >
-        Choose a brief
+        Choose an event
       </Link>
     </div>
   );

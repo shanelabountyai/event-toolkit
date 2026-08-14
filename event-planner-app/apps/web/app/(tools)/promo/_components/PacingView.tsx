@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 /**
  * The Pacing tab: reported registrations against the target curve derived from the brief's
  * registration goal, plus the tactics to run when it's behind.
@@ -38,6 +40,7 @@ import { PromoBriefMissing, PromoTabs } from "./PromoTabs";
 import { RecommendedInterventions } from "./RecommendedInterventions";
 
 export function PacingView() {
+  const router = useRouter();
   const { briefId, brief, loading, notFound } = usePromoBrief();
   const [entries, setEntries] = useState<PacingEntry[]>([]);
   const [config, setConfig] = useState<PacingConfig | null>(null);
@@ -144,6 +147,13 @@ export function PacingView() {
   );
 
   if (loading || loadingData) {
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
+  }
+  // No brief at all means the planner arrived without choosing one — send them to the picker
+  // rather than showing a dead end. A brief that no longer exists still gets the message, because
+  // silently redirecting would hide that something was deleted.
+  if (!briefId && !loading) {
+    router.replace("/promo");
     return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
   if (!briefId || notFound || !brief) {

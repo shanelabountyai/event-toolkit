@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 /**
  * The Kit tab: generate, read, edit and regenerate the promo assets for one brief.
  *
@@ -35,6 +37,7 @@ import { RegenerateDialog } from "./RegenerateDialog";
 import { StaleBriefBanner } from "./StaleBriefBanner";
 
 export function PromoKitView() {
+  const router = useRouter();
   const { briefId, brief, loading, notFound } = usePromoBrief();
   const [set, setSet] = useState<PromoAssetSet | null>(null);
   const [loadingSet, setLoadingSet] = useState(true);
@@ -142,6 +145,13 @@ export function PromoKitView() {
   const sections = useMemo(() => (set ? groupAssets(set.assets) : []), [set]);
 
   if (loading || loadingSet) {
+    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
+  }
+  // No brief at all means the planner arrived without choosing one — send them to the picker
+  // rather than showing a dead end. A brief that no longer exists still gets the message, because
+  // silently redirecting would hide that something was deleted.
+  if (!briefId && !loading) {
+    router.replace("/promo");
     return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
   if (!briefId || notFound || !brief) {
