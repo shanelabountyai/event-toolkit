@@ -107,3 +107,37 @@ export function worstFlagForLineItems(
 ): VarianceFlag {
   return worstFlag(lineItems.map((item) => computeVariance(item, settings).flag));
 }
+
+/** Which way a variance went. A flag alone cannot say, and a badge that guesses gets it wrong. */
+export type VarianceDirection = "over" | "under" | "none";
+
+/**
+ * The flag *and* its direction for a group of line items.
+ *
+ * Flagging is deliberately direction-blind — a 23% underspend is a planning miss worth surfacing,
+ * exactly like a 23% overspend. **Labelling must not be.** The pill rendered from the flag alone
+ * said "Over" on a category that came in $650 under, and on a total that came in $660 under, while
+ * the one category genuinely over budget read "On budget". The arithmetic was right the whole
+ * time; only the word was wrong, which is the worst kind of wrong on a money screen.
+ */
+export function aggregateVarianceForLineItems(
+  lineItems: BudgetLineItem[],
+  settings: Pick<BudgetSettings, "defaultVarianceThresholdPct">,
+): { flag: VarianceFlag; direction: VarianceDirection } {
+  const flag = worstFlagForLineItems(lineItems, settings);
+
+  // Compare on the same basis each line was judged on, so the direction matches the flag.
+  let budgeted = 0;
+  let effective = 0;
+  for (const item of lineItems) {
+    const variance = computeVariance(item, settings);
+    budgeted += item.budgetedAmount ?? 0;
+    effective +=
+      variance.effectiveBasis === "committed"
+        ? (item.committedAmount ?? 0)
+        : (item.actualAmount ?? 0);
+  }
+
+  const delta = roundMoney(effective - budgeted);
+  return { flag, direction: delta > 0 ? "over" : delta < 0 ? "under" : "none" };
+}

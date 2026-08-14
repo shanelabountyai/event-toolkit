@@ -19,7 +19,7 @@ import {
   type BudgetSettings,
   type EventBrief,
 } from "../packages/schema/src/index";
-import {
+import { aggregateVarianceForLineItems,
   applyImportPlan,
   buildExportWorkbook,
   buildImportPlan,
@@ -372,6 +372,38 @@ async function main(): Promise<void> {
   check("the other brief's budget survived", (await getLineItems("budget-b")).length > 0);
 
   /* ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ A variance flag knows which way it went");
+  {
+    // The exact numbers from a real event run, where the budget screen said "Over" on a total
+    // that came in $660 under, and "On budget" on the only category genuinely overspent.
+    const settings = { defaultVarianceThresholdPct: 10 } as never;
+    const line = (id: string, budgeted: number, actual: number) =>
+      ({ id, briefId: "b", lineItemName: id, category: "other", budgetedAmount: budgeted,
+         committedAmount: actual, actualAmount: actual, status: "reconciled" }) as never;
+
+    const av = aggregateVarianceForLineItems([line("av", 2800, 2150)], settings);
+    check("a 23% underspend is still flagged", av.flag !== "none", "an underspend is a planning miss too");
+    check("⭐ …and its direction is under, not over", av.direction === "under");
+
+    const promo = aggregateVarianceForLineItems([line("promo", 10000, 10740)], settings);
+    check("⭐ a 7% overspend inside the threshold is not flagged", promo.flag === "none");
+    check("…and reads as over when it is", aggregateVarianceForLineItems([line("p", 10000, 12000)], settings).direction === "over");
+
+    const total = aggregateVarianceForLineItems(
+      [line("av", 2800, 2150), line("other", 2900, 2650), line("promo", 10000, 10740), line("staff", 2300, 1800)],
+      settings,
+    );
+    check(
+      "⭐ a total $660 under budget does not report as over",
+      total.direction === "under",
+      "$18,000 budgeted against $17,340 actual read \"Over\" on the money screen",
+    );
+
+    check("an exact match has no direction", aggregateVarianceForLineItems([line("x", 5000, 5000)], settings).direction === "none");
+    check("an empty budget has no direction", aggregateVarianceForLineItems([], settings).direction === "none");
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} budget check(s) failed.\n`);
     process.exit(1);

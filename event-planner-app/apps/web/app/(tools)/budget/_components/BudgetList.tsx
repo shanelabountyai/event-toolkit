@@ -5,7 +5,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { EVENT_TYPE_LABELS, type BudgetSettings, type EventBrief } from "@event-toolkit/schema";
-import { computeBudgetActualsSummary, worstFlagForLineItems, type VarianceFlag } from "@event-toolkit/budget-calc";
+import type { VarianceDirection } from "@event-toolkit/budget-calc";
+import { aggregateVarianceForLineItems, computeBudgetActualsSummary, worstFlagForLineItems, type VarianceFlag } from "@event-toolkit/budget-calc";
 import { getBudgetSettings, getLineItems, listBriefs } from "@event-toolkit/local-store";
 import { Badge, Card, CardBody, CardHeader, EmptyRow, Table, Td, Th } from "@event-toolkit/ui";
 import { formatDateRange, formatMoney } from "@/lib/format";
@@ -17,6 +18,7 @@ interface Row {
   totalBudgeted: number;
   totalActual: number;
   flag: VarianceFlag;
+  direction: VarianceDirection;
 }
 
 export function BudgetList() {
@@ -30,7 +32,7 @@ export function BudgetList() {
       for (const brief of briefs) {
         const settings = await getBudgetSettings(brief.id);
         if (!settings) {
-          built.push({ brief, settings: null, totalBudgeted: 0, totalActual: 0, flag: "none" });
+          built.push({ brief, settings: null, totalBudgeted: 0, totalActual: 0, flag: "none", direction: "none" });
           continue;
         }
         const lineItems = await getLineItems(brief.id);
@@ -40,7 +42,7 @@ export function BudgetList() {
           settings,
           totalBudgeted: summary.totalBudgeted,
           totalActual: summary.totalActual,
-          flag: worstFlagForLineItems(lineItems, settings),
+          ...aggregateVarianceForLineItems(lineItems, settings),
         });
       }
       if (!cancelled) setRows(built);
@@ -110,7 +112,7 @@ export function BudgetList() {
                     <Td label="Actual" className="text-right tabular-nums">
                       {row.settings ? formatMoney(row.totalActual, row.settings.currency) : "—"}
                     </Td>
-                    <Td label="Status">{row.settings ? <FlagPill flag={row.flag} /> : <Badge tone="neutral">Not started</Badge>}</Td>
+                    <Td label="Status">{row.settings ? <FlagPill flag={row.flag} direction={row.direction} /> : <Badge tone="neutral">Not started</Badge>}</Td>
                     <Td label="Reconciled">
                       {row.settings?.reconciledAt ? (
                         <Badge tone="success">Yes</Badge>

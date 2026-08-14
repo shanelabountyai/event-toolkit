@@ -2,7 +2,7 @@
 
 /** FR-4 — the amber/red/unbudgeted flag, rendered consistently everywhere. */
 
-import type { LineItemVariance, VarianceFlag } from "@event-toolkit/budget-calc";
+import type { LineItemVariance, VarianceDirection, VarianceFlag } from "@event-toolkit/budget-calc";
 import { Badge, type BadgeTone } from "@event-toolkit/ui";
 
 const TONES: Record<VarianceFlag, BadgeTone> = {
@@ -37,7 +37,23 @@ export function VarianceBadge({ variance }: { variance: LineItemVariance }) {
   );
 }
 
-export function FlagPill({ flag }: { flag: VarianceFlag }) {
-  const label = flag === "red" ? "Over" : flag === "amber" ? "Watch" : "On budget";
+/**
+ * A flag says how far off; only the direction says which way.
+ *
+ * Rendering "Over" from the flag alone labelled a category that came in $650 under as overspent,
+ * and the one category genuinely over budget as "On budget". `direction` is required rather than
+ * optional so a caller cannot reintroduce the guess.
+ */
+export function FlagPill({
+  flag,
+  direction,
+}: {
+  flag: VarianceFlag;
+  direction: VarianceDirection;
+}) {
+  if (flag === "none") return <Badge tone={TONES.none}>On budget</Badge>;
+
+  const way = direction === "under" ? "under" : "over";
+  const label = flag === "red" ? (way === "under" ? "Under" : "Over") : `Watch — ${way}`;
   return <Badge tone={TONES[flag]}>{label}</Badge>;
 }

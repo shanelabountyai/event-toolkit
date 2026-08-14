@@ -16,7 +16,7 @@ import {
   type BudgetSettings,
   type LineItemStatus,
 } from "@event-toolkit/schema";
-import { computeVariance, roundMoney, worstFlagForLineItems } from "@event-toolkit/budget-calc";
+import { aggregateVarianceForLineItems, computeVariance, roundMoney } from "@event-toolkit/budget-calc";
 import {
   Badge,
   Button,
@@ -69,7 +69,7 @@ export function BudgetTable({
             {formatMoney(grandVariance, currency)}
           </span>
         </div>
-        <FlagPill flag={worstFlagForLineItems(lineItems, settings)} />
+        <FlagPill {...aggregateVarianceForLineItems(lineItems, settings)} />
       </div>
 
       {BUDGET_CATEGORIES.map((category) => (
@@ -147,7 +147,7 @@ function CategorySection({
           <span>Budgeted {formatMoney(subtotal.budgeted, settings.currency)}</span>
           <span>Committed {formatMoney(subtotal.committed, settings.currency)}</span>
           <span>Actual {formatMoney(subtotal.actual, settings.currency)}</span>
-          <FlagPill flag={worstFlagForLineItems(items, settings)} />
+          <FlagPill {...aggregateVarianceForLineItems(items, settings)} />
         </span>
       </div>
 

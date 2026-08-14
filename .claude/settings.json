@@ -61,7 +61,9 @@
       "Bash(sort -nrk 4)",
       "Bash(awk '{print $4\"% \"$11\" \"$12}')",
       "Bash(awk '{print $2}')",
-      "Bash(awk '{print $2, $11, $12, $13, $14}')"
+      "Bash(awk '{print $2, $11, $12, $13, $14}')",
+      "Bash(ps -p 75936 -o pid,etime,stat,command)",
+      "Bash(awk '{print $2, $10}')"
     ]
   }
 }
