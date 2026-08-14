@@ -6,6 +6,9 @@ export default defineConfig({
   dialect: "postgresql",
   // Only read when actually applying migrations. `drizzle-kit generate` works offline, which is
   // what lets the schema be reviewed and committed before any database is provisioned.
-  dbCredentials: { url: process.env.DATABASE_URL ?? "" },
+  // Migrations run on the direct endpoint. Neon's pooler is PgBouncer in transaction mode and
+  // does not hold a session across statements, so DDL can fail or half-apply through it. Falls
+  // back to DATABASE_URL so a plain setup still works.
+  dbCredentials: { url: process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL || "" },
   strict: true,
 });
