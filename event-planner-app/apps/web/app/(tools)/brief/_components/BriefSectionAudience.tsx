@@ -9,6 +9,7 @@ export function BriefSectionAudience({ brief, onSave }: BriefSectionProps) {
   const section = useSectionDraft(brief, onSave);
   const personas = (brief.audience.targetPersonas ?? []).filter((p) => p.name.trim() !== "");
   const segments = (brief.audience.segments ?? []).filter((s) => s.trim() !== "");
+  const takeaways = (brief.audience.attendeeValue?.takeaways ?? []).filter((t) => t.trim() !== "");
 
   return (
     <SectionShell
@@ -26,6 +27,29 @@ export function BriefSectionAudience({ brief, onSave }: BriefSectionProps) {
         <div className="space-y-4">
           <ReadField label="Description">
             <ReadText value={brief.audience.description} empty="No audience described" />
+          </ReadField>
+
+          {/*
+            Shown here because it is the only part of the brief written in the attendee's language,
+            and because the promo generator uses it and nothing else. A field you can type and then
+            never see again reads as ignored.
+          */}
+          <ReadField label="Why should they come?">
+            <ReadText
+              value={brief.audience.attendeeValue?.promise ?? ""}
+              empty="Not written yet — promo copy will show a placeholder until it is"
+            />
+          </ReadField>
+          <ReadField label="What they leave with">
+            {takeaways.length > 0 ? (
+              <ul className="list-disc space-y-0.5 pl-4">
+                {takeaways.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            ) : (
+              "—"
+            )}
           </ReadField>
           <div className="grid gap-4 sm:grid-cols-2">
             <ReadField label="Estimated size">

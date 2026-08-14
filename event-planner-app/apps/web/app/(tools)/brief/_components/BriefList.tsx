@@ -26,6 +26,7 @@ import { formatDateRange, formatRelative } from "@/lib/format";
 import { triggerDownload } from "@/lib/download";
 import { CompletenessBadge } from "./CompletenessBadge";
 import { StatusBadge, TypeBadge } from "./badges";
+import { DemoEventButton } from "./DemoEventButton";
 
 interface Row {
   brief: EventBrief;
@@ -253,11 +254,20 @@ function EmptyState() {
           budget shell, RACI, success metrics, risks and timeline in one structured document.
           Pick an event-type preset and the guided intake fills in sensible defaults you can edit.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link href="/brief/new">
             <Button variant="primary">Create your first brief</Button>
           </Link>
+          {/*
+            The suite's claim is that seven tools share one event and feed each other, and that is
+            invisible until an event exists. Anyone arriving to look rather than to plan should not
+            have to fill in a form first.
+          */}
+          <DemoEventButton />
         </div>
+        <p className="mt-3 text-xs text-content-subtle">
+          The demo is a worked example you can edit or delete. Nothing leaves this browser.
+        </p>
       </CardBody>
     </Card>
   );

@@ -2,7 +2,7 @@
 
 /** Brief section — event basics (name, type, dates, delivery, venue/platform). */
 
-import { DELIVERY_MODE_LABELS, EVENT_TYPE_LABELS } from "@event-toolkit/schema";
+import { PARTICIPATION_ROLE_LABELS, DELIVERY_MODE_LABELS, EVENT_TYPE_LABELS } from "@event-toolkit/schema";
 import { formatDateRange, formatIsoDateTime } from "@/lib/format";
 import { EventBasicsStep } from "./steps/EventBasicsStep";
 import { ReadField, SectionShell, useSectionDraft, type BriefSectionProps } from "./SectionShell";
@@ -29,6 +29,12 @@ export function BriefSectionOverview({ brief, onSave }: BriefSectionProps) {
           <ReadField label="Event type">{EVENT_TYPE_LABELS[brief.type]}</ReadField>
           <ReadField label="Delivery mode">
             {DELIVERY_MODE_LABELS[brief.format.deliveryMode]}
+          </ReadField>
+          {/* Decides host vs exhibitor voice in every generated promo asset. */}
+          <ReadField label="Our role">
+            {PARTICIPATION_ROLE_LABELS[
+              brief.format.participationRole ?? (brief.type === "trade_show" ? "exhibitor" : "host")
+            ]}
           </ReadField>
           <ReadField label="Dates">{formatDateRange(brief)}</ReadField>
           <ReadField label="Timezone">{brief.dates.timezone || "—"}</ReadField>
