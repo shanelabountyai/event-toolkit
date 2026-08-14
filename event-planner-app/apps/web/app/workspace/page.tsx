@@ -5,6 +5,7 @@ import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from "@event-toolkit/access
 import { isHostedConfigured } from "@/lib/auth";
 import { currentUser, myWorkspaces } from "@/lib/session";
 import { CreateWorkspaceForm } from "./CreateWorkspaceForm";
+import { LocalDataBanner } from "./LocalDataBanner";
 import { SignOutButton } from "./SignOutButton";
 
 export const runtime = "nodejs";
@@ -29,6 +30,13 @@ export default async function WorkspacePage() {
         </div>
         <SignOutButton />
       </div>
+
+      {/*
+        Sign-in lands here, and until now it landed on a workspace that looked empty while every
+        event the planner had built sat in this browser's IndexedDB with nothing saying so. One
+        workspace gets a direct link; several means the target is theirs to pick.
+      */}
+      <LocalDataBanner workspaceId={memberships.length === 1 ? memberships[0].workspaceId : null} />
 
       {memberships.length > 0 ? (
         <Card>
