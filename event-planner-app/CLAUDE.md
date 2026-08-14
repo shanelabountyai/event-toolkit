@@ -19,11 +19,23 @@ The **Event Planner Productivity Suite** — a standalone, local-first web app f
 7. **Schema changes are additive by default.** (Done once, at 1.1.0, for PRD 7's `LessonLearned.disposition`/`sourceType` — follow that commit as the worked example.) Adding an optional field = MINOR version bump, update `docs/schema/event-brief-schema.md` + `packages/schema/src/event-brief.schema.json` + the TS types together, add a `CHANGELOG.md` entry. Renaming/removing a field, changing a type, or making an optional field required = MAJOR bump, requires a migration function in `packages/schema/src/migrations/`. Never break `migrateBrief()`'s ability to load an older brief.
 8. **Read the tool's PRD + HANDOFF before building it.** `docs/prd/<tool>/PRD.md` is the full spec (problem, user stories, numbered FRs, data model, UX flow, acceptance criteria). `docs/prd/<tool>/HANDOFF.md` is written to be self-contained — paste it into a fresh session and it has everything needed to start building that tool without reading the PRD first.
 
+## The port is 3200, and it is in the config
+
+`apps/web/package.json` pins `next dev -p 3200` and `next start -p 3200`. Not an environment
+variable, not a command-line flag — the first person to run a bare `next dev` would otherwise land
+on 3000, which the storage business project owns. Two projects both defaulting to 3000 do not fail
+loudly: Playwright's `reuseExistingServer` adopts whichever server is already listening, and the
+suite then runs against the other project's app with every assertion nonsense.
+
+That is not hypothetical here. This project ran on 3000 for most of its life, and the resulting
+symptoms — a dev server that "kept dying", 404 storms, a `/checkout?token=` request in our own
+log — cost several debugging passes before the collision was the obvious answer.
+
 ## Commands
 
 ```bash
 pnpm install
-pnpm dev          # apps/web on http://localhost:3000, redirects to /brief
+pnpm dev          # apps/web on http://localhost:3200, redirects to /brief
 pnpm build        # production build, all packages
 pnpm typecheck    # tsc --noEmit across the workspace
 pnpm lint         # eslint

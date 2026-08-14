@@ -70,7 +70,7 @@ with sync_playwright() as p:
         pg = ctx.new_page()
         fails, checked = [], 0
         for route in ROUTES:
-            pg.goto(f"http://localhost:3000{route}", wait_until="networkidle")
+            pg.goto(f"http://localhost:3200{route}", wait_until="networkidle")
             pg.wait_for_timeout(200)
             for r in pg.evaluate(JS):
                 try:

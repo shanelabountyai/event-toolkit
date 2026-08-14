@@ -4,9 +4,9 @@
   "private": true,
   "description": "The single deployable app for the Event Planner Productivity Suite. Each of the 7 tools is a route group under app/(tools).",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3200",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3200",
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit"
   },

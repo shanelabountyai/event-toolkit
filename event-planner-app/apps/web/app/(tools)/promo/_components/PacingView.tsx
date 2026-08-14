@@ -42,6 +42,17 @@ import { RecommendedInterventions } from "./RecommendedInterventions";
 export function PacingView() {
   const router = useRouter();
   const { briefId, brief, loading, notFound } = usePromoBrief();
+
+  /**
+   * Arriving with no brief chosen sends the planner to the picker rather than a dead end.
+   *
+   * In an effect, not in render: `router.replace()` during render updates the Router while this
+   * component is rendering, which React refuses. A brief that no longer *exists* is left alone
+   * here — that still shows the message, because silently redirecting would hide the deletion.
+   */
+  useEffect(() => {
+    if (!loading && !briefId) router.replace("/promo");
+  }, [loading, briefId, router]);
   const [entries, setEntries] = useState<PacingEntry[]>([]);
   const [config, setConfig] = useState<PacingConfig | null>(null);
   const [set, setSet] = useState<PromoAssetSet | null>(null);
@@ -147,13 +158,6 @@ export function PacingView() {
   );
 
   if (loading || loadingData) {
-    return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
-  }
-  // No brief at all means the planner arrived without choosing one — send them to the picker
-  // rather than showing a dead end. A brief that no longer exists still gets the message, because
-  // silently redirecting would hide that something was deleted.
-  if (!briefId && !loading) {
-    router.replace("/promo");
     return <p className="py-16 text-center text-sm text-content-muted">Loading…</p>;
   }
   if (!briefId || notFound || !brief) {

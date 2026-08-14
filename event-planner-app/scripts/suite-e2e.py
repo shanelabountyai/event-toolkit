@@ -17,7 +17,7 @@ import json, sys, pathlib, tempfile
 from playwright.sync_api import sync_playwright
 
 APP = pathlib.Path(__file__).resolve().parent.parent
-BASE = "http://localhost:3000"
+BASE = "http://localhost:3200"
 SHOT = pathlib.Path(tempfile.gettempdir()) / "suite-e2e-shots"
 SHOT.mkdir(exist_ok=True)
 
@@ -182,7 +182,12 @@ def main():
         print("\nEmpty states — the paths most likely to crash")
         visit("/logistics", "Choose an event", "logistics with no briefId")
         visit("/promo", "Promo Campaign Kit", "promo with no briefId")
-        visit("/promo/kit", "Pick an event brief first", "promo kit with no briefId")
+        # /promo/kit with no brief now forwards to the picker rather than dead-ending. This
+        # assertion previously pinned the broken behaviour: a user clicking the nav entry reached
+        # "Pick an event brief first" and a button back to the brief list, with no route into promo.
+        visit("/promo/kit", "Choose an event", "promo kit with no briefId forwards to the picker")
+        # A brief that has been deleted still says so — silently redirecting would hide it.
+        visit("/promo/kit?briefId=does-not-exist", "no longer exists", "unknown promo brief")
         visit("/roi/does-not-exist", "no longer exists", "unknown ROI report")
         visit("/retro/does-not-exist", "no longer exists", "unknown retro")
         visit("/leads/does-not-exist", "no longer exists", "unknown triage session")

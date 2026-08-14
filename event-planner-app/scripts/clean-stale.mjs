@@ -12,7 +12,8 @@
 import { readdirSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const ROOTS = ["apps/web/.next", "apps/web"];
+// scripts/ too: duplicates there are real source files that get edited by accident.
+const ROOTS = ["apps/web/.next", "apps/web", "scripts", "packages"];
 const DUPLICATE = / \d+\.[^.]+$/;
 
 let removed = 0;
@@ -33,7 +34,7 @@ function sweep(dir, depth = 0) {
       continue;
     }
     // Only descend inside .next; sweeping the whole app would be slow and pointless.
-    if (depth < 8 && dir.includes(".next")) {
+    if (depth < 8 && (dir.includes(".next") || dir.startsWith("packages"))) {
       let isDir = false;
       try {
         isDir = statSync(path).isDirectory();

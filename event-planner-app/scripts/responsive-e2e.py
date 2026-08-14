@@ -52,7 +52,7 @@ with sync_playwright() as p:
         page = ctx.new_page()
         for route in ROUTES:
             try:
-                page.goto(f"http://localhost:3000{route}", wait_until="networkidle", timeout=20000)
+                page.goto(f"http://localhost:3200{route}", wait_until="networkidle", timeout=20000)
                 page.wait_for_timeout(150)
             except Exception as e:
                 print(f"  !! {route}: {type(e).__name__}")

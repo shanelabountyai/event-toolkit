@@ -14,7 +14,7 @@ import json, sys, pathlib, tempfile
 from playwright.sync_api import sync_playwright
 
 APP = pathlib.Path(__file__).resolve().parent.parent
-BASE = "http://localhost:3000"
+BASE = "http://localhost:3200"
 SHOT = pathlib.Path(tempfile.gettempdir()) / "logistics-e2e-shots"
 SHOT.mkdir(exist_ok=True)
 
