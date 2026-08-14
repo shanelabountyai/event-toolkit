@@ -154,6 +154,9 @@ migration to PGlite in process.
 
 ## Where to look first
 
+- [`docs/FOR-PLANNERS.md`](docs/FOR-PLANNERS.md) — what this does and why a planner might use it,
+  written for them rather than for engineers
+
 - [`docs/V2-STATUS.md`](docs/V2-STATUS.md) — what is built, what is deployed, what is left
 - [`prd/`](prd/) — the specifications, including the three that added the hosted tier
 - `git log` — the reasoning, including the mistakes
