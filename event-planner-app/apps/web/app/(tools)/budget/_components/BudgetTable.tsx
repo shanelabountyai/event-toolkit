@@ -114,7 +114,15 @@ function CategorySection({
   onDelete: (id: string) => void;
   onAdd: (category: BudgetLineItemCategory) => void;
 }) {
-  const [open, setOpen] = useState(true);
+  /**
+   * Categories with nothing in them start collapsed.
+   *
+   * All nine render for every event type, so a webinar showed Venue, F&B, Travel and Swag as
+   * open, empty sections — four of nine that will never be used, above the four that matter. They
+   * stay reachable, because a planner may well add a venue line to a webinar; they just do not
+   * take up the screen until they hold something.
+   */
+  const [open, setOpen] = useState(items.length > 0);
   const subtotal = {
     budgeted: roundMoney(items.reduce((s, i) => s + i.budgetedAmount, 0)),
     committed: roundMoney(items.reduce((s, i) => s + i.committedAmount, 0)),

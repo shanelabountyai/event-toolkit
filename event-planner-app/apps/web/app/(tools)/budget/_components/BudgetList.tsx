@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { EVENT_TYPE_LABELS, type BudgetSettings, type EventBrief } from "@event-toolkit/schema";
 import type { VarianceDirection } from "@event-toolkit/budget-calc";
-import { aggregateVarianceForLineItems, computeBudgetActualsSummary, worstFlagForLineItems, type VarianceFlag } from "@event-toolkit/budget-calc";
+import { aggregateVarianceForLineItems, computeBudgetActualsSummary, type VarianceFlag } from "@event-toolkit/budget-calc";
 import { getBudgetSettings, getLineItems, listBriefs } from "@event-toolkit/local-store";
 import { Badge, Card, CardBody, CardHeader, EmptyRow, Table, Td, Th } from "@event-toolkit/ui";
 import { formatDateRange, formatMoney } from "@/lib/format";

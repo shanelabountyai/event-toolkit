@@ -142,7 +142,15 @@ export function calibrateDedupeThreshold(inputs: CalibrationInputs): Calibration
 /* -------------------------------------------------------------------------- */
 
 export function calibrateLeadTiers(inputs: CalibrationInputs): CalibrationFinding {
-  const scored = inputs.leads.filter((lead) => lead.scoreBreakdown.length > 0);
+  /**
+   * A lead that scored zero has still been scored.
+   *
+   * This filtered on `scoreBreakdown.length > 0`, so a lead where no rule fired was not counted —
+   * and those are exactly the leads that say the most about whether the thresholds are right. It
+   * under-counted systematically: a triage view showing 17 leads reported 13 here, and the gap is
+   * always the least-engaged leads, which on a virtual event is most of them.
+   */
+  const scored = inputs.leads;
   const minSample = 25;
   const hot = scored.filter((l) => l.tier === "hot").length;
   const warm = scored.filter((l) => l.tier === "warm").length;
@@ -190,7 +198,15 @@ export function calibrateLeadTiers(inputs: CalibrationInputs): CalibrationFindin
  * the weights of rules that are actually doing the work.
  */
 export function calibrateRubricRules(inputs: CalibrationInputs): CalibrationFinding {
-  const scored = inputs.leads.filter((lead) => lead.scoreBreakdown.length > 0);
+  /**
+   * A lead that scored zero has still been scored.
+   *
+   * This filtered on `scoreBreakdown.length > 0`, so a lead where no rule fired was not counted —
+   * and those are exactly the leads that say the most about whether the thresholds are right. It
+   * under-counted systematically: a triage view showing 17 leads reported 13 here, and the gap is
+   * always the least-engaged leads, which on a virtual event is most of them.
+   */
+  const scored = inputs.leads;
   const minSample = 25;
   const enabledRules: ScoringRule[] = inputs.rubrics.flatMap((r) => r.rules.filter((rule) => rule.enabled));
   const firedRuleIds = new Set(scored.flatMap((lead) => lead.scoreBreakdown.map((b) => b.ruleId)));

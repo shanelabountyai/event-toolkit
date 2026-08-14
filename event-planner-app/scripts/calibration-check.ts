@@ -269,6 +269,29 @@ function main(): void {
     check("with genuinely no retros it still says so", none.evidence.includes("No retros have been completed yet"));
   }
 
+  console.log("\n⭐ Lead counts match what the planner can see");
+  {
+    const lead = (id: string, tier: string, breakdown: unknown[]) =>
+      ({ id, tier, score: breakdown.length ? 40 : 0, scoreBreakdown: breakdown }) as never;
+
+    // Two engaged leads and three where no rule fired — the shape a webinar produces.
+    const leads = [
+      lead("a", "warm", [{ label: "Demo requested", points: 40 }]),
+      lead("b", "warm", [{ label: "Demo requested", points: 40 }]),
+      lead("c", "cold", []),
+      lead("d", "cold", []),
+      lead("e", "cold", []),
+    ];
+
+    const f = calibrateLeadTiers({ leads } as never);
+    check(
+      "⭐ leads that scored zero are still counted as scored",
+      f.sampleSize === 5,
+      `counted ${f.sampleSize} of 5 — the triage view showed 17 while this reported 13`,
+    );
+    check("…and the tier split reflects them", f.evidence.includes("3 cold"));
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} calibration check(s) failed.\n`);
     process.exit(1);

@@ -5,7 +5,7 @@
  * location; everywhere else derives them.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SESSION_TYPES,
   SESSION_TYPE_LABELS,
@@ -42,7 +42,37 @@ export function RunOfShowTable({
 }) {
   const [pendingDelete, setPendingDelete] = useState<Session | null>(null);
   const overlaps = findOverlaps(pack);
-  const ordered = sessionsByStart(pack);
+
+  /**
+   * Display order is held still while you type.
+   *
+   * This table re-sorted by start time on every render, so editing a session's time moved its row
+   * mid-keystroke and the following characters landed on whichever row had taken its place. Two
+   * separate end-to-end runs corrupted their own run of show that way — blank session names, end
+   * times bled across rows, one session ending on the wrong day.
+   *
+   * The order tracks which sessions exist, not what their times say. Re-sorting is an explicit
+   * action, below.
+   */
+  const [order, setOrder] = useState<string[]>(() => sessionsByStart(pack).map((s) => s.id));
+
+  const sessionIds = pack.sessions.map((s) => s.id).join(",");
+  useEffect(() => {
+    setOrder((previous) => {
+      const live = new Set(pack.sessions.map((s) => s.id));
+      const kept = previous.filter((id) => live.has(id));
+      // New sessions go to the end, where the "Add session" button put them.
+      const added = pack.sessions.map((s) => s.id).filter((id) => !previous.includes(id));
+      return [...kept, ...added];
+    });
+    // Keyed on the *set* of sessions, so a time edit does not reorder anything.
+  }, [sessionIds, pack.sessions]);
+
+  const byId = new Map(pack.sessions.map((s) => [s.id, s]));
+  const ordered = order.map((id) => byId.get(id)).filter((s): s is Session => Boolean(s));
+  const isSorted = ordered.every(
+    (s, i) => i === 0 || (ordered[i - 1].startTime ?? "") <= (s.startTime ?? ""),
+  );
 
   const patch = (id: string, changes: Partial<Session>) =>
     onUpdate((prev) => ({
@@ -187,6 +217,18 @@ export function RunOfShowTable({
 
       <div className="no-print mt-3">
         <Button onClick={addSession}>Add session</Button>
+        {/*
+          Sorting is an action, not a side effect of typing. Offered only when the order has
+          actually drifted, so it is not a permanently-lit button that does nothing.
+        */}
+        {!isSorted ? (
+          <Button
+            variant="ghost"
+            onClick={() => setOrder(sessionsByStart(pack).map((session) => session.id))}
+          >
+            Sort by start time
+          </Button>
+        ) : null}
       </div>
 
       {pendingDelete ? (
