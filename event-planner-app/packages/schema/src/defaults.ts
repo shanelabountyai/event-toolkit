@@ -137,7 +137,12 @@ export function createEmptyBrief(type: EventType, options: CreateBriefOptions = 
       eventStartDate: "",
       eventEndDate: "",
     },
-    format: { deliveryMode: preset.defaultDeliveryMode, venueOrPlatform: {} },
+    format: {
+      deliveryMode: preset.defaultDeliveryMode,
+      // A booth brief is somebody else's conference. Getting this wrong makes every piece of
+      // generated promo copy claim you run an event you are merely attending.
+      participationRole: type === "trade_show" ? "exhibitor" : "host",
+      venueOrPlatform: {} },
     stakeholders: usePreset ? presetStakeholders(type) : [],
     successMetrics: usePreset ? presetSuccessMetrics(type) : [],
     riskRegister: usePreset ? presetRiskRegister(type) : [],

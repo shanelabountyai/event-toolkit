@@ -12,7 +12,8 @@
       "Bash(pkill -f \"chrome-headless-shell\")",
       "Bash(nohup corepack pnpm dev)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/brief --max-time 20)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(PATH=/Users/shanelabounty/.local/bin:__TRACKED_VAR__ pnpm --filter @event-toolkit/schema typecheck)"
     ]
   }
 }

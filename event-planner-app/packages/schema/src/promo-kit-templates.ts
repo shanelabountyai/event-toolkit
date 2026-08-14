@@ -27,6 +27,17 @@ import {
 /** Stand-in for the registration URL, which the Event Brief schema deliberately doesn't hold. */
 export const REGISTRATION_LINK_PLACEHOLDER = "[registration link]";
 
+/**
+ * Shown when the brief carries no attendee-facing promise or takeaways.
+ *
+ * Deliberately conspicuous and deliberately not fillable by the generator. The alternative — the
+ * behaviour this replaced — was to substitute the internal objective, which reads as finished copy
+ * and is the reason a generated email once told prospects the reason to visit was "capture 60
+ * qualified leads and influence $900K of pipeline".
+ */
+export const PLACEHOLDER_PROMISE = "[why this is worth their time — in their words, not yours]";
+export const PLACEHOLDER_TAKEAWAY = "[what they leave with — fill this in]";
+
 /** Practical hard ceiling for an X post. */
 export const X_MAX_CHARS = 280;
 
@@ -108,12 +119,20 @@ interface BriefFacts {
   dateLong: string;
   dateShort: string;
   dateRange: string;
-  objective: string;
+  /**
+   * The attendee-facing promise — NOT `goals.primaryObjective`.
+   *
+   * `primaryObjective` is internal ("capture 60 qualified leads and influence $900K of pipeline")
+   * and shipping it as the reason a prospect should attend is the single worst thing this
+   * generator has done. When the planner has not written an attendee promise, this is a visible
+   * placeholder they must replace, which is honest; substituting a revenue target is not.
+   */
+  promise: string;
   audience: string;
-  /** Up to three supporting objectives, used as "what you'll get" bullets. */
+  /** What the attendee leaves with. From `attendeeValue.takeaways`, never from internal objectives. */
   benefits: string[];
-  /** Persona labels, used to address the reader. */
-  personas: string[];
+  /** True when the copy is addressing somebody else's event that we are exhibiting at. */
+  isExhibitor: boolean;
   timezone: string;
 }
 
@@ -166,33 +185,54 @@ function resolveFacts(brief: EventBrief): BriefFacts {
     dateLong: formatHumanDate(start),
     dateShort: formatShortDate(start),
     dateRange,
-    objective: pick(brief.goals?.primaryObjective),
+    promise: brief.audience?.attendeeValue?.promise?.trim() || PLACEHOLDER_PROMISE,
     audience: pick(brief.audience?.description),
-    benefits: (brief.goals?.objectives ?? [])
+    benefits: (brief.audience?.attendeeValue?.takeaways ?? [])
       .map((o) => o?.trim())
       .filter((o): o is string => Boolean(o))
       .slice(0, 3),
-    personas: (brief.audience?.targetPersonas ?? [])
-      .map((p) => p?.name?.trim())
-      .filter((n): n is string => Boolean(n))
-      .slice(0, 3),
+    isExhibitor:
+      (brief.format?.participationRole ?? (brief.type === "trade_show" ? "exhibitor" : "host")) !==
+      "host",
     timezone: pick(brief.dates?.timezone),
   };
 }
 
-/** Bullet list from the brief's supporting objectives, with a sane fallback when empty. */
+/**
+ * Phrases an exhibitor cannot truthfully say.
+ *
+ * A company with a booth does not own registration, capacity or the guest list. Copy claiming
+ * otherwise — "we're running this", "we're close to capacity", "want me to hold you a place?" —
+ * is wrong in a way a prospect notices immediately, and it was generated for every trade-show
+ * brief because the templates only knew how to speak as the host.
+ */
+function hosting(facts: BriefFacts, host: string, exhibitor: string): string {
+  return facts.isExhibitor ? exhibitor : host;
+}
+
+/**
+ * "What you'll get" bullets, from the attendee takeaways only.
+ *
+ * The fallback is a placeholder, not the primary objective. An empty promise is a prompt to write
+ * one; an internal revenue target rendered as an attendee benefit is a mistake somebody sends to
+ * three hundred prospects before noticing.
+ */
 function benefitBullets(facts: BriefFacts): string {
   if (facts.benefits.length === 0) {
-    return `- ${facts.objective}`;
+    return `- ${PLACEHOLDER_TAKEAWAY}`;
   }
   return facts.benefits.map((b) => `- ${b}`).join("\n");
 }
 
-/** "marketing and RevOps leaders" style address, falling back to the audience description. */
+/**
+ * Who the copy is addressed to.
+ *
+ * Deliberately the audience *description*, never persona names. Persona labels are internal
+ * shorthand — "Booth visitor — evaluating vendors", "Plant operations director — active buyer" —
+ * and they were being printed to the reader as though they described them.
+ */
 function addressee(facts: BriefFacts): string {
-  if (facts.personas.length === 0) return facts.audience;
-  if (facts.personas.length === 1) return facts.personas[0];
-  return `${facts.personas.slice(0, -1).join(", ")} and ${facts.personas[facts.personas.length - 1]}`;
+  return facts.audience;
 }
 
 /**
@@ -220,7 +260,7 @@ function landingPageBody(facts: BriefFacts, _toneKey: string): string {
     "",
     `## Why attend`,
     "",
-    facts.objective,
+    facts.promise,
     "",
     `## What you'll take away`,
     "",
@@ -238,7 +278,11 @@ function landingPageBody(facts: BriefFacts, _toneKey: string): string {
     "",
     `## ${facts.voice.cta}`,
     "",
-    `Places are limited. ${facts.voice.cta} at ${REGISTRATION_LINK_PLACEHOLDER}.`,
+    hosting(
+      facts,
+      `Places are limited. ${facts.voice.cta} at ${REGISTRATION_LINK_PLACEHOLDER}.`,
+      `${facts.voice.cta} — ${REGISTRATION_LINK_PLACEHOLDER}.`,
+    ),
   ].join("\n");
 }
 
@@ -257,9 +301,13 @@ function emailBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         "",
         `Hi {first_name},`,
         "",
-        `${facts.objective}`,
+        `${facts.promise}`,
         "",
-        `That's why we're running ${facts.name}, a ${facts.voice.noun} built for ${addressee(facts)}.`,
+        hosting(
+          facts,
+          `That's why we're running ${facts.name}, a ${facts.voice.noun} built for ${addressee(facts)}.`,
+          `That's why we'll be at ${facts.name}, where we're meeting ${addressee(facts)}.`,
+        ),
         "",
         `What you'll take away:`,
         benefitBullets(facts),
@@ -289,7 +337,11 @@ function emailBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         "",
         `Hi {first_name},`,
         "",
-        `${facts.name} is one week out. If you've been meaning to register, now is the moment — we're close to capacity.`,
+        hosting(
+          facts,
+          `${facts.name} is one week out. If you've been meaning to register, now is the moment — we're close to capacity.`,
+          `${facts.name} is one week out. If you're going, it's a good moment to put a time in the diary with us.`,
+        ),
         "",
         whenWhere,
         "",
@@ -349,7 +401,7 @@ function socialBody(
     // Short by construction: X gets one line of hook, one of logistics, one CTA.
     const text =
       subtype === "announcement"
-        ? `${facts.voice.joinVerb} ${facts.name} — ${facts.dateShort}, ${where}.\n\n${facts.objective}\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
+        ? `${facts.voice.joinVerb} ${facts.name} — ${facts.dateShort}, ${where}.\n\n${facts.promise}\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
         : subtype === "mid_campaign"
           ? `${facts.name} is coming up on ${facts.dateShort} (${where}).\n\nBuilt for ${addressee(facts)}.\n\n${facts.voice.cta}: ${REGISTRATION_LINK_PLACEHOLDER}`
           : `Last chance to join ${facts.name} — ${facts.dateShort}, ${where}. Registration closes soon.\n\n${REGISTRATION_LINK_PLACEHOLDER}`;
@@ -360,7 +412,11 @@ function socialBody(
   const opener =
     channel === "linkedin"
       ? subtype === "announcement"
-        ? `We're running ${facts.name} on ${facts.dateLong}.`
+        ? hosting(
+            facts,
+            `We're running ${facts.name} on ${facts.dateLong}.`,
+            `We'll be at ${facts.name} on ${facts.dateLong}.`,
+          )
         : subtype === "mid_campaign"
           ? `${facts.name} is a few weeks out, and the guest list is shaping up.`
           : `Final call: registration for ${facts.name} closes this week.`
@@ -373,7 +429,7 @@ function socialBody(
   return [
     opener,
     "",
-    facts.objective,
+    facts.promise,
     "",
     channel === "linkedin" ? `What attendees will take away:` : `Here's what we'll cover:`,
     benefitBullets(facts),
@@ -406,14 +462,22 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         "",
         `We're hosting ${facts.name} on ${facts.dateLong}. ${facts.locationLine}`,
         "",
-        `I thought of you because ${facts.objective.charAt(0).toLowerCase()}${facts.objective.slice(1)}`,
+        `I thought of you because ${facts.promise.charAt(0).toLowerCase()}${facts.promise.slice(1)}`,
         "",
-        `Want me to hold you a place? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+        hosting(
+          facts,
+          `Want me to hold you a place? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+          `Worth a short conversation while we're both there? Details here: ${REGISTRATION_LINK_PLACEHOLDER}`,
+        ),
       ].join("\n");
 
     case "linkedin_dm":
       return [
-        `Hi {first_name} — we're running ${facts.name} on ${facts.dateShort}. ${facts.locationLine}`,
+        hosting(
+          facts,
+          `Hi {first_name} — we're running ${facts.name} on ${facts.dateShort}. ${facts.locationLine}`,
+          `Hi {first_name} — we'll be at ${facts.name} on ${facts.dateShort}. ${facts.locationLine}`,
+        ),
         "",
         `It's built for ${addressee(facts)}, so it felt relevant to you. Happy to save you a spot — here's the detail: ${REGISTRATION_LINK_PLACEHOLDER}`,
       ].join("\n");
@@ -422,10 +486,14 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
     default:
       return [
         `**Opening**`,
-        `"Hi {first_name}, it's {your_name} from {company}. Quick one — we're running ${facts.name} on ${facts.dateLong}."`,
+        hosting(
+          facts,
+          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we're running ${facts.name} on ${facts.dateLong}."`,
+          `"Hi {first_name}, it's {your_name} from {company}. Quick one — we'll be at ${facts.name} on ${facts.dateLong}."`,
+        ),
         "",
         `**The hook**`,
-        `"${facts.objective}"`,
+        `"${facts.promise}"`,
         "",
         `**The logistics**`,
         `"${facts.locationLine}"`,
@@ -437,7 +505,11 @@ function salesBody(subtype: string, facts: BriefFacts, _toneKey: string): string
         `"No problem — who on your team owns this? Happy to reach out to them instead."`,
         "",
         `**Voicemail version**`,
-        `"Hi {first_name}, {your_name} from {company}. We're running ${facts.name} on ${facts.dateShort} — I'll email you the detail. ${REGISTRATION_LINK_PLACEHOLDER}"`,
+        hosting(
+          facts,
+          `"Hi {first_name}, {your_name} from {company}. We're running ${facts.name} on ${facts.dateShort} — I'll email you the detail. ${REGISTRATION_LINK_PLACEHOLDER}"`,
+          `"Hi {first_name}, {your_name} from {company}. We'll be at ${facts.name} on ${facts.dateShort} — I'll email you where to find us. ${REGISTRATION_LINK_PLACEHOLDER}"`,
+        ),
       ].join("\n");
   }
 }

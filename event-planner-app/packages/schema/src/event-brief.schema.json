@@ -82,7 +82,27 @@
       "$ref": "#/$defs/Goals"
     },
     "audience": {
-      "$ref": "#/$defs/Audience"
+      "$ref": "#/$defs/Audience",
+      "properties": {
+        "attendeeValue": {
+          "type": "object",
+          "description": "What the ATTENDEE gets. The only fields here written in their language \u2014 everything under goals is internal and must never reach customer-facing copy.",
+          "properties": {
+            "promise": {
+              "type": "string",
+              "description": "One sentence on why this is worth their time."
+            },
+            "takeaways": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "What they leave with."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
     },
     "budget": {
       "$ref": "#/$defs/Budget"
@@ -91,7 +111,19 @@
       "$ref": "#/$defs/Dates"
     },
     "format": {
-      "$ref": "#/$defs/Format"
+      "$ref": "#/$defs/Format",
+      "properties": {
+        "participationRole": {
+          "type": "string",
+          "enum": [
+            "host",
+            "exhibitor",
+            "sponsor",
+            "speaker"
+          ],
+          "description": "Whether we run this event or attend somebody else's. Decides host vs exhibitor voice in generated promo copy."
+        }
+      }
     },
     "stakeholders": {
       "type": "array",

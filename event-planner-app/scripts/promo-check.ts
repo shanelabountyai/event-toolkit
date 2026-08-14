@@ -14,6 +14,7 @@ import { dirname, join } from "node:path";
 
 import {
   EXPECTED_ASSET_COUNT,
+  createEmptyBrief,
   PLACEHOLDER,
   REGISTRATION_LINK_PLACEHOLDER,
   X_MAX_CHARS,
@@ -353,6 +354,78 @@ async function main(): Promise<void> {
   check("brief B survived", (await getAssetSet("brief-b")) !== null && (await listEntries("brief-b")).length === 1);
 
   /* ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ Internal fields never reach customer-facing copy");
+  {
+    // The exact brief shape from a full event run, where all 18 generated assets were unsendable.
+    const exhibiting = {
+      ...createEmptyBrief("trade_show"),
+      name: "Northgate Manufacturing Summit 2026",
+      goals: {
+        primaryObjective: "capture 60 qualified leads and influence $900K of pipeline",
+        objectives: [
+          "Book 15 on-site meetings with named target accounts",
+          "Drive 120 attendees to the sponsored happy hour",
+        ],
+      },
+      audience: {
+        description: "operations and plant leaders at mid-market manufacturers",
+        targetPersonas: [
+          { id: "p1", name: "Booth visitor — evaluating vendors", title: "Plant operations director" },
+        ],
+      },
+      dates: { eventStartDate: "2026-05-12", eventEndDate: "2026-05-13", timezone: "America/Los_Angeles" },
+    } as unknown as EventBrief;
+
+    const assets = generatePromoAssets(exhibiting, "assertive");
+    const everything = assets.map((a) => `${a.generatedBody} ${a.label}`).join("\n").toLowerCase();
+
+    check(
+      "⭐ the internal revenue target never appears in generated copy",
+      !everything.includes("900k") && !everything.includes("60 qualified leads"),
+      "a generated email once opened \"I thought of you because capture 60 qualified leads…\"",
+    );
+    check(
+      "⭐ internal secondary objectives are not sold as attendee benefits",
+      !everything.includes("book 15 on-site meetings") && !everything.includes("sponsored happy hour"),
+    );
+    check(
+      "⭐ internal persona labels are never printed to the reader",
+      !everything.includes("booth visitor — evaluating vendors") && !everything.includes("evaluating vendors"),
+    );
+    check(
+      "a missing attendee promise shows a placeholder, not a substituted objective",
+      everything.includes("worth their time"),
+      "an empty promise is a prompt to write one; a revenue target reads as finished copy",
+    );
+
+    console.log("\n⭐ An exhibitor does not speak as the host");
+    check(
+      "does not claim to be running somebody else's conference",
+      !everything.includes("we're running"),
+    );
+    check("…and says it will be there instead", everything.includes("we'll be at"));
+    check(
+      "does not claim control of capacity or registration",
+      !everything.includes("close to capacity") && !everything.includes("hold you a place"),
+    );
+
+    // A brief we genuinely host must keep the host voice.
+    const hosting = {
+      ...createEmptyBrief("conference"),
+      name: "Our Own Summit",
+      audience: { description: "customers", attendeeValue: { promise: "see what shipped this year" } },
+      dates: { eventStartDate: "2026-05-12", timezone: "UTC" },
+    } as unknown as EventBrief;
+    const hostKit = generatePromoAssets(hosting, "assertive").map((a) => a.generatedBody).join("\n").toLowerCase();
+    check(
+      "…while a hosted event still speaks as the host",
+      hostKit.includes("we're running"),
+      "the fix must not flatten both voices into one",
+    );
+    check("and uses the planner's attendee promise", hostKit.includes("see what shipped this year"));
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} promo check(s) failed.\n`);
     process.exit(1);
