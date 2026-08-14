@@ -426,6 +426,48 @@ async function main(): Promise<void> {
     check("and uses the planner's attendee promise", hostKit.includes("see what shipped this year"));
   }
 
+  /* ------------------------------------------------------------------ */
+  console.log("\n⭐ What the planner types is what gets generated");
+  {
+    // The gap this closes: the schema and templates supported attendee value for a while before
+    // intake collected it, so every brief generated placeholders and nobody could fix it.
+    const filled = {
+      ...createEmptyBrief("trade_show"),
+      name: "Northgate Manufacturing Summit 2026",
+      goals: { primaryObjective: "capture 60 qualified leads", objectives: ["Book 15 meetings"] },
+      audience: {
+        description: "operations and plant leaders at mid-market manufacturers",
+        attendeeValue: {
+          promise: "see what three plants did to cut changeover time by half",
+          takeaways: ["A benchmark against your peers", "A teardown of a 14-month payback retrofit"],
+        },
+      },
+      dates: { eventStartDate: "2026-05-12", timezone: "America/Los_Angeles" },
+    } as unknown as EventBrief;
+
+    const copy = generatePromoAssets(filled, "assertive").map((a) => a.generatedBody).join("\n").toLowerCase();
+
+    check("the attendee promise reaches the copy", copy.includes("cut changeover time by half"));
+    check("…and so do the takeaways", copy.includes("benchmark against your peers"));
+    check("the placeholder is gone once it is filled in", !copy.includes("worth their time"));
+    check(
+      "…and the internal objective still never appears",
+      !copy.includes("60 qualified leads") && !copy.includes("book 15 meetings"),
+    );
+
+    // Role is a planner decision, so the override has to win over the type default.
+    const sponsoring = {
+      ...filled,
+      format: { ...(filled.format ?? {}), participationRole: "host" },
+    } as unknown as EventBrief;
+    const hostCopy = generatePromoAssets(sponsoring, "assertive").map((a) => a.generatedBody).join("\n").toLowerCase();
+    check(
+      "⭐ a planner overriding the role to host gets host voice on a trade show",
+      hostCopy.includes("we're running"),
+      "the type default is a starting point, not a decision the planner cannot change",
+    );
+  }
+
   if (failures > 0) {
     console.error(`\n${failures} promo check(s) failed.\n`);
     process.exit(1);

@@ -35,6 +35,16 @@ export const REGISTRATION_LINK_PLACEHOLDER = "[registration link]";
  * and is the reason a generated email once told prospects the reason to visit was "capture 60
  * qualified leads and influence $900K of pipeline".
  */
+export const PARTICIPATION_ROLES = ["host", "exhibitor", "sponsor", "speaker"] as const;
+
+/** Written from the planner's point of view, because that is who picks from this list. */
+export const PARTICIPATION_ROLE_LABELS: Record<string, string> = {
+  host: "We're running it",
+  exhibitor: "We have a booth at someone else's event",
+  sponsor: "We're sponsoring someone else's event",
+  speaker: "We're speaking at someone else's event",
+};
+
 export const PLACEHOLDER_PROMISE = "[why this is worth their time — in their words, not yours]";
 export const PLACEHOLDER_TAKEAWAY = "[what they leave with — fill this in]";
 

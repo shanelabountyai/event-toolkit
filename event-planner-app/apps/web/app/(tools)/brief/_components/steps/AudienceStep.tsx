@@ -46,6 +46,63 @@ export function AudienceStep({ brief, onChange, highlightMissing }: StepProps) {
           />
         </Field>
 
+        {/*
+          The only two fields in this brief written in the attendee's language.
+          Everything under Goals is internal — revenue targets, lead counts — and promo copy
+          generated from those told prospects the reason to attend was "capture 60 qualified leads
+          and influence $900K of pipeline". The generator reads these and nothing else.
+        */}
+        <Field
+          label="Why should they come?"
+          htmlFor="attendee-promise"
+          className="sm:col-span-2"
+          hint="One sentence, in their words, not yours. This is the only line the promo generator uses to sell the event — it will not borrow from your objectives."
+        >
+          <TextArea
+            id="attendee-promise"
+            rows={2}
+            value={brief.audience.attendeeValue?.promise ?? ""}
+            placeholder="See what three plants did to cut changeover time by half"
+            onChange={(e) =>
+              onChange((prev) => ({
+                ...prev,
+                audience: {
+                  ...prev.audience,
+                  attendeeValue: { ...prev.audience.attendeeValue, promise: e.target.value },
+                },
+              }))
+            }
+          />
+        </Field>
+
+        <Field
+          label="What do they leave with?"
+          htmlFor="attendee-takeaways"
+          className="sm:col-span-2"
+          hint="One per line. These become the 'what you'll get' bullets in emails and the landing page."
+        >
+          <TextArea
+            id="attendee-takeaways"
+            rows={3}
+            value={(brief.audience.attendeeValue?.takeaways ?? []).join("\n")}
+            placeholder={"A benchmark of your changeover times against peers\nA teardown of the retrofit that paid back in 14 months"}
+            onChange={(e) =>
+              onChange((prev) => ({
+                ...prev,
+                audience: {
+                  ...prev.audience,
+                  attendeeValue: {
+                    ...prev.audience.attendeeValue,
+                    // Split on save rather than on every keystroke, so a trailing newline while
+                    // typing the next line does not momentarily drop an empty bullet in.
+                    takeaways: e.target.value.split("\n").map((t) => t.trim()).filter(Boolean),
+                  },
+                },
+              }))
+            }
+          />
+        </Field>
+
         <Field label="Estimated size" htmlFor="audience-size" hint="Optional headcount estimate.">
           <NumberInput
             id="audience-size"
