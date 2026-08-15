@@ -19,3 +19,16 @@ coverage/
 # duplicates inside .next break `tsc` with duplicate-identifier errors. They are never real.
 * 2.*
 *\ 2.*
+
+# iCloud collision artifacts.
+#
+# iCloud renames a file it thinks conflicts to "name 2.ext" mid-write. Two of these reached git
+# ("settings 3.json", "settings 4.json"), and the same renaming produced the webpack cache ENOENTs
+# that were misdiagnosed as a dying dev server. The real fix is excluding this folder from iCloud;
+# this only stops the debris being committed.
+* [0-9].json
+* [0-9].css
+* [0-9].ts
+* [0-9].tsx
+* [0-9].md
+* [0-9].py
