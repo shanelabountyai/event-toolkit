@@ -51,7 +51,7 @@ keeps its Next app two levels down with `pnpm-workspace.yaml` in between.
 `AUTH_SECRET` and `CRON_SECRET` are set as sensitive production variables, generated separately
 from the local development ones in `.env.local`.
 
-### The custom domain: reachable by link, absent from search
+### The custom domain: invitation only, and absent from search
 
 **https://eventoolkit.labintelligence.co** — attached and verified on Vercel, waiting only on one
 DNS record in Cloudflare:
@@ -60,17 +60,28 @@ DNS record in Cloudflare:
 CNAME  eventoolkit  →  c71c0247b6a83ec1.vercel-dns-017.com.   (DNS only / grey cloud)
 ```
 
-Grey cloud, not proxied — Vercel's own verification returns `disableProxy: true`, and
-`storage.labintelligence.co` already works this way. Proxying would put a second CDN in front of
-Next.js and is known to interfere with Vercel's certificate renewal.
+**Grey cloud first, orange cloud after — in that order, deliberately.** Vercel has to reach the
+hostname directly to issue the TLS certificate, so the record goes in as DNS-only and stays that
+way until the certificate exists. Proxying before that is the standard route to a half-provisioned
+domain that neither side will finish.
 
-Cloudflare Access was considered and rejected. It would make the site genuinely private, which is
-more than was asked for: the request was *not indexable*, and a login wall in front of a portfolio
-piece stops the people you want to show it to. The data that would justify a wall — workspaces,
-members, attendee PII — is already behind authentication.
+Once it is live the record flips to **Proxied**, with Cloudflare's SSL/TLS mode set to
+**Full (Strict)** — on Flexible, Cloudflare talks HTTP to a Vercel origin that redirects to HTTPS,
+and the result is a redirect loop rather than an error.
 
-So indexing is prevented at the response instead: `X-Robots-Tag: noindex, nofollow` on every route,
-set in `apps/web/next.config.ts`. **`app/robots.ts` deliberately allows crawling**, which reads
+Then **Cloudflare Access** in front, one-time-PIN policy. The requirement was *not indexed and not
+viewable*, and `noindex` only delivers the first — it keeps the site out of search while leaving it
+open to anyone holding the URL. Access is what makes it not viewable, and one-time PIN is what
+keeps it showable: an allowlisted email gets a code, with no account to create.
+
+**Access must carry a Bypass policy for `/share/*`, ordered above the allow rule.** The logistics
+share link exists precisely so somebody with no account — an AV tech on a venue floor — can read
+the run of show. A blanket Access policy would demand an email code from the one person the feature
+was built for. The token in the URL is that route's authorisation, by design.
+
+`X-Robots-Tag: noindex, nofollow` stays on every route regardless. It costs nothing behind Access,
+and it is the only thing covering the `event-toolkit.vercel.app` URL, which Cloudflare never sees.
+It is set in `apps/web/next.config.ts`. **`app/robots.ts` deliberately allows crawling**, which reads
 backwards and is explained there — a crawler has to fetch a page to see a response header, so a
 `Disallow: /` would hide the noindex and leave a linked URL eligible for a bare listing. The two
 directives are alternatives, not layers.
