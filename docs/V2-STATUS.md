@@ -97,14 +97,36 @@ private before then, turn on Vercel Authentication in Project Settings → Deplo
 
 ## Blocked on you
 
-Two signups, roughly ten minutes. Neither blocks further building — see the note below.
+Everything here needs an account only you can sign into. None of it blocks further building.
 
-1. **A Postgres database.** [neon.tech](https://neon.tech) → new project → copy the *pooled*
-   connection string. Gives `DATABASE_URL`. Neon over Vercel Postgres for the more generous free
-   tier; it is the same Postgres either way.
-2. **A Resend account with a verified sending domain**, for verification emails, magic links and
-   invitations. Gives `AUTH_RESEND_KEY` and `EMAIL_FROM`. DNS verification is the slow part, so
-   start it first if you want it the same day.
+**1. Cloudflare, in this order** — the ordering is the whole point; both of these fail quietly
+rather than loudly.
+
+- [ ] DNS: `CNAME eventoolkit → c71c0247b6a83ec1.vercel-dns-017.com`, **DNS only (grey)**. Grey
+      first so Vercel can issue the certificate.
+- [ ] Verify it answers: `curl -sI https://eventoolkit.labintelligence.co/brief` → 200 with
+      `x-robots-tag: noindex, nofollow`.
+- [ ] Flip to **Proxied** (orange), then SSL/TLS → **Full (Strict)**. Flexible gives a redirect
+      loop, not an error message.
+- [ ] Zero Trust → Access → self-hosted app. Bypass policy for `/share/*` **ordered above** the
+      allow policy, then Allow → Emails → one-time PIN. Repeat for `storage.labintelligence.co`.
+- [ ] Re-test a `/share/` link afterwards. If the bypass is misordered the share link is dead and
+      nothing else will tell you.
+
+Cloudflare asks you to choose a permanent team domain when Zero Trust is first enabled, and may ask
+for a payment method even on the free 50-user tier.
+
+**2. A Resend sending domain.** `AUTH_RESEND_KEY` is set, but `EMAIL_FROM` is still
+`onboarding@resend.dev` — which only ever delivers to the account owner. **Invitations to anyone
+else are silently discarded**, so the whole invite flow looks like it works and does not. Verify a
+domain on `labintelligence.co` and set `EMAIL_FROM` to an address on it.
+
+**3. Exclude this folder from iCloud sync.** iCloud renames files mid-build; `apps/web/app/tokens
+2.css` is one of its duplicate artifacts, and the webpack cache ENOENTs earlier in this project
+were the same cause.
+
+Done: Neon Postgres (`DATABASE_URL`, pooled and direct), staging as a separate Neon project,
+`AUTH_SECRET`, `CRON_SECRET`, the Vercel deploy, and the domain attached and verified Vercel-side.
 
 `.env.example` lists every variable by name. Nothing real is committed.
 
