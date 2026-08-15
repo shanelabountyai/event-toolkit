@@ -51,6 +51,33 @@ keeps its Next app two levels down with `pnpm-workspace.yaml` in between.
 `AUTH_SECRET` and `CRON_SECRET` are set as sensitive production variables, generated separately
 from the local development ones in `.env.local`.
 
+### The custom domain: reachable by link, absent from search
+
+**https://eventoolkit.labintelligence.co** — attached and verified on Vercel, waiting only on one
+DNS record in Cloudflare:
+
+```
+CNAME  eventoolkit  →  c71c0247b6a83ec1.vercel-dns-017.com.   (DNS only / grey cloud)
+```
+
+Grey cloud, not proxied — Vercel's own verification returns `disableProxy: true`, and
+`storage.labintelligence.co` already works this way. Proxying would put a second CDN in front of
+Next.js and is known to interfere with Vercel's certificate renewal.
+
+Cloudflare Access was considered and rejected. It would make the site genuinely private, which is
+more than was asked for: the request was *not indexable*, and a login wall in front of a portfolio
+piece stops the people you want to show it to. The data that would justify a wall — workspaces,
+members, attendee PII — is already behind authentication.
+
+So indexing is prevented at the response instead: `X-Robots-Tag: noindex, nofollow` on every route,
+set in `apps/web/next.config.ts`. **`app/robots.ts` deliberately allows crawling**, which reads
+backwards and is explained there — a crawler has to fetch a page to see a response header, so a
+`Disallow: /` would hide the noindex and leave a linked URL eligible for a bare listing. The two
+directives are alternatives, not layers.
+
+Note this is a subdomain of **labintelligence.co**. The `.com` of the same name exists, is a
+different zone on Hurricane Electric rather than Cloudflare, and is not used here.
+
 **The deployment is publicly reachable and has no sign-in.** That is currently harmless rather
 than sloppy: every tool is client-side, and a visitor's data lives in their own browser's
 IndexedDB. There is no server-side data to expose because there is not yet a server holding any.

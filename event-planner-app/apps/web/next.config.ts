@@ -21,6 +21,20 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: workspacePackages,
   /**
+   * Reachable by link, absent from search results.
+   *
+   * This is served from a personal subdomain as a portfolio piece and a pilot, not as a product
+   * seeking discovery. Every default in it is still flagged `Assumption — pending validation`, and
+   * a planner who found it cold via a search for "event ROI calculator" would be trusting numbers
+   * that have never met a real event.
+   *
+   * `X-Robots-Tag` is what actually keeps it out of the index — see `app/robots.ts` for why there
+   * is deliberately no disallow-all `robots.txt` alongside it.
+   */
+  async headers() {
+    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
+  },
+  /**
    * `outputFileTracingRoot` is deliberately NOT set.
    *
    * Setting it silences a local "inferred your workspace root" warning and breaks the deploy:
