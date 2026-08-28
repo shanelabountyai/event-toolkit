@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "description": "Event Planner Productivity Suite — monorepo root (PRD 1: Event Brief Generator)",
   "scripts": {
-    "dev": "pnpm --filter @event-toolkit/web dev",
+    "preflight": "if [ -x \"$HOME/.claude/bin/swapcheck\" ]; then \"$HOME/.claude/bin/swapcheck\" --quiet; fi",
+    "dev": "pnpm preflight && pnpm --filter @event-toolkit/web dev",
     "build": "pnpm -r --filter @event-toolkit/web... build",
     "start": "pnpm --filter @event-toolkit/web start",
     "lint": "pnpm --filter @event-toolkit/web lint",
@@ -49,6 +50,6 @@
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   }
 }
