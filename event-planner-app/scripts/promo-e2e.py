@@ -189,13 +189,18 @@ def main():
         page.wait_for_selector("#pacing-count", timeout=20000)
         check("pacing unblocked with a registration metric", page.get_by_text("Registrations so far").count() > 0)
         page.fill("#pacing-date", "2026-09-15")
-        page.fill("#pacing-count", "40")
+        # 20 against a target of 25 is a 20% shortfall, which is Behind Pace
+        # (on_pace is <=10%, critical is >25%). It has to be BELOW target: the
+        # next check asserts interventions appear, and recommendedInterventions()
+        # returns [] on_pace. This previously read 40 — fifteen AHEAD of target —
+        # so the app correctly rendered nothing and the assertion below failed.
+        page.fill("#pacing-count", "20")
         page.get_by_role("button", name="Add", exact=True).click()
         page.wait_for_timeout(800)
         rows = page.locator("tbody tr")
         row_text = rows.first.inner_text() if rows.count() else ""
         check(f"the entry landed in the table ({rows.count()} row(s): {row_text!r})",
-              rows.count() == 1 and "40" in row_text and "2026" in row_text)
+              rows.count() == 1 and "20" in row_text and "2026" in row_text)
         check("a status badge is shown", any(page.get_by_text(s, exact=True).count() > 0
               for s in ["On pace", "Behind pace", "Critical"]))
         check("interventions appear when behind", page.get_by_text("Recommended next steps").count() > 0)
@@ -211,7 +216,10 @@ def main():
         page.wait_for_timeout(600)
         asset_id = href.split("#asset-")[1]
         check("intervention deep link resolves to a real card", page.locator(f"#asset-{asset_id}").count() == 1)
-        check("the linked card is highlighted", "border-sky-400" in (page.locator(f"#asset-{asset_id}").get_attribute("class") or ""))
+        # `border-accent`, not `border-sky-400`: AssetCard styles the highlight with the
+        # semantic token (AssetCard.tsx:73). The literal Tailwind colour it used to carry was
+        # replaced by the design-token migration, and this assertion kept naming the old one.
+        check("the linked card is highlighted", "border-accent" in (page.locator(f"#asset-{asset_id}").get_attribute("class") or ""))
         page.screenshot(path=str(SHOT / "09-deeplink.png"), full_page=True)
 
         # ---- Two-brief isolation ------------------------------------------
@@ -226,7 +234,10 @@ def main():
         # ---- Launch link from the brief view -------------------------------
         page.goto(f"{BASE}/brief/e2e-conf"); page.wait_for_load_state("networkidle")
         page.wait_for_selector("text=Launch a tool from this brief", timeout=20000)
-        launch = page.locator("a[href='/promo/kit?briefId=e2e-conf']")
+        # `/promo`, not `/promo/kit`: the brief view builds this from the tools registry
+        # (lib/tools.ts:35, href "/promo"). `/promo/kit` was the entry point before the tool
+        # grew kit/pacing tabs and `/promo` became the landing route.
+        launch = page.locator("a[href='/promo?briefId=e2e-conf']")
         check("brief view has a live Promo Campaign Kit link", launch.count() == 1)
         launch.first.click()
         landed = True
