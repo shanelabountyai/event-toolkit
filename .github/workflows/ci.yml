@@ -40,3 +40,99 @@ jobs:
       # here only built the app twice.
       - name: Verify
         run: pnpm verify
+
+  # The browser half. Separate from `verify` because it costs minutes that a type error should
+  # never spend: `needs: verify` means a build that cannot compile never reaches a browser.
+  #
+  # These suites existed for months and ran only by hand — their own docstrings say "Run by
+  # hand: pnpm dev". Nothing enforced them, so a route could 500 with `pnpm verify` still green,
+  # which is precisely the gap the per-tool check scripts cannot cover.
+  e2e:
+    name: Browser smoke, a11y, responsive
+    needs: verify
+    runs-on: ubuntu-latest
+
+    # Measured at ~4 minutes locally across the four suites. Sized well above that on purpose,
+    # and it exists at all because a job without one inherits GitHub's 6-hour maximum: a single
+    # hung run then costs more than a dozen healthy ones.
+    timeout-minutes: 20
+
+    env:
+      # The app pulls in Drizzle and @event-toolkit/server-db, so it needs these to boot — but
+      # NOTHING DIALS THE DATABASE on the routes these suites drive. They are indexedDB tools;
+      # the store is in the browser. `client.ts` opens its connection lazily inside a function,
+      # so a URL that points at nothing is never connected to. Verified by running the whole set
+      # locally against exactly these values.
+      #
+      # If a suite is ever added that reads server data, this is where it stops being enough:
+      # add a postgres service and run the drizzle migrations, the way the sibling repos do.
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+      DIRECT_DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+      AUTH_SECRET: ci-only-not-a-real-secret
+      AUTH_URL: http://localhost:3200
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: event-planner-app/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: event-planner-app/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # A REAL BUILD, SERVED — not `next dev`. A dev server is not the artifact that deploys,
+      # and `pnpm start` is what production runs.
+      - name: Build
+        run: pnpm build
+
+      # `pnpm e2e:setup` rather than a hand-written pip line, so CI installs exactly what a
+      # developer installs. Two copies of this drifting apart is a suite that passes on one
+      # machine and not the other, for a reason invisible in the diff.
+      - name: Install Python Playwright and browsers
+        run: pnpm e2e:setup
+
+      - name: Start the server
+        run: |
+          # Output redirected to a file, NOT inherited. A backgrounded process that keeps the
+          # step's stdout open makes the step itself hang until the job times out — the server
+          # is running fine and the workflow never moves on, which reads like a hung build.
+          pnpm start > /tmp/server.log 2>&1 &
+          # Poll rather than sleep: a fixed wait is either too short on a cold runner or wasted
+          # time on a warm one. `/` answers 307 (it redirects), so accept any status — this is
+          # asking "is it listening", not "is it healthy".
+          for i in $(seq 1 60); do
+            curl -s -o /dev/null http://localhost:3200/ && exit 0
+            sleep 2
+          done
+          echo "Server never came up on :3200"
+          cat /tmp/server.log
+          exit 1
+
+      # Run separately, not chained with &&, so one failure does not hide the others: knowing
+      # a11y AND responsive both broke is a different diagnosis than knowing a11y broke.
+      - name: Smoke suite
+        run: pnpm e2e
+
+      - name: Logistics suite
+        run: pnpm e2e:logistics
+
+      - name: Accessibility
+        run: pnpm a11y
+
+      - name: Responsive
+        run: pnpm responsive
+
+      # DELIBERATELY NOT RUN HERE: `pnpm e2e:promo`.
+      #
+      # It fails, and it failed before this workflow existed — twelve checks pass, then the
+      # "intervention deep link" assertion times out waiting for `a[href*='#asset-']`, which the
+      # page never renders (scripts/promo-e2e.py:206). Adding it would make this job red on the
+      # first run and stay red, and a gate nobody can get green is one people learn to ignore.
+      # Fix the deep link, then add `- name: Promo suite / run: pnpm e2e:promo` here.
